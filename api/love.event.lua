@@ -55,7 +55,7 @@ function m.push(e, a, b, c, d) end
 ---
 ---The quit event is a signal for the event handler to close LÖVE. It's possible to abort the exit process with the love.quit callback.
 ---@overload fun(exitstatus:number):void
----@overload fun("restart":string):void
+---@overload fun(restart:string):void
 function m.quit() end
 
 ---Like love.event.poll but blocks until there is an event in the queue.
