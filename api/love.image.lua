@@ -72,7 +72,6 @@ function ImageData:getWidth() end
 ---
 ---The function parameter is called with six parameters for each pixel in turn. The parameters are numbers that represent the x and y coordinates of the pixel and its red, green, blue and alpha values. The function parameter can return up to four number values, which become the new r, g, b and a values of the pixel. If the function returns fewer values, the remaining components are set to 0.
 ---@param pixelFunction function @Function parameter to apply to every pixel.
----@return 
 function ImageData:mapPixel(pixelFunction) end
 
 ---Paste into ImageData from another source ImageData.
@@ -83,7 +82,6 @@ function ImageData:mapPixel(pixelFunction) end
 ---@param sy number @Source top-left position on y-axis.
 ---@param sw number @Source width.
 ---@param sh number @Source height.
----@return 
 function ImageData:paste(source, dx, dy, sx, sy, sw, sh) end
 
 ---Sets the color of a pixel at a specific position in the image.
@@ -95,7 +93,6 @@ function ImageData:paste(source, dx, dy, sx, sy, sw, sh) end
 ---@param g number @The green component (0-255).
 ---@param b number @The blue component (0-255).
 ---@param a number @The alpha component (0-255).
----@return 
 function ImageData:setPixel(x, y, r, g, b, a) end
 
 --endregion ImageData

@@ -34,7 +34,6 @@ Event = {
 	['visible'] = 14,
 }
 ---Clears the event queue.
----@return 
 function m.clear() end
 
 ---Returns an iterator for messages in the event queue.
@@ -42,7 +41,6 @@ function m.clear() end
 function m.poll() end
 
 ---Pump events into the event queue. This is a low-level function, and is usually not called by the user, but by love.run. Note that this does need to be called for any OS to think you're still running, and if you want to handle OS-generated events at all (think callbacks). love.event.pump can only be called from the main thread, but afterwards, the rest of love.event can be used from any other thread.
----@return 
 function m.pump() end
 
 ---Adds an event to the event queue.
@@ -51,15 +49,13 @@ function m.pump() end
 ---@param b Variant @Second event argument.
 ---@param c Variant @Third event argument.
 ---@param d Variant @Fourth event argument.
----@return 
 function m.push(e, a, b, c, d) end
 
 ---Adds the quit event to the queue.
 ---
 ---The quit event is a signal for the event handler to close LÖVE. It's possible to abort the exit process with the love.quit callback.
----@return 
----@overload fun(exitstatus:number):
----@overload fun("restart":string):
+---@overload fun(exitstatus:number):void
+---@overload fun("restart":string):void
 function m.quit() end
 
 ---Like love.event.poll but blocks until there is an event in the queue.

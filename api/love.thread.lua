@@ -19,12 +19,10 @@ function Thread:getError() end
 ---Starts the thread.
 ---
 ---Threads can be restarted after they have completed their execution.
----@return 
----@overload fun(arg1:Variant, arg2:Variant, ...:Variant):
+---@overload fun(arg1:Variant, arg2:Variant, ...:Variant):void
 function Thread:start() end
 
 ---Wait for a thread to finish. This call will block until the thread finishes.
----@return 
 function Thread:wait() end
 
 ---Returns whether the thread is currently running.
@@ -39,7 +37,6 @@ function Thread:isRunning() end
 ---A channel is a way to send and receive data to and from different threads.
 local Channel = {}
 ---Clears all the messages in the Channel queue.
----@return 
 function Channel:clear() end
 
 ---Retrieves the value of a Channel message and removes it from the message queue.
@@ -79,14 +76,12 @@ function Channel:pop() end
 ---
 ---See Variant for the list of supported types.
 ---@param value Variant @The contents of the message.
----@return 
 function Channel:push(value) end
 
 ---Send a message to the thread Channel and wait for a thread to accept it.
 ---
 ---See Variant for the list of supported types.
 ---@param value Variant @The contents of the message.
----@return 
 function Channel:supply(value) end
 
 --endregion Channel

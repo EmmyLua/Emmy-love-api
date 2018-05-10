@@ -8,7 +8,9 @@ end
 local function genReturns(variant)
     local returns = variant.returns
     local s = ""
+    local num = 0
     if returns and #returns > 0 then
+        num = #returns
         for i, ret in ipairs(returns) do
             if i == 1 then
                 s = ret.type
@@ -16,8 +18,10 @@ local function genReturns(variant)
                 s = s .. ', ' .. ret.type
             end
         end
+    else
+        s = "void"
     end
-    return s
+    return s, num
 end
 
 local function genFunction(moduleName, fun, static)
@@ -53,7 +57,10 @@ local function genFunction(moduleName, fun, static)
         end
 
         if vIdx == 1 then
-            code = code .. '---@return ' .. genReturns(variant) .. '\n'
+            local type, num = genReturns(variant)
+            if num > 0 then
+                code = code .. '---@return ' .. type .. '\n'
+            end
         end
     end
 

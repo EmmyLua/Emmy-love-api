@@ -42,12 +42,10 @@ function BezierCurve:getSegment(startpoint, endpoint) end
 ---@param x number @Position of the control point along the x axis.
 ---@param y number @Position of the control point along the y axis.
 ---@param i number @Index of the control point.
----@return 
 function BezierCurve:insertControlPoint(x, y, i) end
 
 ---Removes the specified control point.
 ---@param index number @The index of the control point to remove.
----@return 
 function BezierCurve:removeControlPoint(index) end
 
 ---Get a list of coordinates to be used with love.graphics.line.
@@ -74,27 +72,23 @@ function BezierCurve:renderSegment(startpoint, endpoint, depth) end
 ---@param angle number @Rotation angle in radians.
 ---@param ox number @X coordinate of the rotation center.
 ---@param oy number @Y coordinate of the rotation center.
----@return 
 function BezierCurve:rotate(angle, ox, oy) end
 
 ---Scale the Bézier curve by a factor.
 ---@param s number @Scale factor.
 ---@param ox number @X coordinate of the scaling center.
 ---@param oy number @Y coordinate of the scaling center.
----@return 
 function BezierCurve:scale(s, ox, oy) end
 
 ---Set coordinates of the i-th control point. Indices start with 1.
 ---@param i number @Index of the control point.
 ---@param ox number @Position of the control point along the x axis.
 ---@param oy number @Position of the control point along the y axis.
----@return 
 function BezierCurve:setControlPoint(i, ox, oy) end
 
 ---Move the Bézier curve by an offset.
 ---@param dx number @Offset along the x axis.
 ---@param dy number @Offset along the y axis.
----@return 
 function BezierCurve:translate(dx, dy) end
 
 --endregion BezierCurve
@@ -141,8 +135,7 @@ function RandomGenerator:randomNormal(stddev, mean) end
 
 ---Sets the seed of the random number generator using the specified integer number.
 ---@param seed number @The integer number with which you want to seed the randomization. Must be within the range of [1, 2^53].
----@return 
----@overload fun(low:number, high:number):
+---@overload fun(low:number, high:number):void
 function RandomGenerator:setSeed(seed) end
 
 ---Sets the current state of the random number generator. The value used as an argument for this function is an opaque implementation-dependent string and should only originate from a previous call to RandomGenerator:getState.
@@ -151,7 +144,6 @@ function RandomGenerator:setSeed(seed) end
 ---
 ---The effect of the state string does not depend on the current operating system.
 ---@param state string @The new state of the RandomGenerator object, represented as a string. This should originate from a previous call to RandomGenerator:getState.
----@return 
 function RandomGenerator:setState(state) end
 
 --endregion RandomGenerator
@@ -261,8 +253,7 @@ function m.randomNormal(stddev, mean) end
 
 ---Sets the seed of the random number generator using the specified integer number.
 ---@param seed number @The integer number with which you want to seed the randomization. Must be within the range of [1, 2^53].
----@return 
----@overload fun(low:number, high:number):
+---@overload fun(low:number, high:number):void
 function m.setRandomSeed(seed) end
 
 ---Gets the current state of the random number generator. This returns an opaque implementation-dependent string which is only useful for later use with RandomGenerator:setState.
@@ -271,7 +262,6 @@ function m.setRandomSeed(seed) end
 ---
 ---The value of the state string does not depend on the current operating system.
 ---@param state string @The current state of the RandomGenerator object, represented as a string.
----@return 
 function m.setRandomState(state) end
 
 ---Triangulate a simple polygon.

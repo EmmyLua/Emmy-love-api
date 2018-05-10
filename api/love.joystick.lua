@@ -181,8 +181,7 @@ function m.getJoysticks() end
 
 ---Loads a gamepad mappings string or file created with love.joystick.saveGamepadMappings.
 ---@param filename string @The filename to load the mappings string from.
----@return 
----@overload fun(mappings:string):
+---@overload fun(mappings:string):void
 function m.loadGamepadMappings(filename) end
 
 ---Saves the virtual gamepad mappings of all Joysticks that are recognized as gamepads and have either been recently used or their gamepad bindings have been modified.

@@ -23,7 +23,6 @@ MessageBoxType = {
 	['error'] = 3,
 }
 ---Closes the window. It can be reopened with love.window.setMode.
----@return 
 function m.close() end
 
 ---Converts a number from pixels to density-independent units.
@@ -113,25 +112,21 @@ function m.isVisible() end
 ---Makes the window as large as possible.
 ---
 ---This function has no effect if the window isn't resizable, since it essentially programmatically presses the window's "maximize" button.
----@return 
 function m.maximize() end
 
 ---Minimizes the window to the system's task bar / dock.
----@return 
 function m.minimize() end
 
 ---Causes the window to request the attention of the user if it is not in the foreground.
 ---
 ---In Windows the taskbar icon will flash, and in OS X the dock icon will bounce.
 ---@param continuous boolean @Whether to continuously request attention until the window becomes active, or to do it only once.
----@return 
 function m.requestAttention(continuous) end
 
 ---Sets whether the display is allowed to sleep while the program is running.
 ---
 ---Display sleep is disabled by default. Some types of input (e.g. joystick button presses) might not prevent the display from sleeping, if display sleep is allowed.
 ---@param enable boolean @True to enable system display sleep, false to disable it.
----@return 
 function m.setDisplaySleepEnabled(enable) end
 
 ---Enters or exits fullscreen. The display to use when entering fullscreen is chosen based on which display the window is currently in, if multiple monitors are connected.
@@ -164,12 +159,10 @@ function m.setMode(width, height, flags) end
 ---@param x number @The x-coordinate of the window's position.
 ---@param y number @The y-coordinate of the window's position.
 ---@param display number @The index of the display that the new window position is relative to.
----@return 
 function m.setPosition(x, y, display) end
 
 ---Sets the window title.
 ---@param title string @The new window title.
----@return 
 function m.setTitle(title) end
 
 ---Displays a message box dialog above the love window. The message box contains a title, optional text, and buttons.

@@ -150,7 +150,6 @@ function m.getDirectoryItems(dir) end
 
 ---Gets the write directory name for your game. Note that this only returns the name of the folder to store your files in, not the full location.
 ---@param name string @The identity that is used as write directory.
----@return 
 function m.getIdentity(name) end
 
 ---Gets the last modification time of a file.
@@ -202,7 +201,6 @@ function m.getWorkingDirectory() end
 
 ---Initializes love.filesystem, will be called internally, so should not be used explicitly.
 ---@param appname string @The name of the application binary, typically love.
----@return 
 function m.init(appname) end
 
 ---Check whether something is a directory.
@@ -276,7 +274,6 @@ function m.remove(name) end
 ---Sets the write directory for your game. Note that you can only set the name of the folder to store your files in, not the location.
 ---@param name string @The new identity that will be used as write directory.
 ---@param appendToPath boolean @Whether the identity directory will be searched when reading a filepath before or after the game's source directory and any currently mounted archives.
----@return 
 function m.setIdentity(name, appendToPath) end
 
 ---Sets the filesystem paths that will be searched when require is called.
@@ -285,17 +282,14 @@ function m.setIdentity(name, appendToPath) end
 ---
 ---The paths are relative to the game's source and save directories, as well as any paths mounted with love.filesystem.mount.
 ---@param paths string @The paths that the require function will check in love's filesystem.
----@return 
 function m.setRequirePath(paths) end
 
 ---Sets the source of the game, where the code is present. This function can only be called once, and is normally automatically done by LÖVE.
 ---@param path string @Absolute path to the game's source folder.
----@return 
 function m.setSource(path) end
 
 ---Sets whether love.filesystem follows symbolic links. It is enabled by default in version 0.10.0 and newer, and disabled by default in 0.9.2.
 ---@param enable boolean @Whether love.filesystem should follow symbolic links.
----@return 
 function m.setSymlinksEnabled(enable) end
 
 ---Unmounts a zip file or folder previously mounted for reading with love.filesystem.mount.

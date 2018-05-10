@@ -107,19 +107,16 @@ function m.newCursor(imageData, hotx, hoty) end
 ---Sets the current mouse cursor.
 ---
 ---Resets the current mouse cursor to the default when called without arguments.
----@return 
----@overload fun(cursor:Cursor):
+---@overload fun(cursor:Cursor):void
 function m.setCursor() end
 
 ---Grabs the mouse and confines it to the window.
 ---@param grab boolean @True to confine the mouse, false to let it leave the window.
----@return 
 function m.setGrabbed(grab) end
 
 ---Sets the current position of the mouse. Non-integer values are floored.
 ---@param x number @The new position of the mouse along the x-axis.
 ---@param y number @The new position of the mouse along the y-axis.
----@return 
 function m.setPosition(x, y) end
 
 ---Sets whether relative mode is enabled for the mouse.
@@ -128,22 +125,18 @@ function m.setPosition(x, y) end
 ---
 ---The reported position of the mouse is not updated while relative mode is enabled, even when relative mouse motion events are generated.
 ---@param enable boolean @True to enable relative mode, false to disable it.
----@return 
 function m.setRelativeMode(enable) end
 
 ---Sets the visibility of the cursor.
 ---@param visible boolean @True to set the cursor to visible, false to hide the cursor.
----@return 
 function m.setVisible(visible) end
 
 ---Sets the current X position of the mouse. Non-integer values are floored.
 ---@param x number @The new position of the mouse along the x-axis.
----@return 
 function m.setX(x) end
 
 ---Sets the current Y position of the mouse. Non-integer values are floored.
 ---@param y number @The new position of the mouse along the y-axis.
----@return 
 function m.setY(y) end
 
 return m

@@ -42,12 +42,10 @@ function m.openURL(url) end
 
 ---Puts text in the clipboard.
 ---@param text string @The new text to hold in the system's clipboard.
----@return 
 function m.setClipboardText(text) end
 
 ---Causes the device to vibrate, if possible. Currently this will only work on Android and iOS devices that have a built-in vibration motor.
 ---@param seconds number @The duration to vibrate for. If called on an iOS device, it will always vibrate for 0.5 seconds due to limitations in the iOS system APIs.
----@return 
 function m.vibrate(seconds) end
 
 return m

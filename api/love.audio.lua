@@ -80,7 +80,6 @@ function Source:isPlaying() end
 function Source:isStopped() end
 
 ---Pauses the Source.
----@return 
 function Source:pause() end
 
 ---Starts playing the Source.
@@ -88,61 +87,51 @@ function Source:pause() end
 function Source:play() end
 
 ---Resumes a paused Source.
----@return 
 function Source:resume() end
 
 ---Rewinds a Source.
----@return 
 function Source:rewind() end
 
 ---Sets the playing position of the Source.
 ---@param position number @The position to seek to.
 ---@param unit TimeUnit @The unit of the position value.
----@return 
 function Source:seek(position, unit) end
 
 ---Sets the direction vector of the Source. A zero vector makes the source non-directional.
 ---@param x number @The X part of the direction vector.
 ---@param y number @The Y part of the direction vector.
 ---@param z number @The Z part of the direction vector.
----@return 
 function Source:setDirection(x, y, z) end
 
 ---Sets the reference and maximum distance of the source.
 ---@param ref number @The new reference distance.
 ---@param max number @The new maximum distance.
----@return 
 function Source:setAttenuationDistances(ref, max) end
 
 ---Sets the Source's directional volume cones. Together with Source:setDirection, the cone angles allow for the Source's volume to vary depending on its direction.
 ---@param innerAngle number @The inner angle from the Source's direction, in radians. The Source will play at normal volume if the listener is inside the cone defined by this angle.
 ---@param outerAngle number @The outer angle from the Source's direction, in radians. The Source will play at a volume between the normal and outer volumes, if the listener is in between the cones defined by the inner and outer angles.
 ---@param outerVolume number @The Source's volume when the listener is outside both the inner and outer cone angles.
----@return 
 function Source:setCone(innerAngle, outerAngle, outerVolume) end
 
 ---Sets whether the Source should loop.
 ---@param loop boolean @True if the source should loop, false otherwise.
----@return 
 function Source:setLooping(loop) end
 
 ---Sets the pitch of the Source.
 ---@param pitch number @Calculated with regard to 1 being the base pitch. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value.
----@return 
 function Source:setPitch(pitch) end
 
 ---Sets the position of the Source.
 ---@param x number @The X position of the Source.
 ---@param y number @The Y position of the Source.
 ---@param z number @The Z position of the Source.
----@return 
 function Source:setPosition(x, y, z) end
 
 ---Sets the rolloff factor which affects the strength of the used distance attenuation.
 ---
 ---Extended information and detailed formulas can be found in the chapter "3.4. Attenuation By Distance" of OpenAL 1.1 specification.
 ---@param rolloff number @The new rolloff factor.
----@return 
 function Source:setRolloff(rolloff) end
 
 ---Sets the velocity of the Source.
@@ -151,22 +140,18 @@ function Source:setRolloff(rolloff) end
 ---@param x number @The X part of the velocity vector.
 ---@param y number @The Y part of the velocity vector.
 ---@param z number @The Z part of the velocity vector.
----@return 
 function Source:setVelocity(x, y, z) end
 
 ---Sets the volume of the Source.
 ---@param volume number @The volume of the Source, where 1.0 is normal volume.
----@return 
 function Source:setVolume(volume) end
 
 ---Sets the volume limits of the source. The limits have to be numbers from 0 to 1.
 ---@param min number @The minimum volume.
 ---@param max number @The maximum volume.
----@return 
 function Source:setVolumeLimits(min, max) end
 
 ---Stops a Source.
----@return 
 function Source:stop() end
 
 ---Gets the currently playing position of the Source.
@@ -249,33 +234,27 @@ function m.getVolume() end
 function m.newSource(filename, type) end
 
 ---Pauses currently played Sources.
----@return 
----@overload fun(source:Source):
+---@overload fun(source:Source):void
 function m.pause() end
 
 ---Plays the specified Source.
 ---@param source Source @The Source to play.
----@return 
 function m.play(source) end
 
 ---Resumes all audio
----@return 
----@overload fun(source:Source):
+---@overload fun(source:Source):void
 function m.resume() end
 
 ---Rewinds all playing audio.
----@return 
----@overload fun(source:Source):
+---@overload fun(source:Source):void
 function m.rewind() end
 
 ---Sets the distance attenuation model.
 ---@param model DistanceModel @The new distance model.
----@return 
 function m.setDistanceModel(model) end
 
 ---Sets a global scale factor for velocity-based doppler effects. The default scale value is 1.
 ---@param scale number @The new doppler scale factor. The scale must be greater than 0.
----@return 
 function m.setDopplerScale(scale) end
 
 ---Sets the orientation of the listener.
@@ -285,31 +264,26 @@ function m.setDopplerScale(scale) end
 ---@param ux number @The X component of the up vector of the listener orientation.
 ---@param uy number @The Y component of the up vector of the listener orientation.
 ---@param uz number @The Z component of the up vector of the listener orientation.
----@return 
 function m.setOrientation(fx, fy, fz, ux, uy, uz) end
 
 ---Sets the position of the listener, which determines how sounds play.
 ---@param x number @The X position of the listener.
 ---@param y number @The Y position of the listener.
 ---@param z number @The Z position of the listener.
----@return 
 function m.setPosition(x, y, z) end
 
 ---Sets the velocity of the listener.
 ---@param x number @The X velocity of the listener.
 ---@param y number @The Y velocity of the listener.
 ---@param z number @The Z velocity of the listener.
----@return 
 function m.setVelocity(x, y, z) end
 
 ---Sets the master volume.
 ---@param volume number @1.0f is max and 0.0f is off.
----@return 
 function m.setVolume(volume) end
 
 ---Stops currently played sources.
----@return 
----@overload fun(source:Source):
+---@overload fun(source:Source):void
 function m.stop() end
 
 return m

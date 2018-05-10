@@ -20,11 +20,9 @@ function m.getTime() end
 
 ---Sleeps the program for the specified amount of time.
 ---@param s number @Seconds to sleep for.
----@return 
 function m.sleep(s) end
 
 ---Measures the time between two frames. Calling this changes the return value of love.timer.getDelta.
----@return 
 function m.step() end
 
 return m

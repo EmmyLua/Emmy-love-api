@@ -55,14 +55,12 @@ function Canvas:newImageData() end
 
 ---Render to the Canvas using a function.
 ---@param func function @A function performing drawing operations.
----@return 
 function Canvas:renderTo(func) end
 
 ---Sets the filter of the Canvas.
 ---@param min FilterMode @How to scale a canvas down.
 ---@param mag FilterMode @How to scale a canvas up.
 ---@param anisotropy number @Maximum amount of anisotropic filtering used.
----@return 
 function Canvas:setFilter(min, mag, anisotropy) end
 
 ---Sets the wrapping properties of a Canvas.
@@ -70,7 +68,6 @@ function Canvas:setFilter(min, mag, anisotropy) end
 ---This function sets the way the edges of a Canvas are treated if it is scaled or rotated. If the WrapMode is set to "clamp", the edge will not be interpolated. If set to "repeat", the edge will be interpolated with the pixels on the opposing side of the framebuffer.
 ---@param horizontal WrapMode @Horizontal wrapping mode of the Canvas.
 ---@param vertical WrapMode @Vertical wrapping mode of the Canvas.
----@return 
 function Canvas:setWrap(horizontal, vertical) end
 
 --endregion Canvas
@@ -124,19 +121,16 @@ function Font:hasGlyphs(character) end
 ---Sets the fallback fonts. When the Font doesn't contain a glyph, it will substitute the glyph from the next subsequent fallback Fonts. This is akin to setting a "font stack" in Cascading Style Sheets (CSS).
 ---@param fallbackfont1 Font @The first fallback Font to use.
 ---@param ... Font @Additional fallback Fonts.
----@return 
 function Font:setFallbacks(fallbackfont1, ...) end
 
 ---Sets the filter mode for a font.
 ---@param min FilterMode @How to scale a font down.
 ---@param mag FilterMode @How to scale a font up.
 ---@param anisotropy number @Maximum amount of anisotropic filtering used.
----@return 
 function Font:setFilter(min, mag, anisotropy) end
 
 ---Sets the line height. When rendering the font in lines the actual height will be determined by the line height multiplied by the height of the font. The default is 1.0.
 ---@param height number @The new line height.
----@return 
 function Font:setLineHeight(height) end
 
 --endregion Font
@@ -147,7 +141,6 @@ local Mesh = {}
 ---Attaches a vertex attribute from a different Mesh onto this Mesh, for use when drawing. This can be used to share vertex attribute data between several different Meshes.
 ---@param name string @The name of the vertex attribute to attach.
 ---@param mesh Mesh @The Mesh to get the vertex attribute from.
----@return 
 function Mesh:attachAttribute(name, mesh) end
 
 ---Gets the mode used when drawing the Mesh.
@@ -200,12 +193,10 @@ function Mesh:isAttributeEnabled(name) end
 ---Enables or disables a specific vertex attribute in the Mesh. Vertex data from disabled attributes is not used when drawing the Mesh.
 ---@param name string @The name of the vertex attribute to enable or disable.
 ---@param enable boolean @Whether the vertex attribute is used when drawing this Mesh.
----@return 
 function Mesh:setAttributeEnabled(name, enable) end
 
 ---Sets the mode used when drawing the Mesh.
 ---@param mode MeshDrawMode @The mode to use when drawing the Mesh.
----@return 
 function Mesh:setDrawMode(mode) end
 
 ---Restricts the drawn vertices of the Mesh to a subset of the total.
@@ -215,24 +206,21 @@ function Mesh:setDrawMode(mode) end
 ---For example, if Mesh:setVertexMap(1, 2, 3, 1, 3, 4) and Mesh:setDrawRange(4, 6) are called, vertices 1, 3, and 4 will be drawn.
 ---@param min number @The index of the first vertex to use when drawing, or the index of the first value in the vertex map to use if one is set for this Mesh.
 ---@param max number @The index of the last vertex to use when drawing, or the index of the last value in the vertex map to use if one is set for this Mesh.
----@return 
 function Mesh:setDrawRange(min, max) end
 
 ---Sets the texture (Image or Canvas) used when drawing the Mesh.
 ---
 ---When called without an argument disables the texture. Untextured meshes have a white color by default.
----@return 
----@overload fun(texture:Texture):
+---@overload fun(texture:Texture):void
 function Mesh:setTexture() end
 
 ---Sets the properties of a vertex in the Mesh.
 ---@param index number @The index of the the vertex you want to modify.
 ---@param attributecomponent number @The first component of the first vertex attribute in the specified vertex.
 ---@param ... number @Additional components of all vertex attributes in the specified vertex.
----@return 
----@overload fun(index:number, vertex:table):
----@overload fun(index:number, x:number, y:number, u:number, v:number, r:number, g:number, b:number, a:number):
----@overload fun(index:number, vertex:table):
+---@overload fun(index:number, vertex:table):void
+---@overload fun(index:number, x:number, y:number, u:number, v:number, r:number, g:number, b:number, a:number):void
+---@overload fun(index:number, vertex:table):void
 function Mesh:setVertex(index, attributecomponent, ...) end
 
 ---Sets the properties of a specific attribute within a vertex in the Mesh.
@@ -243,21 +231,18 @@ function Mesh:setVertex(index, attributecomponent, ...) end
 ---@param value1 number @The value of the first component of the attribute.
 ---@param value2 number @The value of the second component of the attribute.
 ---@param ... number @Any additional vertex attribute components.
----@return 
 function Mesh:setVertexAttribute(vertexindex, attributeindex, value1, value2, ...) end
 
 ---Sets the vertex map for the Mesh. The vertex map describes the order in which the vertices are used when the Mesh is drawn. The vertices, vertex map, and mesh draw mode work together to determine what exactly is displayed on the screen.
 ---
 ---The vertex map allows you to re-order or reuse vertices when drawing without changing the actual vertex parameters or duplicating vertices. It is especially useful when combined with different Mesh Draw Modes.
 ---@param map table @A table containing a list of vertex indices to use when drawing. Values must be in the range of [1, Mesh:getVertexCount()].
----@return 
----@overload fun(vi1:number, vi2:number, vi3:number):
+---@overload fun(vi1:number, vi2:number, vi3:number):void
 function Mesh:setVertexMap(map) end
 
 ---Replaces a range of vertices in the Mesh with new ones. The total number of vertices in a Mesh cannot be changed after it has been created.
 ---@param vertices table @The table filled with vertex information tables for each vertex, in the form of {vertex, ...} where each vertex is a table in the form of {attributecomponent, ...}.
----@return 
----@overload fun(vertices:table):
+---@overload fun(vertices:table):void
 function Mesh:setVertices(vertices) end
 
 --endregion Mesh
@@ -302,14 +287,12 @@ function Image:getWidth() end
 function Image:getWrap() end
 
 ---Reloads the Image's contents from the ImageData or CompressedImageData used to create the image.
----@return 
----@overload fun(x:number, y:number, width:number, height:number):
+---@overload fun(x:number, y:number, width:number, height:number):void
 function Image:refresh() end
 
 ---Sets the filter mode for an image.
 ---@param min FilterMode @How to scale an image down.
 ---@param mag FilterMode @How to scale an image up.
----@return 
 function Image:setFilter(min, mag) end
 
 ---Sets the mipmap filter mode for an Image.
@@ -319,7 +302,6 @@ function Image:setFilter(min, mag) end
 ---In 0.10.0 and newer, the Image must be created with the mipmaps flag enabled for the mipmap filter to have any effect.
 ---@param filtermode FilterMode @The filter mode to use in between mipmap levels. "nearest" will often give better performance.
 ---@param sharpness number @A positive sharpness value makes the image use a more detailed mipmap level when drawing, at the expense of performance. A negative value does the reverse.
----@return 
 function Image:setMipmapFilter(filtermode, sharpness) end
 
 ---Sets the wrapping properties of an Image.
@@ -329,7 +311,6 @@ function Image:setMipmapFilter(filtermode, sharpness) end
 ---If you use a Quad that is larger than the image extent and do not use repeated tiling, there may be an unwanted visual effect of the image stretching all the way to fill the Quad. If this is the case, setting Image:getWrap("repeat", "repeat") for all the images to be repeated, and using Quad of appropriate size will result in the best visual appearance.
 ---@param horizontal WrapMode @Horizontal wrapping mode of the image.
 ---@param vertical WrapMode @Vertical wrapping mode of the image.
----@return 
 function Image:setWrap(horizontal, vertical) end
 
 --endregion Image
@@ -345,7 +326,6 @@ function ParticleSystem:clone() end
 
 ---Emits a burst of particles from the particle emitter.
 ---@param numparticles number @The amount of particles to emit. The number of emitted particles will be truncated if the particle system's max buffer size is reached.
----@return 
 function ParticleSystem:emit(numparticles) end
 
 ---Gets the amount of particles that are currently in the system.
@@ -469,27 +449,22 @@ function ParticleSystem:isStopped() end
 ---Moves the position of the emitter. This results in smoother particle spawning behaviour than if ParticleSystem:setPosition is used every frame.
 ---@param x number @Position along x-axis.
 ---@param y number @Position along y-axis.
----@return 
 function ParticleSystem:moveTo(x, y) end
 
 ---Pauses the particle emitter.
----@return 
 function ParticleSystem:pause() end
 
 ---Resets the particle emitter, removing any existing particles and resetting the lifetime counter.
----@return 
 function ParticleSystem:reset() end
 
 ---Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.
 ---@param distribution AreaSpreadDistribution @The type of distribution for new particles.
 ---@param dx number @The maximum spawn distance from the emitter along the x-axis for uniform distribution, or the standard deviation along the x-axis for normal distribution.
 ---@param dy number @The maximum spawn distance from the emitter along the y-axis for uniform distribution, or the standard deviation along the y-axis for normal distribution.
----@return 
 function ParticleSystem:setAreaSpread(distribution, dx, dy) end
 
 ---Sets the size of the buffer (the max allowed amount of particles in the system).
 ---@param buffer number @The buffer size.
----@return 
 function ParticleSystem:setBufferSize(buffer) end
 
 ---Sets a series of colors to apply to the particle sprite. The particle system will interpolate between each color evenly over the particle's lifetime. Color modulation needs to be activated for this function to have any effect.
@@ -504,27 +479,22 @@ function ParticleSystem:setBufferSize(buffer) end
 ---@param b2 number @Second color, blue component (0-255).
 ---@param a2 number @Second color, alpha component (0-255).
 ---@param ... number @Etc.
----@return 
 function ParticleSystem:setColors(r1, g1, b1, a1, r2, g2, b2, a2, ...) end
 
 ---Sets the direction the particles will be emitted in.
 ---@param direction number @The direction of the particles (in radians).
----@return 
 function ParticleSystem:setDirection(direction) end
 
 ---Sets the amount of particles emitted per second.
 ---@param rate number @The amount of particles per second.
----@return 
 function ParticleSystem:setEmissionRate(rate) end
 
 ---Sets how long the particle system should emit particles (if -1 then it emits particles forever).
 ---@param life number @The lifetime of the emitter (in seconds).
----@return 
 function ParticleSystem:setEmitterLifetime(life) end
 
 ---Sets the mode to use when the ParticleSystem adds new particles.
 ---@param mode ParticleInsertMode @The mode to use when the ParticleSystem adds new particles.
----@return 
 function ParticleSystem:setInsertMode(mode) end
 
 ---Sets the linear acceleration (acceleration along the x and y axes) for particles.
@@ -534,55 +504,46 @@ function ParticleSystem:setInsertMode(mode) end
 ---@param ymin number @The minimum acceleration along the y axis.
 ---@param xmax number @The maximum acceleration along the x axis.
 ---@param ymax number @The maximum acceleration along the y axis.
----@return 
 function ParticleSystem:setLinearAcceleration(xmin, ymin, xmax, ymax) end
 
 ---Sets the amount of linear damping (constant deceleration) for particles.
 ---@param min number @The minimum amount of linear damping applied to particles.
 ---@param max number @The maximum amount of linear damping applied to particles.
----@return 
 function ParticleSystem:setLinearDamping(min, max) end
 
 ---Set the offset position which the particle sprite is rotated around. If this function is not used, the particles rotate around their center.
 ---@param x number @The x coordinate of the rotation offset.
 ---@param y number @The y coordinate of the rotation offset.
----@return 
 function ParticleSystem:setOffset(x, y) end
 
 ---Sets the life of the particles.
 ---@param min number @The minimum life of the particles (seconds).
 ---@param max number @The maximum life of the particles (seconds).
----@return 
 function ParticleSystem:setParticleLifetime(min, max) end
 
 ---Sets the position of the emitter.
 ---@param x number @Position along x-axis.
 ---@param y number @Position along y-axis.
----@return 
 function ParticleSystem:setPosition(x, y) end
 
 ---Sets a series of Quads to use for the particle sprites. Particles will choose a Quad from the list based on the particle's current lifetime, allowing for the use of animated sprite sheets with ParticleSystems.
 ---@param quad1 Quad @The first Quad to use.
 ---@param quad2 Quad @The second Quad to use.
----@return 
----@overload fun(quads:table):
+---@overload fun(quads:table):void
 function ParticleSystem:setQuads(quad1, quad2) end
 
 ---Set the radial acceleration (away from the emitter).
 ---@param min number @The minimum acceleration.
 ---@param max number @The maximum acceleration.
----@return 
 function ParticleSystem:setRadialAcceleration(min, max) end
 
 ---Sets whether particle angles and rotations are relative to their velocities. If enabled, particles are aligned to the angle of their velocities and rotate relative to that angle.
 ---@param enable boolean @True to enable relative particle rotation, false to disable it.
----@return 
 function ParticleSystem:setRelativeRotation(enable) end
 
 ---Sets the rotation of the image upon particle creation (in radians).
 ---@param min number @The minimum initial angle (radians).
 ---@param max number @The maximum initial angle (radians).
----@return 
 function ParticleSystem:setRotation(min, max) end
 
 ---Sets a series of sizes by which to scale a particle sprite. 1.0 is normal size. The particle system will interpolate between each size evenly over the particle's lifetime.
@@ -591,58 +552,47 @@ function ParticleSystem:setRotation(min, max) end
 ---@param size1 number @The first size.
 ---@param size2 number @The second size.
 ---@param ... number @Etc.
----@return 
 function ParticleSystem:setSizes(size1, size2, ...) end
 
 ---Sets the degree of variation (0 meaning no variation and 1 meaning full variation between start and end).
 ---@param variation number @The degree of variation (0 meaning no variation and 1 meaning full variation between start and end).
----@return 
 function ParticleSystem:setSizeVariation(variation) end
 
 ---Sets the speed of the particles.
 ---@param min number @The minimum linear speed of the particles.
 ---@param max number @The maximum linear speed of the particles.
----@return 
 function ParticleSystem:setSpeed(min, max) end
 
 ---Sets the spin of the sprite.
 ---@param min number @The minimum spin (radians per second).
 ---@param max number @The maximum spin (radians per second).
----@return 
 function ParticleSystem:setSpin(min, max) end
 
 ---Sets the degree of variation (0 meaning no variation and 1 meaning full variation between start and end).
 ---@param variation number @The degree of variation (0 meaning no variation and 1 meaning full variation between start and end).
----@return 
 function ParticleSystem:setSpinVariation(variation) end
 
 ---Sets the amount of spread for the system.
 ---@param spread number @The amount of spread (radians).
----@return 
 function ParticleSystem:setSpread(spread) end
 
 ---Sets the Image or Canvas which is to be emitted.
 ---@param texture Texture @An Image or Canvas to use for the particle.
----@return 
 function ParticleSystem:setTexture(texture) end
 
 ---Sets the tangential acceleration (acceleration perpendicular to the particle's direction).
 ---@param min number @The minimum acceleration.
 ---@param max number @The maximum acceleration.
----@return 
 function ParticleSystem:setTangentialAcceleration(min, max) end
 
 ---Starts the particle emitter.
----@return 
 function ParticleSystem:start() end
 
 ---Stops the particle emitter, resetting the lifetime counter.
----@return 
 function ParticleSystem:stop() end
 
 ---Updates the particle system; moving, creating and killing particles.
 ---@param dt number @The time (seconds) since last frame.
----@return 
 function ParticleSystem:update(dt) end
 
 --endregion ParticleSystem
@@ -665,7 +615,6 @@ function Quad:getViewport() end
 ---@param y number @The top-right corner along the y-axis.
 ---@param w number @The width of the viewport.
 ---@param h number @The height of the viewport.
----@return 
 function Quad:setViewport(x, y, w, h) end
 
 --endregion Quad
@@ -688,18 +637,16 @@ function Shader:getWarnings() end
 ---@param name string @Name of the number to send to the shader.
 ---@param number number @Number to send to store in the uniform variable.
 ---@param ... number @Additional numbers to send if the uniform variable is an array.
----@return 
----@overload fun(name:string, vector:table, ...:table):
----@overload fun(name:string, matrix:table, ...:table):
----@overload fun(name:string, texture:Texture):
----@overload fun(name:string, boolean:boolean, ...:boolean):
+---@overload fun(name:string, vector:table, ...:table):void
+---@overload fun(name:string, matrix:table, ...:table):void
+---@overload fun(name:string, texture:Texture):void
+---@overload fun(name:string, boolean:boolean, ...:boolean):void
 function Shader:send(name, number, ...) end
 
 ---Sends one or more colors to a special (extern / uniform) vec3 or vec4 variable inside the shader. The color components must be in the range of [0, 255], unlike Shader:send. The colors are gamma-corrected if global gamma-correction is enabled.
 ---@param name string @The name of the color extern variable to send to in the shader.
 ---@param color table @A table with red, green, blue, and optional alpha color components in the range of [0, 255] to send to the extern as a vector.
 ---@param ... table @Additional colors to send in case the extern is an array. All colors need to be of the same size (e.g. only vec3's).
----@return 
 function Shader:sendColor(name, color, ...) end
 
 --endregion Shader
@@ -728,15 +675,12 @@ function SpriteBatch:add(x, y, r, sx, sy, ox, oy, kx, ky) end
 ---Each sprite in a SpriteBatch has 4 vertices in the following order: top-left, bottom-left, top-right, bottom-right. The index returned by SpriteBatch:add (and used by SpriteBatch:set) can used to determine the first vertex of a specific sprite with the formula "1 + 4 * ( id - 1 )".
 ---@param name string @The name of the vertex attribute to attach.
 ---@param mesh Mesh @The Mesh to get the vertex attribute from.
----@return 
 function SpriteBatch:attachAttribute(name, mesh) end
 
 ---Removes all sprites from the buffer.
----@return 
 function SpriteBatch:clear() end
 
 ---Immediately sends all new and modified sprite data in the batch to the graphics card.
----@return 
 function SpriteBatch:flush() end
 
 ---Gets the maximum number of sprites the SpriteBatch can hold.
@@ -768,13 +712,11 @@ function SpriteBatch:getTexture() end
 ---@param oy number @Origin offset (y-axis).
 ---@param kx number @Shear factor (x-axis).
 ---@param ky number @Shear factor (y-axis).
----@return 
----@overload fun(id:number, quad:Quad, x:number, y:number, r:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):
+---@overload fun(id:number, quad:Quad, x:number, y:number, r:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):void
 function SpriteBatch:set(id, x, y, r, sx, sy, ox, oy, kx, ky) end
 
 ---Sets the maximum number of sprites the SpriteBatch can hold. Existing sprites in the batch (up to the new maximum) will not be cleared when this function is called.
 ---@param size number @The new maximum number of sprites the batch can hold.
----@return 
 function SpriteBatch:setBufferSize(size) end
 
 ---Sets the color that will be used for the next add and set operations. Calling the function without arguments will clear the color.
@@ -784,12 +726,10 @@ function SpriteBatch:setBufferSize(size) end
 ---@param g number @The amount of green.
 ---@param b number @The amount of blue.
 ---@param a number @The amount of alpha.
----@return 
 function SpriteBatch:setColor(r, g, b, a) end
 
 ---Replaces the Image or Canvas used for the sprites.
 ---@param texture Texture @The new Image or Canvas to use for the sprites.
----@return 
 function SpriteBatch:setTexture(texture) end
 
 --endregion SpriteBatch
@@ -830,7 +770,6 @@ function Text:add(textstring, x, y, angle, sx, sy, ox, oy, kx, ky) end
 function Text:addf(textstring, wraplimit, align, x, y, angle, sx, sy, ox, oy, kx, ky) end
 
 ---Clears the contents of the Text object.
----@return 
 function Text:clear() end
 
 ---Gets the width and height of the text in pixels.
@@ -854,21 +793,18 @@ function Text:getWidth() end
 
 ---Replaces the contents of the Text object with a new unformatted string.
 ---@param textstring string @The new string of text to use.
----@return 
----@overload fun(coloredtext:table):
+---@overload fun(coloredtext:table):void
 function Text:set(textstring) end
 
 ---Replaces the contents of the Text object with a new formatted string.
 ---@param textstring string @The new string of text to use.
 ---@param wraplimit number @The maximum width in pixels of the text before it gets automatically wrapped to a new line.
 ---@param align AlignMode @The alignment of the text.
----@return 
----@overload fun(coloredtext:table, wraplimit:number, align:AlignMode):
+---@overload fun(coloredtext:table, wraplimit:number, align:AlignMode):void
 function Text:setf(textstring, wraplimit, align) end
 
 ---Replaces the Font used with the text.
 ---@param font Font @The new font to use with this Text object.
----@return 
 function Text:setFont(font) end
 
 --endregion Text
@@ -910,37 +846,30 @@ function Video:getWidth() end
 function Video:isPlaying() end
 
 ---Pauses the Video.
----@return 
 function Video:pause() end
 
 ---Starts playing the Video. In order for the video to appear onscreen it must be drawn with love.graphics.draw.
----@return 
 function Video:play() end
 
 ---Rewinds the Video to the beginning.
----@return 
 function Video:rewind() end
 
 ---Sets the current playback position of the Video.
 ---@param offset number @The time in seconds since the beginning of the Video.
----@return 
 function Video:seek(offset) end
 
 ---Sets the scaling filters used when drawing the Video.
 ---@param min FilterMode @The filter mode used when scaling the Video down.
 ---@param mag FilterMode @The filter mode used when scaling the Video up.
 ---@param anisotropy number @Maximum amount of anisotropic filtering used.
----@return 
 function Video:setFilter(min, mag, anisotropy) end
 
 ---Sets the audio Source used for playing back the video's audio. The audio Source also controls playback speed and synchronization.
 ---@param source Source @The audio Source used for audio playback, or nil to disable audio synchronization.
----@return 
 function Video:setSource(source) end
 
 ---Gets the current playback position of the Video.
 ---@param seconds number @The time in seconds since the beginning of the Video.
----@return 
 function Video:tell(seconds) end
 
 --endregion Video
@@ -1173,8 +1102,7 @@ WrapMode = {
 ---@param angle1 number @The angle at which the arc begins.
 ---@param angle2 number @The angle at which the arc terminates.
 ---@param segments number @The number of segments used for drawing the arc.
----@return 
----@overload fun(drawmode:DrawMode, arctype:ArcType, x:number, y:number, radius:number, angle1:number, angle2:number, segments:number):
+---@overload fun(drawmode:DrawMode, arctype:ArcType, x:number, y:number, radius:number, angle1:number, angle2:number, segments:number):void
 function m.arc(drawmode, x, y, radius, angle1, angle2, segments) end
 
 ---Draws a circle.
@@ -1182,8 +1110,7 @@ function m.arc(drawmode, x, y, radius, angle1, angle2, segments) end
 ---@param x number @The position of the center along x-axis.
 ---@param y number @The position of the center along y-axis.
 ---@param radius number @The radius of the circle.
----@return 
----@overload fun(mode:DrawMode, x:number, y:number, radius:number, segments:number):
+---@overload fun(mode:DrawMode, x:number, y:number, radius:number, segments:number):void
 function m.circle(mode, x, y, radius) end
 
 ---Clears the screen to the background color in LÖVE 0.9.2 and earlier, or to the specified color in 0.10.0 and newer.
@@ -1191,9 +1118,8 @@ function m.circle(mode, x, y, radius) end
 ---This function is called automatically before love.draw in the default love.run function. See the example in love.run for a typical use of this function.
 ---
 ---Note that the scissor area bounds the cleared region.
----@return 
----@overload fun(r:number, g:number, b:number, a:number):
----@overload fun(color:table, ...:table):
+---@overload fun(r:number, g:number, b:number, a:number):void
+---@overload fun(color:table, ...:table):void
 function m.clear() end
 
 ---Discards (trashes) the contents of the screen or active Canvas. This is a performance optimization function with niche use cases.
@@ -1203,8 +1129,7 @@ function m.clear() end
 ---On some desktop systems this function may do nothing.
 ---@param discardcolor boolean @Whether to discard the texture(s) of the active Canvas(es) (the contents of the screen if no Canvas is active).
 ---@param discardstencil boolean @Whether to discard the contents of the stencil buffer of the screen / active Canvas.
----@return 
----@overload fun(discardcolors:table, discardstencil:boolean):
+---@overload fun(discardcolors:table, discardstencil:boolean):void
 function m.discard(discardcolor, discardstencil) end
 
 ---Draws a Drawable object (an Image, Canvas, SpriteBatch, ParticleSystem, Mesh, or Video) on the screen with optional rotation, scaling and shearing.
@@ -1226,8 +1151,7 @@ function m.discard(discardcolor, discardstencil) end
 ---@param oy number @Origin offset (y-axis). (A value of 20 would effectively move your drawable object 20 pixels up.)
 ---@param kx number @Shearing factor (x-axis).
 ---@param ky number @Shearing factor (y-axis).
----@return 
----@overload fun(texture:Texture, quad:Quad, x:number, y:number, r:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):
+---@overload fun(texture:Texture, quad:Quad, x:number, y:number, r:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):void
 function m.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky) end
 
 ---Draws an ellipse.
@@ -1236,8 +1160,7 @@ function m.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky) end
 ---@param y number @The position of the center along y-axis.
 ---@param radiusx number @The radius of the ellipse along the x-axis (half the ellipse's width).
 ---@param radiusy number @The radius of the ellipse along the y-axis (half the ellipse's height).
----@return 
----@overload fun(mode:DrawMode, x:number, y:number, radiusx:number, radiusy:number, segments:number):
+---@overload fun(mode:DrawMode, x:number, y:number, radiusx:number, radiusy:number, segments:number):void
 function m.ellipse(mode, x, y, radiusx, radiusy) end
 
 ---Gets the current background color.
@@ -1349,7 +1272,6 @@ function m.getWidth() end
 ---@param y number @The y-coordinate of the upper left corner of the rectangle to intersect with the existing scissor rectangle.
 ---@param width number @The width of the rectangle to intersect with the existing scissor rectangle.
 ---@param height number @The height of the rectangle to intersect with the existing scissor rectangle.
----@return 
 function m.intersectScissor(x, y, width, height) end
 
 ---Gets whether gamma-correct rendering is supported and enabled. It can be enabled by setting t.gammacorrect = true in love.conf.
@@ -1368,8 +1290,7 @@ function m.isWireframe() end
 ---@param x2 number @The position of second point on the x-axis.
 ---@param y2 number @The position of second point on the y-axis.
 ---@param ... number @You can continue passing point positions to draw a polyline.
----@return 
----@overload fun(points:table):
+---@overload fun(points:table):void
 function m.line(x1, y1, x2, y2, ...) end
 
 ---Creates a new Canvas object for offscreen rendering.
@@ -1480,16 +1401,14 @@ function m.newVideo(filename, loadaudio) end
 ---Resets the current coordinate transformation.
 ---
 ---This function is always used to reverse any previous calls to love.graphics.rotate, love.graphics.scale, love.graphics.shear or love.graphics.translate. It returns the current transformation state to its defaults.
----@return 
 function m.origin() end
 
 ---Draws one or more points.
 ---@param x number @The position of the first point on the x-axis.
 ---@param y number @The position of the first point on the y-axis.
 ---@param ... number @The x and y coordinates of additional points.
----@return 
----@overload fun(points:table):
----@overload fun(points:table):
+---@overload fun(points:table):void
+---@overload fun(points:table):void
 function m.points(x, y, ...) end
 
 ---Draw a polygon.
@@ -1499,20 +1418,17 @@ function m.points(x, y, ...) end
 ---When in fill mode, the polygon must be convex and simple or rendering artifacts may occur.
 ---@param mode DrawMode @How to draw the polygon.
 ---@param ... number @The vertices of the polygon.
----@return 
----@overload fun(mode:DrawMode, vertices:table):
+---@overload fun(mode:DrawMode, vertices:table):void
 function m.polygon(mode, ...) end
 
 ---Pops the current coordinate transformation from the transformation stack.
 ---
 ---This function is always used to reverse a previous push operation. It returns the current transformation state to what it was before the last preceding push. For an example, see the description of love.graphics.push.
----@return 
 function m.pop() end
 
 ---Displays the results of drawing operations on the screen.
 ---
 ---This function is used when writing your own love.run function. It presents all the results of your drawing operations on the screen. See the example in love.run for a typical use of this function.
----@return 
 function m.present() end
 
 ---Draws text on screen. If no Font is set, one will be created and set (once) if needed.
@@ -1530,8 +1446,7 @@ function m.present() end
 ---@param oy number @Origin offset (y-axis).
 ---@param kx number @Shear factor (x-axis).
 ---@param ky number @Shear factor (y-axis).
----@return 
----@overload fun(coloredtext:table, x:number, y:number, angle:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):
+---@overload fun(coloredtext:table, x:number, y:number, angle:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):void
 function m.print(text, x, y, r, sx, sy, ox, oy, kx, ky) end
 
 ---Draws formatted text, with word wrap and alignment.
@@ -1551,15 +1466,13 @@ function m.print(text, x, y, r, sx, sy, ox, oy, kx, ky) end
 ---@param oy number @Origin offset (y-axis).
 ---@param kx number @Shear factor (x-axis).
 ---@param ky number @Shear factor (y-axis).
----@return 
----@overload fun(coloredtext:table, x:number, y:number, wraplimit:number, align:AlignMode, angle:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):
+---@overload fun(coloredtext:table, x:number, y:number, wraplimit:number, align:AlignMode, angle:number, sx:number, sy:number, ox:number, oy:number, kx:number, ky:number):void
 function m.printf(text, x, y, limit, align, r, sx, sy, ox, oy, kx, ky) end
 
 ---Copies and pushes the current coordinate transformation to the transformation stack.
 ---
 ---This function is always used to prepare for a corresponding pop operation later. It stores the current coordinate transformation state into the transformation stack and keeps it active. Later changes to the transformation can be undone by using the pop operation, which returns the coordinate transform to the state it was in before calling push.
 ---@param stack StackType @The type of stack to push (e.g. just transformation state, or all love.graphics state).
----@return 
 function m.push(stack) end
 
 ---Draws a rectangle.
@@ -1568,21 +1481,18 @@ function m.push(stack) end
 ---@param y number @The position of top-left corner along the y-axis.
 ---@param width number @Width of the rectangle.
 ---@param height number @Height of the rectangle.
----@return 
----@overload fun(mode:DrawMode, x:number, y:number, width:number, height:number, rx:number, ry:number, segments:number):
+---@overload fun(mode:DrawMode, x:number, y:number, width:number, height:number, rx:number, ry:number, segments:number):void
 function m.rectangle(mode, x, y, width, height) end
 
 ---Resets the current graphics settings.
 ---
 ---Calling reset makes the current drawing color white, the current background color black, resets any active Canvas or Shader, and removes any scissor settings. It sets the BlendMode to alpha. It also sets both the point and line drawing modes to smooth and their sizes to 1.0.
----@return 
 function m.reset() end
 
 ---Rotates the coordinate system in two dimensions.
 ---
 ---Calling this function affects all future drawing operations by rotating the coordinate system around the origin by the given amount of radians. This change lasts until love.draw exits.
 ---@param angle number @The amount to rotate the coordinate system in radians.
----@return 
 function m.rotate(angle) end
 
 ---Scales the coordinate system in two dimensions.
@@ -1596,7 +1506,6 @@ function m.rotate(angle) end
 ---Scaling lasts until love.draw exits.
 ---@param sx number @The scaling in the direction of the x-axis.
 ---@param sy number @The scaling in the direction of the y-axis. If omitted, it defaults to same as parameter sx.
----@return 
 function m.scale(sx, sy) end
 
 ---Sets the background color.
@@ -1604,20 +1513,17 @@ function m.scale(sx, sy) end
 ---@param g number @The green component (0-255).
 ---@param b number @The blue component (0-255).
 ---@param a number @The alpha component (0-255).
----@return 
----@overload fun(rgba:table):
+---@overload fun(rgba:table):void
 function m.setBackgroundColor(r, g, b, a) end
 
 ---Sets the blending mode.
 ---@param mode BlendMode @The blend mode to use.
----@return 
----@overload fun(mode:BlendMode, alphamode:BlendAlphaMode):
+---@overload fun(mode:BlendMode, alphamode:BlendAlphaMode):void
 function m.setBlendMode(mode) end
 
 ---Captures drawing operations to a Canvas.
 ---@param canvas Canvas @A render target.
----@return 
----@overload fun(canvas1:Canvas, canvas2:Canvas, ...:Canvas):
+---@overload fun(canvas1:Canvas, canvas2:Canvas, ...:Canvas):void
 function m.setCanvas(canvas) end
 
 ---Sets the color used for drawing.
@@ -1625,8 +1531,7 @@ function m.setCanvas(canvas) end
 ---@param green number @The amount of green.
 ---@param blue number @The amount of blue.
 ---@param alpha number @The amount of alpha. The alpha value will be applied to all subsequent draw operations, even the drawing of an image.
----@return 
----@overload fun(rgba:table):
+---@overload fun(rgba:table):void
 function m.setColor(red, green, blue, alpha) end
 
 ---Sets the color mask. Enables or disables specific color components when rendering and clearing the screen. For example, if red is set to false, no further changes will be made to the red component of any pixels.
@@ -1636,7 +1541,6 @@ function m.setColor(red, green, blue, alpha) end
 ---@param green boolean @Render green component.
 ---@param blue boolean @Render blue component.
 ---@param alpha boolean @Render alpha component.
----@return 
 function m.setColorMask(red, green, blue, alpha) end
 
 ---Sets the default scaling filters used with Images, Canvases, and Fonts.
@@ -1645,29 +1549,24 @@ function m.setColorMask(red, green, blue, alpha) end
 ---@param min FilterMode @Filter mode used when scaling the image down.
 ---@param mag FilterMode @Filter mode used when scaling the image up.
 ---@param anisotropy number @Maximum amount of Anisotropic Filtering used.
----@return 
 function m.setDefaultFilter(min, mag, anisotropy) end
 
 ---Set an already-loaded Font as the current font or create and load a new one from the file and size.
 ---
 ---It's recommended that Font objects are created with love.graphics.newFont in the loading stage and then passed to this function in the drawing stage.
 ---@param font Font @The Font object to use.
----@return 
 function m.setFont(font) end
 
 ---Sets the line join style.
 ---@param join LineJoin @The LineJoin to use.
----@return 
 function m.setLineJoin(join) end
 
 ---Sets the line style.
 ---@param style LineStyle @The LineStyle to use.
----@return 
 function m.setLineStyle(style) end
 
 ---Sets the line width.
 ---@param width number @The width of the line.
----@return 
 function m.setLineWidth(width) end
 
 ---Creates and sets a new font.
@@ -1681,13 +1580,11 @@ function m.setNewFont(filename, size) end
 ---Sets or resets a Shader as the current pixel effect or vertex shaders. All drawing operations until the next love.graphics.setShader will be drawn using the Shader object specified.
 ---
 ---Disables the shaders when called without arguments.
----@return 
----@overload fun(shader:Shader):
+---@overload fun(shader:Shader):void
 function m.setShader() end
 
 ---Sets the point size.
 ---@param size number @The new point size.
----@return 
 function m.setPointSize(size) end
 
 ---Sets or disables scissor.
@@ -1697,7 +1594,6 @@ function m.setPointSize(size) end
 ---@param y number @The Y coordinate of upper left corner.
 ---@param width number @The width of clipping rectangle.
 ---@param height number @The height of clipping rectangle.
----@return 
 function m.setScissor(x, y, width, height) end
 
 ---Configures or disables stencil testing.
@@ -1707,20 +1603,17 @@ function m.setScissor(x, y, width, height) end
 ---Each Canvas has its own per-pixel stencil values.
 ---@param comparemode CompareMode @The type of comparison to make for each pixel.
 ---@param comparevalue number @The value to use when comparing with the stencil value of each pixel. Must be between 0 and 255.
----@return 
 function m.setStencilTest(comparemode, comparevalue) end
 
 ---Sets whether wireframe lines will be used when drawing.
 ---
 ---Wireframe mode should only be used for debugging. The lines drawn with it enabled do not behave like regular love.graphics lines: their widths don't scale with the coordinate transformations or with love.graphics.setLineWidth, and they don't use the smooth LineStyle.
 ---@param enable boolean @True to enable wireframe mode when drawing, false to disable it.
----@return 
 function m.setWireframe(enable) end
 
 ---Shears the coordinate system.
 ---@param kx number @The shear factor on the x-axis.
 ---@param ky number @The shear factor on the y-axis.
----@return 
 function m.shear(kx, ky) end
 
 ---Draws geometry as a stencil.
@@ -1732,7 +1625,6 @@ function m.shear(kx, ky) end
 ---@param action StencilAction @How to modify any stencil values of pixels that are touched by what's drawn in the stencil function.
 ---@param value number @The new stencil value to use for pixels if the "replace" stencil action is used. Has no effect with other stencil actions. Must be between 0 and 255.
 ---@param keepvalues boolean @True to preserve old stencil values of pixels, false to re-set every pixel's stencil value to 0 before executing the stencil function. love.graphics.clear will also re-set all stencil values.
----@return 
 function m.stencil(stencilfunction, action, value, keepvalues) end
 
 ---Translates the coordinate system in two dimensions.
@@ -1746,7 +1638,6 @@ function m.stencil(stencilfunction, action, value, keepvalues) end
 ---Translating using whole numbers will prevent tearing/blurring of images and fonts draw after translating.
 ---@param dx number @The translation relative to the x-axis.
 ---@param dy number @The translation relative to the y-axis.
----@return 
 function m.translate(dx, dy) end
 
 return m

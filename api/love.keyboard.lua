@@ -734,13 +734,11 @@ function m.isScancodeDown(scancode, ...) end
 ---
 ---The interval between repeats depends on the user's system settings.
 ---@param enable boolean @Whether repeat keypress events should be enabled when a key is held down.
----@return 
 function m.setKeyRepeat(enable) end
 
 ---Enables or disables text input events. It is enabled by default on Windows, Mac, and Linux, and disabled by default on iOS and Android.
 ---@param enable boolean @Whether text input events should be enabled.
----@return 
----@overload fun(enable:boolean, x:number, y:number, w:number, h:number):
+---@overload fun(enable:boolean, x:number, y:number, w:number, h:number):void
 function m.setTextInput(enable) end
 
 return m

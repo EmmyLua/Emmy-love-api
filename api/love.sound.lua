@@ -55,7 +55,6 @@ function SoundData:getSampleRate() end
 ---Sets the sample at the specified position.
 ---@param i number @The position of the sample (0 means first sample).
 ---@param sample number @A normalized sample (range -1.0 to 1.0).
----@return 
 function SoundData:setSample(i, sample) end
 
 --endregion SoundData
