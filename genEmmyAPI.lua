@@ -105,7 +105,7 @@ local function genEnum(enum)
 end
 
 local function genModule(name, api)
-    local f = io.open("api/" .. name .. ".lua", 'w')
+    local f = assert(io.open("api/" .. name .. ".lua", 'w'))
     f:write("---@class " .. name .. '\n')
     if api.description then
         f:write('---' .. safeDesc(api.description) .. '\n')
