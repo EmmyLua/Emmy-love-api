@@ -16,6 +16,35 @@ Once you start or refresh your IDE (might be automatic) you should have autocomp
 
 When you want to change the LÖVE version you use, just delete the `api` folder from your project, and redo the steps above for the appropriate version of the API.
 
+## Example workflow (Linux)
+
+```
+kirby@devbox:~/devel$ git clone https://github.com/love2d-community/love-api.git
+Cloning into 'love-api'...
+remote: Enumerating objects: 34, done.
+remote: Counting objects: 100% (34/34), done.
+remote: Compressing objects: 100% (31/31), done.
+remote: Total 4170 (delta 15), reused 15 (delta 3), pack-reused 4136
+Receiving objects: 100% (4170/4170), 4.29 MiB | 3.90 MiB/s, done.
+Resolving deltas: 100% (2617/2617), done.
+kirby@devbox:~/devel$ git clone https://github.com/kindfulkirby/Emmy-love-api.git
+Cloning into 'Emmy-love-api'...
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 210 (delta 1), reused 2 (delta 0), pack-reused 201
+Receiving objects: 100% (210/210), 186.86 KiB | 898.00 KiB/s, done.
+Resolving deltas: 100% (91/91), done.
+kirby@devbox:~/devel$ cp Emmy-love-api/genEmmyAPI.lua love-api/
+kirby@devbox:~/devel$ cd love-api/
+kirby@devbox:~/devel/love-api$ mkdir api
+kirby@devbox:~/devel/love-api$ lua genEmmyAPI.lua 
+--finished.
+kirby@devbox:~/devel/love-api$ cp -r api/ ../mygame/src/
+kirby@devbox:~/devel/love-api$
+```
+
+
 ## Credits
 
 Original script by https://github.com/tangzx  
