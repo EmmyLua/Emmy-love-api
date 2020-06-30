@@ -86,7 +86,7 @@ return {
         },
         {
             name = 'exists',
-            description = 'Deprecated!: Check whether a file or directory exists.',
+            description = '(Deprecated Love >=11) Check whether a file or directory exists.',
             variants = {
                 {
                     arguments = {
