@@ -664,13 +664,13 @@ return {
                         {
                         	type = 'number',
                         	name = 'angle',
-                        	default = '0'
+                        	default = '0',
                         	description = 'The angle in radians of the emission area.'
                         },
                         {
                         	type = 'boolean',
                         	name = 'directionRelativeToCenter',
-                        	default = 'false'
+                        	default = 'false',
                         	description = 'True if newly spawned particles will be oriented relative to the center of the emission area, false otherwise.'
                         }
                     }

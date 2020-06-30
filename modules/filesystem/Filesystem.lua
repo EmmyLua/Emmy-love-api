@@ -120,7 +120,7 @@ return {
                         {
                         	type = 'FileType',
                         	name = 'filtertype',
-                        	default = 'nil'
+                        	default = 'nil',
                         	description = 'If supplied, this parameter causes getInfo to only return the info table if the item at the given path matches the specified file type.'
                         }
                     },
@@ -128,7 +128,7 @@ return {
                         {
                             type = 'table',
                             name = 'info',
-                            default = 'nil'
+                            default = 'nil',
                             description = 'A table containing information about the specified path, or nil if nothing exists at the path. The table contains the following fields: '
                         }
                     }
@@ -150,7 +150,7 @@ return {
                         {
                             type = 'table',
                             name = 'info',
-                            default = 'nil'
+                            default = 'nil',
                             description = ' The table given as an argument, or nil if nothing exists at the path. The table will be filled in with the following fields: '
                         }
                     }
@@ -166,7 +166,7 @@ return {
                         	type = 'FileType',
                         	name = 'filtertype',
                         	description = 'Causes getInfo to only return the info table if the item at the given path matches the specified file type.'
-                        }
+                        },
                         {
                         	type = 'table',
                         	name = 'info',
@@ -177,7 +177,7 @@ return {
                         {
                             type = 'table',
                             name = 'info',
-                            default = 'nil'
+                            default = 'nil',
                             description = ' The table given as an argument, or nil if nothing exists at the path. The table will be filled in with the following fields: '
                         }
                     }

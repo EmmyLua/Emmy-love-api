@@ -132,10 +132,18 @@ function m.areSymlinksEnabled() end
 ---@return boolean
 function m.createDirectory(name) end
 
----Check whether a file or directory exists.
+---Deprecated!: Check whether a file or directory exists.
 ---@param filename string @The path to a potential file or directory.
 ---@return boolean
 function m.exists(filename) end
+
+---Gets information about the specified file or directory.
+---@param filename string @The path to a potential file or directory.
+---@param filtertype FileType @If supplied, this parameter causes getInfo to only return the info table if the item at the given path matches the specified file type.
+---@return table
+---@overload fun(path:string, info:table):table
+---@overload fun(path:string, filtertype:FileType, info:table):table
+function m.getInfo(filename, filtertype) end
 
 ---Returns the application data directory (could be the same as getUserDirectory)
 ---@return string
