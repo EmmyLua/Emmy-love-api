@@ -617,7 +617,7 @@ return {
         },
         {
             name = 'setAreaSpread',
-            description = 'Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.',
+            description = '(Depcreated! Love >=11) Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.',
             variants = {
                 {
                     arguments = {
@@ -640,6 +640,43 @@ return {
                 }
             }
         },
+        {
+            name = 'setEmissionArea',
+            description = 'Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'AreaSpreadDistribution',
+                            name = 'distribution',
+                            description = 'The type of distribution for new particles.'
+                        },
+                        {
+                            type = 'number',
+                            name = 'dx',
+                            description = 'The maximum spawn distance from the emitter along the x-axis for uniform distribution, or the standard deviation along the x-axis for normal distribution.'
+                        },
+                        {
+                            type = 'number',
+                            name = 'dy',
+                            description = 'The maximum spawn distance from the emitter along the y-axis for uniform distribution, or the standard deviation along the y-axis for normal distribution.'
+                        },
+                        {
+                        	type = 'number',
+                        	name = 'angle',
+                        	default = '0'
+                        	description = 'The angle in radians of the emission area.'
+                        },
+                        {
+                        	type = 'boolean',
+                        	name = 'directionRelativeToCenter',
+                        	default = 'false'
+                        	description = 'True if newly spawned particles will be oriented relative to the center of the emission area, false otherwise.'
+                        }
+                    }
+                }
+            }
+        },        
         {
             name = 'setBufferSize',
             description = 'Sets the size of the buffer (the max allowed amount of particles in the system).',

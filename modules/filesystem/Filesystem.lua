@@ -108,7 +108,7 @@ return {
         },
         {
             name = 'getInfo',
-            description = 'Check whether a file or directory exists.',
+            description = 'Gets information about the specified file or directory.',
             variants = {
                 {
                     arguments = {
@@ -116,16 +116,72 @@ return {
                             type = 'string',
                             name = 'filename',
                             description = 'The path to a potential file or directory.'
+                        },
+                        {
+                        	type = 'FileType',
+                        	name = 'filtertype',
+                        	default = 'nil'
+                        	description = 'If supplied, this parameter causes getInfo to only return the info table if the item at the given path matches the specified file type.'
                         }
                     },
                     returns = {
                         {
-                            type = 'boolean',
-                            name = 'exists',
-                            description = 'True if there is a file or directory with the specified name. False otherwise.'
+                            type = 'table',
+                            name = 'info',
+                            default = 'nil'
+                            description = 'A table containing information about the specified path, or nil if nothing exists at the path. The table contains the following fields: '
                         }
                     }
-                }
+                },
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'path',
+                            description = 'The file or directory path to check.'
+                        },
+                        {
+                        	type = 'table',
+                        	name = 'info',
+                        	description = 'A table which will be filled in with info about the specified path.'
+                        }
+                    },
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'info',
+                            default = 'nil'
+                            description = ' The table given as an argument, or nil if nothing exists at the path. The table will be filled in with the following fields: '
+                        }
+                    }
+                },
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'path',
+                            description = 'The file or directory path to check.'
+                        },
+                        {
+                        	type = 'FileType',
+                        	name = 'filtertype',
+                        	description = 'Causes getInfo to only return the info table if the item at the given path matches the specified file type.'
+                        }
+                        {
+                        	type = 'table',
+                        	name = 'info',
+                        	description = 'A table which will be filled in with info about the specified path.'
+                        }
+                    },
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'info',
+                            default = 'nil'
+                            description = ' The table given as an argument, or nil if nothing exists at the path. The table will be filled in with the following fields: '
+                        }
+                    }
+                },                        
             }
         },
         {
