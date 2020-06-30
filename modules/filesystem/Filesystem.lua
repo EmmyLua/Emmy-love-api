@@ -86,6 +86,28 @@ return {
         },
         {
             name = 'exists',
+            description = 'Deprecated!: Check whether a file or directory exists.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'filename',
+                            description = 'The path to a potential file or directory.'
+                        }
+                    },
+                    returns = {
+                        {
+                            type = 'boolean',
+                            name = 'exists',
+                            description = 'True if there is a file or directory with the specified name. False otherwise.'
+                        }
+                    }
+                }
+            }
+        },
+        {
+            name = 'getInfo',
             description = 'Check whether a file or directory exists.',
             variants = {
                 {
