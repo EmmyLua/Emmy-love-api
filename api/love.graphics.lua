@@ -457,11 +457,19 @@ function ParticleSystem:pause() end
 ---Resets the particle emitter, removing any existing particles and resetting the lifetime counter.
 function ParticleSystem:reset() end
 
----Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.
+---(Depcreated! Love >=11) Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.
 ---@param distribution AreaSpreadDistribution @The type of distribution for new particles.
 ---@param dx number @The maximum spawn distance from the emitter along the x-axis for uniform distribution, or the standard deviation along the x-axis for normal distribution.
 ---@param dy number @The maximum spawn distance from the emitter along the y-axis for uniform distribution, or the standard deviation along the y-axis for normal distribution.
 function ParticleSystem:setAreaSpread(distribution, dx, dy) end
+
+---Sets area-based spawn parameters for the particles. Newly created particles will spawn in an area around the emitter based on the parameters to this function.
+---@param distribution AreaSpreadDistribution @The type of distribution for new particles.
+---@param dx number @The maximum spawn distance from the emitter along the x-axis for uniform distribution, or the standard deviation along the x-axis for normal distribution.
+---@param dy number @The maximum spawn distance from the emitter along the y-axis for uniform distribution, or the standard deviation along the y-axis for normal distribution.
+---@param angle number @The angle in radians of the emission area.
+---@param directionRelativeToCenter boolean @True if newly spawned particles will be oriented relative to the center of the emission area, false otherwise.
+function ParticleSystem:setEmissionArea(distribution, dx, dy, angle, directionRelativeToCenter) end
 
 ---Sets the size of the buffer (the max allowed amount of particles in the system).
 ---@param buffer number @The buffer size.
