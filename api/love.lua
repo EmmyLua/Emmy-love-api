@@ -1,25 +1,20 @@
 ---@class love
 local m = {}
 
+--region ByteData
+---@class ByteData
+---Data object containing arbitrary bytes in an contiguous memory.
+---
+---There are currently no LÖVE functions provided for manipulating the contents of a ByteData, but Data:getPointer can be used with LuaJIT's FFI to access and write to the contents directly.
+local ByteData = {}
+--endregion ByteData
 --region Data
----@class Data : Object
+---@class Data
 ---The superclass of all data.
 local Data = {}
----Gets a pointer to the Data.
----@return light userdata
-function Data:getPointer() end
-
----Gets the size of the Data.
----@return number
-function Data:getSize() end
-
----Gets the full Data as a string.
----@return string
-function Data:getString() end
-
 --endregion Data
 --region Drawable
----@class Drawable : Object
+---@class Drawable
 ---Superclass for all things that can be drawn on screen. This is an abstract type that can't be created directly.
 local Drawable = {}
 --endregion Drawable
@@ -27,18 +22,12 @@ local Drawable = {}
 ---@class Object
 ---The superclass of all LÖVE types.
 local Object = {}
----Gets the type of the object as a string.
----@return string
-function Object:type() end
-
----Checks whether an object is of a certain type. If the object has the type with the specified name in its hierarchy, this function will return true.
----@param name string @The name of the type to check for.
----@return boolean
-function Object:typeOf(name) end
-
 --endregion Object
 ---@type love.audio
 m.audio = nil
+
+---@type love.data
+m.data = nil
 
 ---@type love.event
 m.event = nil
@@ -91,5 +80,17 @@ m.window = nil
 ---Gets the current running version of LÖVE.
 ---@return number, number, number, string
 function m.getVersion() end
+
+---Gets whether LÖVE displays warnings when using deprecated functionality. It is disabled by default in fused mode, and enabled by default otherwise.
+---
+---When deprecation output is enabled, the first use of a formally deprecated LÖVE API will show a message at the bottom of the screen for a short time, and print the message to the console.
+---@return boolean
+function m.hasDeprecationOutput() end
+
+---Sets whether LÖVE displays warnings when using deprecated functionality. It is disabled by default in fused mode, and enabled by default otherwise.
+---
+---When deprecation output is enabled, the first use of a formally deprecated LÖVE API will show a message at the bottom of the screen for a short time, and print the message to the console.
+---@param enable boolean @Whether to enable or disable deprecation output.
+function m.setDeprecationOutput(enable) end
 
 return m

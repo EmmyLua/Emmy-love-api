@@ -3,12 +3,12 @@
 local m = {}
 
 --region Body
----@class Body : Object
+---@class Body
 ---Bodies are objects with velocity and position.
 local Body = {}
 ---Applies an angular impulse to a body. This makes a single, instantaneous addition to the body momentum.
 ---
----A body with with a larger mass will react less. The reaction does not depend on the timestep, and is equivalent to applying a force continuously for 1 second. Impulses are best used to give a single push to a body. For a continuous push to a body it is better to use Body:applyForce.
+---A body with with a larger mass will react less. The reaction does '''not''' depend on the timestep, and is equivalent to applying a force continuously for 1 second. Impulses are best used to give a single push to a body. For a continuous push to a body it is better to use Body:applyForce.
 ---@param impulse number @The impulse in kilogram-square meter per second.
 function Body:applyAngularImpulse(impulse) end
 
@@ -24,11 +24,13 @@ function Body:applyAngularImpulse(impulse) end
 ---@overload fun(fx:number, fy:number, x:number, y:number):void
 function Body:applyForce(fx, fy) end
 
----Applies an impulse to a body. This makes a single, instantaneous addition to the body momentum.
+---Applies an impulse to a body.
 ---
----An impulse pushes a body in a direction. A body with with a larger mass will react less. The reaction does not depend on the timestep, and is equivalent to applying a force continuously for 1 second. Impulses are best used to give a single push to a body. For a continuous push to a body it is better to use Body:applyForce.
+---This makes a single, instantaneous addition to the body momentum.
 ---
----If the position to apply the impulse is not given, it will act on the center of mass of the body. The part of the impulse not directed towards the center of mass will cause the body to spin (and depends on the rotational inertia).
+---An impulse pushes a body in a direction. A body with with a larger mass will react less. The reaction does '''not''' depend on the timestep, and is equivalent to applying a force continuously for 1 second. Impulses are best used to give a single push to a body. For a continuous push to a body it is better to use Body:applyForce.
+---
+---If the position to apply the impulse is not given, it will act on the center of mass of the body. The part of the impulse not directed towards the center of mass will cause the body to spin (and depends on the rotational inertia). 
 ---
 ---Note that the impulse components and position must be given in world coordinates.
 ---@param ix number @The x component of the impulse applied to the center of mass.
@@ -42,22 +44,24 @@ function Body:applyLinearImpulse(ix, iy) end
 ---@param torque number @The torque to apply.
 function Body:applyTorque(torque) end
 
----Explicitly destroys the Body. When you don't have time to wait for garbage collection, this function may be used to free the object immediately, but note that an error will occur if you attempt to use the object after calling this function.
+---Explicitly destroys the Body and all fixtures and joints attached to it.
+---
+---An error will occur if you attempt to use the object after calling this function. In 0.7.2, when you don't have time to wait for garbage collection, this function may be used to free the object immediately.
 function Body:destroy() end
 
 ---Get the angle of the body.
 ---
 ---The angle is measured in radians. If you need to transform it to degrees, use math.deg.
 ---
----A value of 0 radians will mean "looking to the right". Although radians increase counter-clockwise, the y-axis points down so it becomes clockwise from our point of view.
+---A value of 0 radians will mean 'looking to the right'. Although radians increase counter-clockwise, the y axis points down so it becomes ''clockwise'' from our point of view.
 ---@return number
 function Body:getAngle() end
 
 ---Gets the Angular damping of the Body
 ---
----The angular damping is the rate of decrease of the angular velocity over time: A spinning body with no damping and no external forces will continue spinning indefinitely. A spinning body with damping will gradually stop spinning.
+---The angular damping is the ''rate of decrease of the angular velocity over time'': A spinning body with no damping and no external forces will continue spinning indefinitely. A spinning body with damping will gradually stop spinning.
 ---
----Damping is not the same as friction - they can be modelled together. However, only damping is provided by Box2D (and LÖVE).
+---Damping is not the same as friction - they can be modelled together. However, only damping is provided by Box2D (and LOVE).
 ---
 ---Damping parameters should be between 0 and infinity, with 0 meaning no damping, and infinity meaning full damping. Normally you will use a damping value between 0 and 0.1.
 ---@return number
@@ -65,21 +69,21 @@ function Body:getAngularDamping() end
 
 ---Get the angular velocity of the Body.
 ---
----The angular velocity is the rate of change of angle over time.
+---The angular velocity is the ''rate of change of angle over time''.
 ---
 ---It is changed in World:update by applying torques, off centre forces/impulses, and angular damping. It can be set directly with Body:setAngularVelocity.
 ---
----If you need the rate of change of position over time, use Body:getLinearVelocity.
+---If you need the ''rate of change of position over time'', use Body:getLinearVelocity.
 ---@return number
 function Body:getAngularVelocity() end
 
 ---Gets a list of all Contacts attached to the Body.
 ---@return table
-function Body:getContactList() end
+function Body:getContacts() end
 
 ---Returns a table with all fixtures.
 ---@return table
-function Body:getFixtureList() end
+function Body:getFixtures() end
 
 ---Returns the gravity scale factor.
 ---@return number
@@ -93,25 +97,29 @@ function Body:getInertia() end
 
 ---Returns a table containing the Joints attached to this Body.
 ---@return table
-function Body:getJointList() end
+function Body:getJoints() end
 
 ---Gets the linear damping of the Body.
 ---
----The linear damping is the rate of decrease of the linear velocity over time. A moving body with no damping and no external forces will continue moving indefinitely, as is the case in space. A moving body with damping will gradually stop moving.
+---The linear damping is the ''rate of decrease of the linear velocity over time''. A moving body with no damping and no external forces will continue moving indefinitely, as is the case in space. A moving body with damping will gradually stop moving.
 ---
----Damping is not the same as friction - they can be modelled together. However, only damping is provided by Box2D (and LÖVE).
+---Damping is not the same as friction - they can be modelled together.
 ---@return number
 function Body:getLinearDamping() end
 
 ---Gets the linear velocity of the Body from its center of mass.
 ---
----The linear velocity is the rate of change of position over time.
+---The linear velocity is the ''rate of change of position over time''.
 ---
----If you need the rate of change of angle over time, use Body:getAngularVelocity. If you need to get the linear velocity of a point different from the center of mass:
+---If you need the ''rate of change of angle over time'', use Body:getAngularVelocity.
 ---
----Body:getLinearVelocityFromLocalPoint allows you to specify the point in local coordinates.
+---If you need to get the linear velocity of a point different from the center of mass:
 ---
----Body:getLinearVelocityFromWorldPoint allows you to specify the point in world coordinates.
+---*  Body:getLinearVelocityFromLocalPoint allows you to specify the point in local coordinates.
+---
+---*  Body:getLinearVelocityFromWorldPoint allows you to specify the point in world coordinates.
+---
+---See page 136 of 'Essential Mathematics for Games and Interactive Applications' for definitions of local and world coordinates.
 ---@return number, number
 function Body:getLinearVelocity() end
 
@@ -154,6 +162,8 @@ function Body:getLocalPoint(worldX, worldY) end
 function Body:getLocalVector(worldX, worldY) end
 
 ---Get the mass of the body.
+---
+---Static bodies always have a mass of 0.
 ---@return number
 function Body:getMass() end
 
@@ -166,6 +176,12 @@ function Body:getMassData() end
 ---Note that this may not be the center of mass of the body.
 ---@return number, number
 function Body:getPosition() end
+
+---Get the position and angle of the body.
+---
+---Note that the position may not be the center of mass of the body. An angle of 0 radians will mean 'looking to the right'. Although radians increase counter-clockwise, the y axis points down so it becomes clockwise from our point of view.
+---@return number, number, number
+function Body:getTransform() end
 
 ---Returns the type of the body.
 ---@return BodyType
@@ -196,9 +212,8 @@ function Body:getWorldPoint(localX, localY) end
 ---@param y1 number @The y position of the first point.
 ---@param x2 number @The x position of the second point.
 ---@param y2 number @The y position of the second point.
----@param ... number @More x and y points.
----@return number, number, number, number, number
-function Body:getWorldPoints(x1, y1, x2, y2, ...) end
+---@return number, number, number, number
+function Body:getWorldPoints(x1, y1, x2, y2) end
 
 ---Transform a vector from local coordinates to world coordinates.
 ---@param localX number @The vector x component in local coordinates.
@@ -226,9 +241,9 @@ function Body:isAwake() end
 ---
 ---There are two methods to check for body collisions:
 ---
----at their location when the world is updated (default)
+---*  at their location when the world is updated (default)
 ---
----using continuous collision detection (CCD)
+---*  using continuous collision detection (CCD)
 ---
 ---The default method is efficient, but a body moving very quickly may sometimes jump over another body without producing a collision. A body that is set as a bullet will use CCD. This is less efficient, but is guaranteed not to jump when moving quickly.
 ---
@@ -248,6 +263,11 @@ function Body:isFixedRotation() end
 ---@return boolean
 function Body:isSleepingAllowed() end
 
+---Gets whether the Body is touching the given other Body.
+---@param otherbody Body @The other body to check.
+---@return boolean
+function Body:isTouching(otherbody) end
+
 ---Resets the mass of the body by recalculating it from the mass properties of the fixtures.
 function Body:resetMassData() end
 
@@ -261,13 +281,13 @@ function Body:setActive(active) end
 ---
 ---The angle is measured in radians. If you need to transform it from degrees, use math.rad.
 ---
----A value of 0 radians will mean "looking to the right". Although radians increase counter-clockwise, the y-axis points down so it becomes clockwise from our point of view.
+---A value of 0 radians will mean 'looking to the right'. Although radians increase counter-clockwise, the y axis points down so it becomes ''clockwise'' from our point of view.
 ---
----It is possible to cause a collision with another body by changing its angle.
+---It is possible to cause a collision with another body by changing its angle. 
 ---@param angle number @The angle in radians.
 function Body:setAngle(angle) end
 
----Sets the angular damping of a Body.
+---Sets the angular damping of a Body
 ---
 ---See Body:getAngularDamping for a definition of angular damping.
 ---
@@ -277,9 +297,9 @@ function Body:setAngularDamping(damping) end
 
 ---Sets the angular velocity of a Body.
 ---
----The angular velocity is the rate of change of angle over time.
+---The angular velocity is the ''rate of change of angle over time''.
 ---
----This function will not accumulate anything; any impulses previously applied since the last call to World:update will be lost.
+---This function will not accumulate anything; any impulses previously applied since the last call to World:update will be lost. 
 ---@param w number @The new angular velocity, in radians per second
 function Body:setAngularVelocity(w) end
 
@@ -291,9 +311,9 @@ function Body:setAwake(awake) end
 ---
 ---There are two methods to check for body collisions:
 ---
----at their location when the world is updated (default)
+---*  at their location when the world is updated (default)
 ---
----using continuous collision detection (CCD)
+---*  using continuous collision detection (CCD)
 ---
 ---The default method is efficient, but a body moving very quickly may sometimes jump over another body without producing a collision. A body that is set as a bullet will use CCD. This is less efficient, but is guaranteed not to jump when moving quickly.
 ---
@@ -303,54 +323,66 @@ function Body:setBullet(status) end
 
 ---Set whether a body has fixed rotation.
 ---
----Bodies with fixed rotation don't vary the speed at which they rotate.
----@param fixed boolean @Whether the body should have fixed rotation.
-function Body:setFixedRotation(fixed) end
+---Bodies with fixed rotation don't vary the speed at which they rotate. Calling this function causes the mass to be reset. 
+---@param isFixed boolean @Whether the body should have fixed rotation.
+function Body:setFixedRotation(isFixed) end
 
 ---Sets a new gravity scale factor for the body.
 ---@param scale number @The new gravity scale factor.
 function Body:setGravityScale(scale) end
 
 ---Set the inertia of a body.
----@param inertia number @The new moment of inertia, in kilograms per meter squared.
+---@param inertia number @The new moment of inertia, in kilograms * pixel squared.
 function Body:setInertia(inertia) end
 
 ---Sets the linear damping of a Body
 ---
 ---See Body:getLinearDamping for a definition of linear damping.
 ---
----Linear damping can take any value from 0 to infinity. It is recommended to stay between 0 and 0.1, though. Other values will make the objects look "floaty".
----@param ld number @The new linear damping.
+---Linear damping can take any value from 0 to infinity. It is recommended to stay between 0 and 0.1, though. Other values will make the objects look 'floaty'(if gravity is enabled).
+---@param ld number @The new linear damping
 function Body:setLinearDamping(ld) end
 
 ---Sets a new linear velocity for the Body.
 ---
 ---This function will not accumulate anything; any impulses previously applied since the last call to World:update will be lost.
----@param x number @The x component of the velocity vector.
----@param y number @The y component of the velocity vector.
+---@param x number @The x-component of the velocity vector.
+---@param y number @The y-component of the velocity vector.
 function Body:setLinearVelocity(x, y) end
 
----Sets the mass in kilograms.
+---Sets a new body mass.
 ---@param mass number @The mass, in kilograms.
 function Body:setMass(mass) end
 
 ---Overrides the calculated mass data.
----@param x number @The x component of the center of mass in local coordinates.
----@param y number @The y component of the center of mass in local coordinates.
----@param mass number @The mass, in kilograms.
----@param inertia number @The rotational inertia, in kilograms per squared meter.
+---@param x number @The x position of the center of mass.
+---@param y number @The y position of the center of mass.
+---@param mass number @The mass of the body.
+---@param inertia number @The rotational inertia.
 function Body:setMassData(x, y, mass, inertia) end
 
 ---Set the position of the body.
 ---
 ---Note that this may not be the center of mass of the body.
+---
+---This function cannot wake up the body.
 ---@param x number @The x position.
 ---@param y number @The y position.
 function Body:setPosition(x, y) end
 
----Sets the sleeping behaviour of the body.
+---Sets the sleeping behaviour of the body. Should sleeping be allowed, a body at rest will automatically sleep. A sleeping body is not simulated unless it collided with an awake body. Be wary that one can end up with a situation like a floating sleeping body if the floor was removed.
 ---@param allowed boolean @True if the body is allowed to sleep or false if not.
 function Body:setSleepingAllowed(allowed) end
+
+---Set the position and angle of the body.
+---
+---Note that the position may not be the center of mass of the body. An angle of 0 radians will mean 'looking to the right'. Although radians increase counter-clockwise, the y axis points down so it becomes clockwise from our point of view.
+---
+---This function cannot wake up the body.
+---@param x number @The x component of the position.
+---@param y number @The y component of the position.
+---@param angle number @The angle in radians.
+function Body:setTransform(x, y, angle) end
 
 ---Sets a new body type.
 ---@param type BodyType @The new type.
@@ -363,31 +395,34 @@ function Body:setType(type) end
 function Body:setUserData(value) end
 
 ---Set the x position of the body.
+---
+---This function cannot wake up the body. 
 ---@param x number @The x position.
 function Body:setX(x) end
 
 ---Set the y position of the body.
+---
+---This function cannot wake up the body. 
 ---@param y number @The y position.
 function Body:setY(y) end
 
 --endregion Body
 --region ChainShape
----@class ChainShape : Shape
+---@class ChainShape
 ---A ChainShape consists of multiple line segments. It can be used to create the boundaries of your terrain. The shape does not have volume and can only collide with PolygonShape and CircleShape.
 ---
 ---Unlike the PolygonShape, the ChainShape does not have a vertices limit or has to form a convex shape, but self intersections are not supported.
 local ChainShape = {}
 ---Returns a child of the shape as an EdgeShape.
 ---@param index number @The index of the child.
----@return number
+---@return EdgeShape
 function ChainShape:getChildEdge(index) end
 
 ---Gets the vertex that establishes a connection to the next shape.
 ---
 ---Setting next and previous ChainShape vertices can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@param x number @The x-component of the vertex, or nil if ChainShape:setNextVertex hasn't been called.
----@param y number @The y-component of the vertex, or nil if ChainShape:setNextVertex hasn't been called.
-function ChainShape:getNextVertex(x, y) end
+---@return number, number
+function ChainShape:getNextVertex() end
 
 ---Returns a point of the shape.
 ---@param index number @The index of the point to return.
@@ -395,7 +430,7 @@ function ChainShape:getNextVertex(x, y) end
 function ChainShape:getPoint(index) end
 
 ---Returns all points of the shape.
----@return number, number, number, number, number
+---@return number, number, number, number
 function ChainShape:getPoints() end
 
 ---Gets the vertex that establishes a connection to the previous shape.
@@ -411,20 +446,20 @@ function ChainShape:getVertexCount() end
 ---Sets a vertex that establishes a connection to the next shape.
 ---
 ---This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@param x number @The x component of the vertex.
----@param y number @The y component of the vertex.
+---@param x number @The x-component of the vertex.
+---@param y number @The y-component of the vertex.
 function ChainShape:setNextVertex(x, y) end
 
 ---Sets a vertex that establishes a connection to the previous shape.
 ---
 ---This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@param x number @The x component of the vertex.
----@param y number @The y component of the vertex.
+---@param x number @The x-component of the vertex.
+---@param y number @The y-component of the vertex.
 function ChainShape:setPreviousVertex(x, y) end
 
 --endregion ChainShape
 --region CircleShape
----@class CircleShape : Shape
+---@class CircleShape
 ---Circle extends Shape and adds a radius and a local position.
 local CircleShape = {}
 ---Gets the center point of the circle shape.
@@ -441,12 +476,12 @@ function CircleShape:getRadius() end
 function CircleShape:setPoint(x, y) end
 
 ---Sets the radius of the circle.
----@param radius number @The radius of the circle.
+---@param radius number @The radius of the circle
 function CircleShape:setRadius(radius) end
 
 --endregion CircleShape
 --region Contact
----@class Contact : Object
+---@class Contact
 ---Contacts are objects created to manage collisions in worlds.
 local Contact = {}
 ---Gets the two Fixtures that hold the shapes that are in contact.
@@ -498,43 +533,8 @@ function Contact:setFriction(friction) end
 function Contact:setRestitution(restitution) end
 
 --endregion Contact
---region EdgeShape
----@class EdgeShape : Shape
----A EdgeShape is a line segment. They can be used to create the boundaries of your terrain. The shape does not have volume and can only collide with PolygonShape and CircleShape.
-local EdgeShape = {}
----Returns the local coordinates of the edge points.
----@return number, number, number, number
-function EdgeShape:getPoints() end
-
----Gets the vertex that establishes a connection to the next shape.
----
----Setting next and previous EdgeShape vertices can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@return number, number
-function EdgeShape:getNextVertex() end
-
----Gets the vertex that establishes a connection to the previous shape.
----
----Setting next and previous EdgeShape vertices can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@return number, number
-function EdgeShape:getPreviousVertex() end
-
----Sets a vertex that establishes a connection to the next shape.
----
----This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@param x number @The x-component of the vertex.
----@param y number @The y-component of the vertex.
-function EdgeShape:setNextVertex(x, y) end
-
----Sets a vertex that establishes a connection to the previous shape.
----
----This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
----@param x number @The x-component of the vertex.
----@param y number @The y-component of the vertex.
-function EdgeShape:setPreviousVertex(x, y) end
-
---endregion EdgeShape
 --region DistanceJoint
----@class DistanceJoint : Joint
+---@class DistanceJoint
 ---Keeps two bodies at the same distance.
 local DistanceJoint = {}
 ---Gets the damping ratio.
@@ -562,11 +562,46 @@ function DistanceJoint:setFrequency(Hz) end
 function DistanceJoint:setLength(l) end
 
 --endregion DistanceJoint
+--region EdgeShape
+---@class EdgeShape
+---A EdgeShape is a line segment. They can be used to create the boundaries of your terrain. The shape does not have volume and can only collide with PolygonShape and CircleShape.
+local EdgeShape = {}
+---Gets the vertex that establishes a connection to the next shape.
+---
+---Setting next and previous EdgeShape vertices can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
+---@return number, number
+function EdgeShape:getNextVertex() end
+
+---Returns the local coordinates of the edge points.
+---@return number, number, number, number
+function EdgeShape:getPoints() end
+
+---Gets the vertex that establishes a connection to the previous shape.
+---
+---Setting next and previous EdgeShape vertices can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
+---@return number, number
+function EdgeShape:getPreviousVertex() end
+
+---Sets a vertex that establishes a connection to the next shape.
+---
+---This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
+---@param x number @The x-component of the vertex.
+---@param y number @The y-component of the vertex.
+function EdgeShape:setNextVertex(x, y) end
+
+---Sets a vertex that establishes a connection to the previous shape.
+---
+---This can help prevent unwanted collisions when a flat shape slides along the edge and moves over to the new shape.
+---@param x number @The x-component of the vertex.
+---@param y number @The y-component of the vertex.
+function EdgeShape:setPreviousVertex(x, y) end
+
+--endregion EdgeShape
 --region Fixture
----@class Fixture : Object
+---@class Fixture
 ---Fixtures attach shapes to bodies.
 local Fixture = {}
----Destroys the fixture
+---Destroys the fixture.
 function Fixture:destroy() end
 
 ---Returns the body to which the fixture is attached.
@@ -579,14 +614,16 @@ function Fixture:getBody() end
 function Fixture:getBoundingBox(index) end
 
 ---Returns the categories the fixture belongs to.
----@return number, number, number
+---@return number, number
 function Fixture:getCategory() end
 
 ---Returns the density of the fixture.
 ---@return number
 function Fixture:getDensity() end
 
----Returns the filter data of the fixture. Categories and masks are encoded as the bits of a 16-bit integer.
+---Returns the filter data of the fixture.
+---
+---Categories and masks are encoded as the bits of a 16-bit integer.
 ---@return number, number, number
 function Fixture:getFilterData() end
 
@@ -600,8 +637,8 @@ function Fixture:getFriction() end
 ---@return number
 function Fixture:getGroupIndex() end
 
----Returns the category mask of the fixture.
----@return number, number, number
+---Returns which categories this fixture should '''NOT''' collide with.
+---@return number, number
 function Fixture:getMask() end
 
 ---Returns the mass, its center and the rotational inertia.
@@ -613,14 +650,10 @@ function Fixture:getMassData() end
 function Fixture:getRestitution() end
 
 ---Returns the shape of the fixture. This shape is a reference to the actual data used in the simulation. It's possible to change its values between timesteps.
----
----Do not call any functions on this shape after the parent fixture has been destroyed. This shape will point to an invalid memory address and likely cause crashes if you interact further with it.
 ---@return Shape
 function Fixture:getShape() end
 
 ---Returns the Lua value associated with this fixture.
----
----Use this function in one thread only.
 ---@return any
 function Fixture:getUserData() end
 
@@ -634,27 +667,28 @@ function Fixture:isSensor() end
 
 ---Casts a ray against the shape of the fixture and returns the surface normal vector and the line position where the ray hit. If the ray missed the shape, nil will be returned.
 ---
----The ray starts on the first point of the input line and goes towards the second point of the line. The fourth argument is the maximum distance the ray is going to travel as a scale factor of the input line length.
+---The ray starts on the first point of the input line and goes towards the second point of the line. The fifth argument is the maximum distance the ray is going to travel as a scale factor of the input line length.
 ---
 ---The childIndex parameter is used to specify which child of a parent shape, such as a ChainShape, will be ray casted. For ChainShapes, the index of 1 is the first edge on the chain. Ray casting a parent shape will only test the child specified so if you want to test every shape of the parent, you must loop through all of its children.
 ---
 ---The world position of the impact can be calculated by multiplying the line vector with the third return value and adding it to the line starting point.
 ---
 ---hitx, hity = x1 + (x2 - x1) * fraction, y1 + (y2 - y1) * fraction
----@param x1 number @The x position of the ray starting point.
----@param y1 number @The y position of the ray starting point.
----@param x2 number @The x position of the ray end point.
----@param y1 number @The y position of the ray end point.
----@param maxFraction number @The maximum distance the ray is going to travel as a number from 0 to 1.
+---@param x1 number @The x position of the input line starting point.
+---@param y1 number @The y position of the input line starting point.
+---@param x2 number @The x position of the input line end point.
+---@param y2 number @The y position of the input line end point.
+---@param maxFraction number @Ray length parameter.
 ---@param childIndex number @The index of the child the ray gets cast against.
 ---@return number, number, number
-function Fixture:rayCast(x1, y1, x2, y1, maxFraction, childIndex) end
+function Fixture:rayCast(x1, y1, x2, y2, maxFraction, childIndex) end
 
 ---Sets the categories the fixture belongs to. There can be up to 16 categories represented as a number from 1 to 16.
+---
+---All fixture's default category is 1.
 ---@param category1 number @The first category.
 ---@param category2 number @The second category.
----@param ... number @Additional categories.
-function Fixture:setCategory(category1, category2, ...) end
+function Fixture:setCategory(category1, category2) end
 
 ---Sets the density of the fixture. Call Body:resetMassData if this needs to take effect immediately.
 ---@param density number @The fixture density in kilograms per square meter.
@@ -667,12 +701,18 @@ function Fixture:setDensity(density) end
 ---If two fixtures are in the same group they either always collide if the group is positive, or never collide if it's negative. If the group is zero or they do not match, then the contact filter checks if the fixtures select a category of the other fixture with their masks. The fixtures do not collide if that's not the case. If they do have each other's categories selected, the return value of the custom contact filter will be used. They always collide if none was set.
 ---
 ---There can be up to 16 categories. Categories and masks are encoded as the bits of a 16-bit integer.
+---
+---When created, prior to calling this function, all fixtures have category set to 1, mask set to 65535 (all categories) and group set to 0.
+---
+---This function allows setting all filter data for a fixture at once. To set only the categories, the mask or the group, you can use Fixture:setCategory, Fixture:setMask or Fixture:setGroupIndex respectively.
 ---@param categories number @The categories as an integer from 0 to 65535.
 ---@param mask number @The mask as an integer from 0 to 65535.
 ---@param group number @The group as an integer from -32768 to 32767.
 function Fixture:setFilterData(categories, mask, group) end
 
 ---Sets the friction of the fixture.
+---
+---Friction determines how shapes react when they 'slide' along other shapes. Low friction indicates a slippery surface, like ice, while high friction indicates a rough surface, like concrete. Range: 0.0 - 1.0.
 ---@param friction number @The fixture friction.
 function Fixture:setFriction(friction) end
 
@@ -684,11 +724,10 @@ function Fixture:setGroupIndex(group) end
 
 ---Sets the category mask of the fixture. There can be up to 16 categories represented as a number from 1 to 16.
 ---
----This fixture will collide with the fixtures that are in the selected categories if the other fixture also has a category of this fixture selected.
+---This fixture will '''NOT''' collide with the fixtures that are in the selected categories if the other fixture also has a category of this fixture selected.
 ---@param mask1 number @The first category.
 ---@param mask2 number @The second category.
----@param ... number @Additional categories.
-function Fixture:setMask(mask1, mask2, ...) end
+function Fixture:setMask(mask1, mask2) end
 
 ---Sets the restitution of the fixture.
 ---@param restitution number @The fixture restitution.
@@ -696,14 +735,14 @@ function Fixture:setRestitution(restitution) end
 
 ---Sets whether the fixture should act as a sensor.
 ---
----Sensor do not produce collisions responses, but the begin and end callbacks will still be called for this fixture.
+---Sensors do not cause collision responses, but the begin-contact and end-contact World callbacks will still be called for this fixture.
 ---@param sensor boolean @The sensor status.
 function Fixture:setSensor(sensor) end
 
 ---Associates a Lua value with the fixture.
 ---
----Use this function in one thread only.
----@param value any @The Lua value associated with the fixture.
+---To delete the reference, explicitly pass nil.
+---@param value any @The Lua value to associate with the fixture.
 function Fixture:setUserData(value) end
 
 ---Checks if a point is inside the shape of the fixture.
@@ -714,7 +753,7 @@ function Fixture:testPoint(x, y) end
 
 --endregion Fixture
 --region FrictionJoint
----@class FrictionJoint : Joint
+---@class FrictionJoint
 ---A FrictionJoint applies friction to a body.
 local FrictionJoint = {}
 ---Gets the maximum friction force in Newtons.
@@ -735,7 +774,7 @@ function FrictionJoint:setMaxTorque(torque) end
 
 --endregion FrictionJoint
 --region GearJoint
----@class GearJoint : Joint
+---@class GearJoint
 ---Keeps bodies together in such a way that they act like gears.
 local GearJoint = {}
 ---Get the Joints connected by this GearJoint.
@@ -752,10 +791,14 @@ function GearJoint:setRatio(ratio) end
 
 --endregion GearJoint
 --region Joint
----@class Joint : Object
+---@class Joint
 ---Attach multiple bodies together to interact in unique ways.
 local Joint = {}
----Explicitly destroys the Joint. When you don't have time to wait for garbage collection, this function may be used to free the object immediately, but note that an error will occur if you attempt to use the object after calling this function.
+---Explicitly destroys the Joint. An error will occur if you attempt to use the object after calling this function.
+---
+---In 0.7.2, when you don't have time to wait for garbage collection, this function 
+---
+---may be used to free the object immediately.
 function Joint:destroy() end
 
 ---Get the anchor points of the joint.
@@ -770,9 +813,10 @@ function Joint:getBodies() end
 ---@return boolean
 function Joint:getCollideConnected() end
 
----Gets the reaction force on Body 2 at the joint anchor.
+---Returns the reaction force in newtons on the second body
+---@param x number @How long the force applies. Usually the inverse time step or 1/dt.
 ---@return number, number
-function Joint:getReactionForce() end
+function Joint:getReactionForce(x) end
 
 ---Returns the reaction torque on the second body.
 ---@param invdt number @How long the force applies. Usually the inverse time step or 1/dt.
@@ -799,7 +843,7 @@ function Joint:setUserData(value) end
 
 --endregion Joint
 --region MotorJoint
----@class MotorJoint : Joint
+---@class MotorJoint
 ---Controls the relative motion between two Bodies. Position and rotation offsets can be specified, as well as the maximum motor force and torque that will be applied to reach the target offsets.
 local MotorJoint = {}
 ---Gets the target angular offset between the two Bodies the Joint is attached to.
@@ -811,8 +855,8 @@ function MotorJoint:getAngularOffset() end
 function MotorJoint:getLinearOffset() end
 
 ---Sets the target angluar offset between the two Bodies the Joint is attached to.
----@param angularoffset number @The target angular offset in radians: the second body's angle minus the first body's angle.
-function MotorJoint:setAngularOffset(angularoffset) end
+---@param angleoffset number @The target angular offset in radians: the second body's angle minus the first body's angle.
+function MotorJoint:setAngularOffset(angleoffset) end
 
 ---Sets the target linear offset between the two Bodies the Joint is attached to.
 ---@param x number @The x component of the target linear offset, relative to the first Body.
@@ -821,7 +865,7 @@ function MotorJoint:setLinearOffset(x, y) end
 
 --endregion MotorJoint
 --region MouseJoint
----@class MouseJoint : Joint
+---@class MouseJoint
 ---For controlling objects with the mouse.
 local MouseJoint = {}
 ---Returns the damping ratio.
@@ -853,28 +897,30 @@ function MouseJoint:setFrequency(freq) end
 function MouseJoint:setMaxForce(f) end
 
 ---Sets the target point.
----@param x number @The x component of the target.
----@param y number @The y component of the target.
+---@param x number @The x-component of the target.
+---@param y number @The y-component of the target.
 function MouseJoint:setTarget(x, y) end
 
 --endregion MouseJoint
 --region PolygonShape
----@class PolygonShape : Shape
----Polygon is a convex polygon with up to 8 sides.
+---@class PolygonShape
+---A PolygonShape is a convex polygon with up to 8 vertices.
 local PolygonShape = {}
 ---Get the local coordinates of the polygon's vertices.
 ---
 ---This function has a variable number of return values. It can be used in a nested fashion with love.graphics.polygon.
----
----This function may have up to 16 return values, since it returns two values for each vertex in the polygon. In other words, it can return the coordinates of up to 8 points.
----@return number, number, number, number, number
+---@return number, number, number, number
 function PolygonShape:getPoints() end
 
 --endregion PolygonShape
 --region PrismaticJoint
----@class PrismaticJoint : Joint
+---@class PrismaticJoint
 ---Restricts relative motion between Bodies to one shared axis.
 local PrismaticJoint = {}
+---Checks whether the limits are enabled.
+---@return boolean
+function PrismaticJoint:areLimitsEnabled() end
+
 ---Gets the world-space axis vector of the Prismatic Joint.
 ---@return number, number
 function PrismaticJoint:getAxis() end
@@ -899,9 +945,10 @@ function PrismaticJoint:getLowerLimit() end
 ---@return number
 function PrismaticJoint:getMaxMotorForce() end
 
----Get the current motor force.
+---Returns the current motor force.
+---@param invdt number @How long the force applies. Usually the inverse time step or 1/dt.
 ---@return number
-function PrismaticJoint:getMotorForce() end
+function PrismaticJoint:getMotorForce(invdt) end
 
 ---Gets the motor speed.
 ---@return number
@@ -910,10 +957,6 @@ function PrismaticJoint:getMotorSpeed() end
 ---Gets the upper limit.
 ---@return number
 function PrismaticJoint:getUpperLimit() end
-
----Checks whether the limits are enabled.
----@return boolean
-function PrismaticJoint:hasLimitsEnabled() end
 
 ---Checks whether the motor is enabled.
 ---@return boolean
@@ -924,9 +967,9 @@ function PrismaticJoint:isMotorEnabled() end
 ---@param upper number @The upper limit, usually in meters.
 function PrismaticJoint:setLimits(lower, upper) end
 
----Enables or disables the limits of the joint.
----@param enable boolean @True to enable, false to disable.
-function PrismaticJoint:setLimitsEnabled(enable) end
+---Enables/disables the joint limit.
+---@return boolean
+function PrismaticJoint:setLimitsEnabled() end
 
 ---Sets the lower limit.
 ---@param lower number @The lower limit, usually in meters.
@@ -936,7 +979,7 @@ function PrismaticJoint:setLowerLimit(lower) end
 ---@param f number @The maximum motor force, usually in N.
 function PrismaticJoint:setMaxMotorForce(f) end
 
----Starts or stops the joint motor.
+---Enables/disables the joint motor.
 ---@param enable boolean @True to enable, false to disable.
 function PrismaticJoint:setMotorEnabled(enable) end
 
@@ -950,7 +993,7 @@ function PrismaticJoint:setUpperLimit(upper) end
 
 --endregion PrismaticJoint
 --region PulleyJoint
----@class PulleyJoint : Joint
+---@class PulleyJoint
 ---Allows you to simulate bodies connected through pulleys.
 local PulleyJoint = {}
 ---Get the total length of the rope.
@@ -996,16 +1039,12 @@ function PulleyJoint:setRatio(ratio) end
 
 --endregion PulleyJoint
 --region RevoluteJoint
----@class RevoluteJoint : Joint
+---@class RevoluteJoint
 ---Allow two Bodies to revolve around a shared point.
 local RevoluteJoint = {}
----Enables or disables the joint limits.
----@param enable boolean @True to enable, false to disable.
-function RevoluteJoint:setLimitsEnabled(enable) end
-
----Starts or stops the joint motor.
----@param enable boolean @True to enable, false to disable.
-function RevoluteJoint:setMotorEnabled(enable) end
+---Checks whether limits are enabled.
+---@return boolean
+function RevoluteJoint:areLimitsEnabled() end
 
 ---Get the current joint angle.
 ---@return number
@@ -1052,6 +1091,10 @@ function RevoluteJoint:isMotorEnabled() end
 ---@param upper number @The upper limit, in radians.
 function RevoluteJoint:setLimits(lower, upper) end
 
+---Enables/disables the joint limit.
+---@param enable boolean @True to enable, false to disable.
+function RevoluteJoint:setLimitsEnabled(enable) end
+
 ---Sets the lower limit.
 ---@param lower number @The lower limit, in radians.
 function RevoluteJoint:setLowerLimit(lower) end
@@ -1059,6 +1102,10 @@ function RevoluteJoint:setLowerLimit(lower) end
 ---Set the maximum motor force.
 ---@param f number @The maximum motor force, in Nm.
 function RevoluteJoint:setMaxMotorTorque(f) end
+
+---Enables/disables the joint motor.
+---@param enable boolean @True to enable, false to disable.
+function RevoluteJoint:setMotorEnabled(enable) end
 
 ---Sets the motor speed.
 ---@param s number @The motor speed, radians per second.
@@ -1070,19 +1117,25 @@ function RevoluteJoint:setUpperLimit(upper) end
 
 --endregion RevoluteJoint
 --region RopeJoint
----@class RopeJoint : Joint
+---@class RopeJoint
 ---The RopeJoint enforces a maximum distance between two points on two bodies. It has no other effect.
 local RopeJoint = {}
 ---Gets the maximum length of a RopeJoint.
 ---@return number
 function RopeJoint:getMaxLength() end
 
+---Sets the maximum length of a RopeJoint.
+---@param maxLength number @The new maximum length of the RopeJoint.
+function RopeJoint:setMaxLength(maxLength) end
+
 --endregion RopeJoint
 --region Shape
----@class Shape : Object
----Shapes are solid 2d geometrical objects used in love.physics.
+---@class Shape
+---Shapes are solid 2d geometrical objects which handle the mass and collision of a Body in love.physics.
 ---
----Shapes are attached to a Body via a Fixture. The Shape object is copied when this happens. Shape position is relative to Body position.
+---Shapes are attached to a Body via a Fixture. The Shape object is copied when this happens. 
+---
+---The Shape's position is relative to the position of the Body it has been attached to.
 local Shape = {}
 ---Returns the points of the bounding box for the transformed shape.
 ---@param tx number @The translation of the shape on the x-axis.
@@ -1105,7 +1158,9 @@ function Shape:getChildCount() end
 ---@return number
 function Shape:getRadius() end
 
----Gets a string representing the Shape. This function can be useful for conditional debug drawing.
+---Gets a string representing the Shape.
+---
+---This function can be useful for conditional debug drawing.
 ---@return ShapeType
 function Shape:getType() end
 
@@ -1130,15 +1185,18 @@ function Shape:getType() end
 ---@return number, number, number
 function Shape:rayCast(x1, y1, x2, y2, maxFraction, tx, ty, tr, childIndex) end
 
----Checks whether a point lies inside the shape. This is particularly useful for mouse interaction with the shapes. By looping through all shapes and testing the mouse position with this function, we can find which shapes the mouse touches.
----@param x number @The x component of the point.
----@param y number @The y component of the point.
+---This is particularly useful for mouse interaction with the shapes. By looping through all shapes and testing the mouse position with this function, we can find which shapes the mouse touches.
+---@param tx number @Translates the shape along the x-axis.
+---@param ty number @Translates the shape along the y-axis.
+---@param tr number @Rotates the shape.
+---@param x number @The x-component of the point.
+---@param y number @The y-component of the point.
 ---@return boolean
-function Shape:testPoint(x, y) end
+function Shape:testPoint(tx, ty, tr, x, y) end
 
 --endregion Shape
 --region WeldJoint
----@class WeldJoint : Joint
+---@class WeldJoint
 ---A WeldJoint essentially glues two bodies together.
 local WeldJoint = {}
 ---Returns the damping ratio of the joint.
@@ -1149,7 +1207,7 @@ function WeldJoint:getDampingRatio() end
 ---@return number
 function WeldJoint:getFrequency() end
 
----The new damping ratio.
+---Sets a new damping ratio.
 ---@param ratio number @The new damping ratio.
 function WeldJoint:setDampingRatio(ratio) end
 
@@ -1159,7 +1217,7 @@ function WeldJoint:setFrequency(freq) end
 
 --endregion WeldJoint
 --region WheelJoint
----@class WheelJoint : Joint
+---@class WheelJoint
 ---Restricts a point on the second body to a line on the first body.
 local WheelJoint = {}
 ---Gets the world-space axis vector of the Wheel Joint.
@@ -1217,21 +1275,21 @@ function WheelJoint:setSpringFrequency(freq) end
 
 --endregion WheelJoint
 --region World
----@class World : Object
+---@class World
 ---A world is an object that contains all bodies and joints.
 local World = {}
----Destroys the world, taking all bodies, joints, fixtures and their shapes with it.
+---Destroys the world, taking all bodies, joints, fixtures and their shapes with it. 
 ---
 ---An error will occur if you attempt to use any of the destroyed objects after calling this function.
 function World:destroy() end
 
----Get the number of bodies in the world.
----@return number
-function World:getBodyCount() end
-
 ---Returns a table with all bodies.
 ---@return table
-function World:getBodyList() end
+function World:getBodies() end
+
+---Returns the number of bodies in the world.
+---@return number
+function World:getBodyCount() end
 
 ---Returns functions for the callbacks during the world update.
 ---@return function, function, function, function
@@ -1245,21 +1303,21 @@ function World:getContactCount() end
 ---@return function
 function World:getContactFilter() end
 
----Returns a table with all contacts.
+---Returns a table with all Contacts.
 ---@return table
-function World:getContactList() end
+function World:getContacts() end
 
 ---Get the gravity of the world.
 ---@return number, number
 function World:getGravity() end
 
----Get the number of joints in the world.
+---Returns the number of joints in the world.
 ---@return number
 function World:getJointCount() end
 
 ---Returns a table with all joints.
 ---@return table
-function World:getJointList() end
+function World:getJoints() end
 
 ---Gets whether the World is destroyed. Destroyed worlds cannot be used.
 ---@return boolean
@@ -1271,11 +1329,11 @@ function World:isDestroyed() end
 ---@return boolean
 function World:isLocked() end
 
----Returns the sleep behaviour of the world.
+---Gets the sleep behaviour of the world.
 ---@return boolean
 function World:isSleepingAllowed() end
 
----Calls a function for each fixture inside the specified area.
+---Calls a function for each fixture inside the specified area by searching for any overlapping bounding box (Fixture:getBoundingBox).
 ---@param topLeftX number @The x position of the top-left point.
 ---@param topLeftY number @The y position of the top-left point.
 ---@param bottomRightX number @The x position of the bottom-right point.
@@ -1283,21 +1341,25 @@ function World:isSleepingAllowed() end
 ---@param callback function @This function gets passed one argument, the fixture, and should return a boolean. The search will continue if it is true or stop if it is false.
 function World:queryBoundingBox(topLeftX, topLeftY, bottomRightX, bottomRightY, callback) end
 
----Casts a ray and calls a function for each fixtures it intersects.
----@param x1 number @The x position of the starting point of the ray.
----@param y1 number @The y position of the starting point of the ray.
----@param x2 number @The x position of the end point of the ray.
----@param y2 number @The y position of the end point of the ray.
----@param callback function @This function gets six arguments and should return a number.
-function World:rayCast(x1, y1, x2, y2, callback) end
+---Casts a ray and calls a function for each fixtures it intersects. 
+---@param fixture Fixture @The fixture intersecting the ray.
+---@param x number @The x position of the intersection point.
+---@param y number @The y position of the intersection point.
+---@param xn number @The x value of the surface normal vector of the shape edge.
+---@param yn number @The y value of the surface normal vector of the shape edge.
+---@param fraction number @The position of the intersection on the ray as a number from 0 to 1 (or even higher if the ray length was changed with the return value).
+---@return number
+function World:rayCast(fixture, x, y, xn, yn, fraction) end
 
 ---Sets functions for the collision callbacks during the world update.
 ---
 ---Four Lua functions can be given as arguments. The value nil removes a function.
 ---
----When called, each function will be passed three arguments. The first two arguments are the colliding fixtures and the third argument is the Contact between them. The PostSolve callback additionally gets the normal and tangent impulse for each contact point.
----@param beginContact function @Gets called when two fixtures begin to overlap. 
----@param endContact function @Gets called when two fixtures cease to overlap.
+---When called, each function will be passed three arguments. The first two arguments are the colliding fixtures and the third argument is the Contact between them. The postSolve callback additionally gets the normal and tangent impulse for each contact point. See notes.
+---
+---If you are interested to know when exactly each callback is called, consult a Box2d manual
+---@param beginContact function @Gets called when two fixtures begin to overlap.
+---@param endContact function @Gets called when two fixtures cease to overlap. This will also be called outside of a world update, when colliding objects are destroyed.
 ---@param preSolve function @Gets called before a collision gets resolved.
 ---@param postSolve function @Gets called after the collision has been resolved.
 function World:setCallbacks(beginContact, endContact, preSolve, postSolve) end
@@ -1313,13 +1375,9 @@ function World:setContactFilter(filter) end
 ---@param y number @The y component of gravity.
 function World:setGravity(x, y) end
 
----Set the sleep behaviour of the world.
----
----A sleeping body is much more efficient to simulate than when awake.
----
----If sleeping is allowed, any body that has come to rest will sleep.
----@param allowSleep boolean @True if the bodies are allowed to sleep or false if not.
-function World:setSleepingAllowed(allowSleep) end
+---Sets the sleep behaviour of the world.
+---@param allow boolean @True if bodies in the world are allowed to sleep, or false if not.
+function World:setSleepingAllowed(allow) end
 
 ---Translates the World's origin. Useful in large worlds where floating point precision issues become noticeable at far distances from the origin.
 ---@param x number @The x component of the new origin with respect to the old origin.
@@ -1328,10 +1386,12 @@ function World:translateOrigin(x, y) end
 
 ---Update the state of the world.
 ---@param dt number @The time (in seconds) to advance the physics simulation.
-function World:update(dt) end
+---@param velocityiterations number @The maximum number of steps used to determine the new velocities when resolving a collision.
+---@param positioniterations number @The maximum number of steps used to determine the new positions when resolving a collision.
+function World:update(dt, velocityiterations, positioniterations) end
 
 --endregion World
----The types of a Body.
+---The types of a Body. 
 BodyType = {
 	---Static bodies do not move.
 	['static'] = 1,
@@ -1344,22 +1404,22 @@ BodyType = {
 JointType = {
 	---A DistanceJoint.
 	['distance'] = 1,
-	---A GearJoint.
-	['gear'] = 2,
-	---A MouseJoint.
-	['mouse'] = 3,
-	---A PrismaticJoint.
-	['prismatic'] = 4,
-	---A PulleyJoint.
-	['pulley'] = 5,
-	---A RevoluteJoint.
-	['revolute'] = 6,
 	---A FrictionJoint.
-	['friction'] = 7,
-	---A WeldJoint.
-	['weld'] = 8,
+	['friction'] = 2,
+	---A GearJoint.
+	['gear'] = 3,
+	---A MouseJoint.
+	['mouse'] = 4,
+	---A PrismaticJoint.
+	['prismatic'] = 5,
+	---A PulleyJoint.
+	['pulley'] = 6,
+	---A RevoluteJoint.
+	['revolute'] = 7,
 	---A RopeJoint.
-	['rope'] = 9,
+	['rope'] = 8,
+	---A WeldJoint.
+	['weld'] = 9,
 }
 ---The different types of Shapes, as returned by Shape:getType.
 ShapeType = {
@@ -1378,17 +1438,23 @@ ShapeType = {
 ---@return number, number, number, number, number
 function m.getDistance(fixture1, fixture2) end
 
----Get the scale of the world.
+---Returns the meter scale factor.
 ---
----The world scale is the number of pixels per meter. Try to keep your shape sizes less than 10 times this scale.
+---All coordinates in the physics module are divided by this number, creating a convenient way to draw the objects directly to the screen without the need for graphics transformations.
 ---
----This is important because the physics in Box2D is tuned to work well for objects of size 0.1m up to 10m. All physics coordinates are divided by this number for the physics calculations.
+---It is recommended to create shapes no larger than 10 times the scale. This is important because Box2D is tuned to work well with shape sizes from 0.1 to 10 meters.
 ---@return number
 function m.getMeter() end
 
 ---Creates a new body.
 ---
----There are three types of bodies. Static bodies do not move, have a infinite mass, and can be used for level boundaries. Dynamic bodies are the main actors in the simulation, they collide with everything. Kinematic bodies do not react to forces and only collide with dynamic bodies.
+---There are three types of bodies. 
+---
+---* Static bodies do not move, have a infinite mass, and can be used for level boundaries. 
+---
+---* Dynamic bodies are the main actors in the simulation, they collide with everything. 
+---
+---* Kinematic bodies do not react to forces and only collide with dynamic bodies.
 ---
 ---The mass of the body gets calculated when a Fixture is attached or removed, but can be changed at any time with Body:setMass or Body:resetMassData.
 ---@param world World @The world to create the body in.
@@ -1415,7 +1481,7 @@ function m.newChainShape(loop, x1, y1, x2, y2, ...) end
 ---@overload fun(x:number, y:number, radius:number):CircleShape
 function m.newCircleShape(radius) end
 
----Create a distance joint between two bodies.
+---Creates a DistanceJoint between two bodies.
 ---
 ---This joint constrains the distance between two points on two bodies to be constant. These two points are specified in world coordinates and the two bodies are assumed to be in place when this joint is created. The first anchor point is connected to the first body and the second to the second body, and the points define the length of the distance joint.
 ---@param body1 Body @The first body to attach to the joint.
@@ -1428,7 +1494,7 @@ function m.newCircleShape(radius) end
 ---@return DistanceJoint
 function m.newDistanceJoint(body1, body2, x1, y1, x2, y2, collideConnected) end
 
----Creates a edge shape.
+---Creates a new EdgeShape.
 ---@param x1 number @The x position of the first point.
 ---@param y1 number @The y position of the first point.
 ---@param x2 number @The x position of the second point.
@@ -1437,8 +1503,10 @@ function m.newDistanceJoint(body1, body2, x1, y1, x2, y2, collideConnected) end
 function m.newEdgeShape(x1, y1, x2, y2) end
 
 ---Creates and attaches a Fixture to a body.
+---
+---Note that the Shape object is copied rather than kept as a reference when the Fixture is created. To get the Shape object that the Fixture owns, use Fixture:getShape.
 ---@param body Body @The body which gets the fixture attached.
----@param shape Shape @The shape of the fixture.
+---@param shape Shape @The shape to be copied to the fixture.
 ---@param density number @The density of the fixture.
 ---@return Fixture
 function m.newFixture(body, shape, density) end
@@ -1448,13 +1516,14 @@ function m.newFixture(body, shape, density) end
 ---@param body2 Body @The second body to attach to the joint.
 ---@param x number @The x position of the anchor point.
 ---@param y number @The y position of the anchor point.
----@param collideConnected boolean @Specifies whether the two bodies should collide with eachother.
+---@param collideConnected boolean @Specifies whether the two bodies should collide with each other.
 ---@return FrictionJoint
+---@overload fun(body1:Body, body2:Body, x1:number, y1:number, x2:number, y2:number, collideConnected:boolean):FrictionJoint
 function m.newFrictionJoint(body1, body2, x, y, collideConnected) end
 
----Create a gear joint connecting two joints.
+---Create a GearJoint connecting two Joints.
 ---
----The gear joint connects two joints that must be either prismatic or revolute joints. Using this joint requires that the joints it uses connect their respective bodies to the ground and have the ground as the first body. When destroying the bodies and joints you must make sure you destroy the gear joint before the other joints.
+---The gear joint connects two joints that must be either  prismatic or  revolute joints. Using this joint requires that the joints it uses connect their respective bodies to the ground and have the ground as the first body. When destroying the bodies and joints you must make sure you destroy the gear joint before the other joints.
 ---
 ---The gear joint has a ratio the determines how the angular or distance values of the connected joints relate to each other. The formula coordinate1 + ratio * coordinate2 always has a constant value that is set when the gear joint is created.
 ---@param joint1 Joint @The first joint to connect with a gear joint.
@@ -1469,7 +1538,7 @@ function m.newGearJoint(joint1, joint2, ratio, collideConnected) end
 ---Position and rotation offsets can be specified once the MotorJoint has been created, as well as the maximum motor force and torque that will be be applied to reach the target offsets.
 ---@param body1 Body @The first body to attach to the joint.
 ---@param body2 Body @The second body to attach to the joint.
----@param correctionFactor number @The joint's initial position correction factor, in the range of [0, 1].
+---@param correctionFactor number @The joint's initial position correction factor, in the range of 1.
 ---@return MotorJoint
 ---@overload fun(body1:Body, body2:Body, correctionFactor:number, collideConnected:boolean):MotorJoint
 function m.newMotorJoint(body1, body2, correctionFactor) end
@@ -1478,7 +1547,7 @@ function m.newMotorJoint(body1, body2, correctionFactor) end
 ---
 ---This joint actually connects the body to a fixed point in the world. To make it follow the mouse, the fixed point must be updated every timestep (example below).
 ---
----The advantage of using a MouseJoint instead of just changing a body position directly is that collisions and reactions to other joints are handled by the physics engine.
+---The advantage of using a MouseJoint instead of just changing a body position directly is that collisions and reactions to other joints are handled by the physics engine. 
 ---@param body Body @The body to attach to the mouse.
 ---@param x number @The x position of the connecting point.
 ---@param y number @The y position of the connecting point.
@@ -1488,35 +1557,37 @@ function m.newMouseJoint(body, x, y) end
 ---Creates a new PolygonShape.
 ---
 ---This shape can have 8 vertices at most, and must form a convex shape.
----@param x1 number @The position of first point on the x-axis.
----@param y1 number @The position of first point on the y-axis.
----@param x2 number @The position of second point on the x-axis.
----@param y2 number @The position of second point on the y-axis.
+---@param x1 number @The x position of the first point.
+---@param y1 number @The y position of the first point.
+---@param x2 number @The x position of the second point.
+---@param y2 number @The y position of the second point.
+---@param x3 number @The x position of the third point.
+---@param y3 number @The y position of the third point.
 ---@param ... number @You can continue passing more point positions to create the PolygonShape.
 ---@return PolygonShape
 ---@overload fun(vertices:table):PolygonShape
-function m.newPolygonShape(x1, y1, x2, y2, ...) end
+function m.newPolygonShape(x1, y1, x2, y2, x3, y3, ...) end
 
----Create a prismatic joints between two bodies.
+---Creates a PrismaticJoint between two bodies.
 ---
----A prismatic joint constrains two bodies to move relatively to each other on a specified axis. It does not allow for relative rotation. Its definition and operation are similar to a revolute joint, but with translation and force substituted for angle and torque.
+---A prismatic joint constrains two bodies to move relatively to each other on a specified axis. It does not allow for relative rotation. Its definition and operation are similar to a  revolute joint, but with translation and force substituted for angle and torque.
 ---@param body1 Body @The first body to connect with a prismatic joint.
 ---@param body2 Body @The second body to connect with a prismatic joint.
 ---@param x number @The x coordinate of the anchor point.
 ---@param y number @The y coordinate of the anchor point.
----@param ax number @The x coordinate of the axis unit vector.
----@param ay number @The y coordinate of the axis unit vector.
+---@param ax number @The x coordinate of the axis vector.
+---@param ay number @The y coordinate of the axis vector.
 ---@param collideConnected boolean @Specifies whether the two bodies should collide with each other.
 ---@return PrismaticJoint
 ---@overload fun(body1:Body, body2:Body, x1:number, y1:number, x2:number, y2:number, ax:number, ay:number, collideConnected:boolean):PrismaticJoint
 ---@overload fun(body1:Body, body2:Body, x1:number, y1:number, x2:number, y2:number, ax:number, ay:number, collideConnected:boolean, referenceAngle:number):PrismaticJoint
 function m.newPrismaticJoint(body1, body2, x, y, ax, ay, collideConnected) end
 
----Create a pulley joint to join two bodies to each other and the ground.
+---Creates a PulleyJoint to join two bodies to each other and the ground.
 ---
 ---The pulley joint simulates a pulley with an optional block and tackle. If the ratio parameter has a value different from one, then the simulated rope extends faster on one side than the other. In a pulley joint the total length of the simulated rope is the constant length1 + ratio * length2, which is set when the pulley joint is created.
 ---
----Pulley joints can behave unpredictably if one side is fully extended. It is recommended that the method setMaxLengths  be used to constrain the maximum lengths each side can attain.
+---Pulley joints can behave unpredictably if one side is fully extended. It is recommended that the method  setMaxLengths  be used to constrain the maximum lengths each side can attain.
 ---@param body1 Body @The first body to connect with a pulley joint.
 ---@param body2 Body @The second body to connect with a pulley joint.
 ---@param gx1 number @The x coordinate of the first body's ground anchor.
@@ -1532,9 +1603,9 @@ function m.newPrismaticJoint(body1, body2, x, y, ax, ay, collideConnected) end
 ---@return PulleyJoint
 function m.newPulleyJoint(body1, body2, gx1, gy1, gx2, gy2, x1, y1, x2, y2, ratio, collideConnected) end
 
----Shorthand for creating rectangular PolygonShapes.
+---Shorthand for creating rectangular PolygonShapes. 
 ---
----By default, the local origin is located at the center of the rectangle as opposed to the top left for graphics.
+---By default, the local origin is located at the '''center''' of the rectangle as opposed to the top left for graphics.
 ---@param width number @The width of the rectangle.
 ---@param height number @The height of the rectangle.
 ---@return PolygonShape
@@ -1553,7 +1624,7 @@ function m.newRectangleShape(width, height) end
 ---@overload fun(body1:Body, body2:Body, x1:number, y1:number, x2:number, y2:number, collideConnected:boolean, referenceAngle:number):RevoluteJoint
 function m.newRevoluteJoint(body1, body2, x, y, collideConnected) end
 
----Create a joint between two bodies. Its only function is enforcing a max distance between these bodies.
+---Creates a joint between two bodies. Its only function is enforcing a max distance between these bodies.
 ---@param body1 Body @The first body to attach to the joint.
 ---@param body2 Body @The second body to attach to the joint.
 ---@param x1 number @The x position of the first anchor point.
@@ -1585,6 +1656,7 @@ function m.newWeldJoint(body1, body2, x, y, collideConnected) end
 ---@param ay number @The y position of the axis unit vector.
 ---@param collideConnected boolean @Specifies whether the two bodies should collide with each other.
 ---@return WheelJoint
+---@overload fun(body1:Body, body2:Body, x1:number, y1:number, x2:number, y2:number, ax:number, ay:number, collideConnected:boolean):WheelJoint
 function m.newWheelJoint(body1, body2, x, y, ax, ay, collideConnected) end
 
 ---Creates a new World.
@@ -1599,8 +1671,6 @@ function m.newWorld(xg, yg, sleep) end
 ---All coordinates in the physics module are divided by this number and converted to meters, and it creates a convenient way to draw the objects directly to the screen without the need for graphics transformations.
 ---
 ---It is recommended to create shapes no larger than 10 times the scale. This is important because Box2D is tuned to work well with shape sizes from 0.1 to 10 meters. The default meter scale is 30.
----
----love.physics.setMeter does not apply retroactively to created objects. Created objects retain their meter coordinates but the scale factor will affect their pixel coordinates.
 ---@param scale number @The scale factor as an integer.
 function m.setMeter(scale) end
 

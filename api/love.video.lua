@@ -5,7 +5,7 @@
 local m = {}
 
 --region VideoStream
----@class VideoStream : Object
+---@class VideoStream
 ---An object which decodes, streams, and controls Videos.
 local VideoStream = {}
 --endregion VideoStream

@@ -27,16 +27,18 @@ function m.getOS() end
 ---@return PowerState, number, number
 function m.getPowerInfo() end
 
----Gets the number of CPU cores in the system.
----
----The number includes the threads reported if technologies such as Intel's Hyper-threading are enabled. For example, on a 4-core CPU with Hyper-threading, this function will return 8.
+---Gets the amount of logical processor in the system.
 ---@return number
 function m.getProcessorCount() end
 
+---Gets whether another application on the system is playing music in the background.
+---
+---Currently this is implemented on iOS and Android, and will always return false on other operating systems. The t.audio.mixwithsystem flag in love.conf can be used to configure whether background audio / music from other apps should play while LÖVE is open.
+---@return boolean
+function m.hasBackgroundMusic() end
+
 ---Opens a URL with the user's web or file browser.
 ---@param url string @The URL to open. Must be formatted as a proper URL.
-
-To open a file or folder, "file://" must be prepended to the path.
 ---@return boolean
 function m.openURL(url) end
 
