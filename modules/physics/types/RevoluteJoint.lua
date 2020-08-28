@@ -1,39 +1,27 @@
+local path = (...):match('(.-)[^%./]+$')
+
 return {
     name = 'RevoluteJoint',
     description = 'Allow two Bodies to revolve around a shared point.',
-    constructors = {
-        'newRevoluteJoint'
+    supertypes = {
+        'Joint',
+        'Object',
     },
     functions = {
         {
-            name = 'setLimitsEnabled',
-            description = 'Enables or disables the joint limits.',
+            name = 'areLimitsEnabled',
+            description = 'Checks whether limits are enabled.',
             variants = {
                 {
-                    arguments = {
+                    returns = {
                         {
                             type = 'boolean',
-                            name = 'enable',
-                            description = 'True to enable, false to disable.'
-                        }
-                    }
-                }
-            }
-        },
-        {
-            name = 'setMotorEnabled',
-            description = 'Starts or stops the joint motor.',
-            variants = {
-                {
-                    arguments = {
-                        {
-                            type = 'boolean',
-                            name = 'enable',
-                            description = 'True to enable, false to disable.'
-                        }
-                    }
-                }
-            }
+                            name = 'enabled',
+                            description = 'True if enabled, false otherwise.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getJointAngle',
@@ -44,11 +32,11 @@ return {
                         {
                             type = 'number',
                             name = 'angle',
-                            description = 'The joint angle in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The joint angle in radians.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getJointSpeed',
@@ -59,11 +47,11 @@ return {
                         {
                             type = 'number',
                             name = 's',
-                            description = 'Joint angle speed in radians/second.'
-                        }
-                    }
-                }
-            }
+                            description = 'Joint angle speed in radians/second.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getLimits',
@@ -74,16 +62,16 @@ return {
                         {
                             type = 'number',
                             name = 'lower',
-                            description = 'The lower limit, in radians.'
+                            description = 'The lower limit, in radians.',
                         },
                         {
                             type = 'number',
                             name = 'upper',
-                            description = 'The upper limit, in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The upper limit, in radians.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getLowerLimit',
@@ -94,11 +82,11 @@ return {
                         {
                             type = 'number',
                             name = 'lower',
-                            description = 'The lower limit, in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The lower limit, in radians.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getMaxMotorTorque',
@@ -109,11 +97,11 @@ return {
                         {
                             type = 'number',
                             name = 'f',
-                            description = 'The maximum motor force, in Nm.'
-                        }
-                    }
-                }
-            }
+                            description = 'The maximum motor force, in Nm.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getMotorSpeed',
@@ -124,11 +112,11 @@ return {
                         {
                             type = 'number',
                             name = 's',
-                            description = 'The motor speed, radians per second.'
-                        }
-                    }
-                }
-            }
+                            description = 'The motor speed, radians per second.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getMotorTorque',
@@ -139,11 +127,11 @@ return {
                         {
                             type = 'number',
                             name = 'f',
-                            description = 'The current motor force, in Nm.'
-                        }
-                    }
-                }
-            }
+                            description = 'The current motor force, in Nm.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getUpperLimit',
@@ -154,11 +142,11 @@ return {
                         {
                             type = 'number',
                             name = 'upper',
-                            description = 'The upper limit, in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The upper limit, in radians.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'hasLimitsEnabled',
@@ -169,11 +157,11 @@ return {
                         {
                             type = 'boolean',
                             name = 'enabled',
-                            description = 'True if enabled, false otherwise.'
-                        }
-                    }
-                }
-            }
+                            description = 'True if enabled, false otherwise.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'isMotorEnabled',
@@ -184,11 +172,11 @@ return {
                         {
                             type = 'boolean',
                             name = 'enabled',
-                            description = 'True if enabled, false if disabled.'
-                        }
-                    }
-                }
-            }
+                            description = 'True if enabled, false if disabled.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setLimits',
@@ -199,16 +187,31 @@ return {
                         {
                             type = 'number',
                             name = 'lower',
-                            description = 'The lower limit, in radians.'
+                            description = 'The lower limit, in radians.',
                         },
                         {
                             type = 'number',
                             name = 'upper',
-                            description = 'The upper limit, in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The upper limit, in radians.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'setLimitsEnabled',
+            description = 'Enables/disables the joint limit.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'boolean',
+                            name = 'enable',
+                            description = 'True to enable, false to disable.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setLowerLimit',
@@ -219,11 +222,11 @@ return {
                         {
                             type = 'number',
                             name = 'lower',
-                            description = 'The lower limit, in radians.'
-                        }
-                    }
-                }
-            }
+                            description = 'The lower limit, in radians.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setMaxMotorTorque',
@@ -234,11 +237,26 @@ return {
                         {
                             type = 'number',
                             name = 'f',
-                            description = 'The maximum motor force, in Nm.'
-                        }
-                    }
-                }
-            }
+                            description = 'The maximum motor force, in Nm.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'setMotorEnabled',
+            description = 'Enables/disables the joint motor.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'boolean',
+                            name = 'enable',
+                            description = 'True to enable, false to disable.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setMotorSpeed',
@@ -249,11 +267,11 @@ return {
                         {
                             type = 'number',
                             name = 's',
-                            description = 'The motor speed, radians per second.'
-                        }
-                    }
-                }
-            }
+                            description = 'The motor speed, radians per second.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setUpperLimit',
@@ -264,16 +282,11 @@ return {
                         {
                             type = 'number',
                             name = 'upper',
-                            description = 'The upper limit, in radians.'
-                        }
-                    }
-                }
-            }
-        }
+                            description = 'The upper limit, in radians.',
+                        },
+                    },
+                },
+            },
+        },
     },
-    parenttype = 'Joint',
-    supertypes = {
-        'Object',
-        'Joint'
-    }
 }

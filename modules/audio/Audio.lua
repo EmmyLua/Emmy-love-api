@@ -1,13 +1,43 @@
--- Match the parent directory
 local path = (...):match('(.-)[^%./]+$')
 
 return {
     name = 'audio',
     description = 'Provides an interface to create noise with the user\'s speakers.',
     types = {
-        require(path .. 'types.Source')
+        require(path .. 'types.RecordingDevice'),
+        require(path .. 'types.Source'),
     },
     functions = {
+        {
+            name = 'getActiveEffects',
+            description = 'Gets a list of the names of the currently enabled effects.',
+            variants = {
+                {
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'effects',
+                            description = 'The list of the names of the currently enabled effects.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'getActiveSourceCount',
+            description = 'Gets the current number of simultaneously playing sources.',
+            variants = {
+                {
+                    returns = {
+                        {
+                            type = 'number',
+                            name = 'count',
+                            description = 'The current number of simultaneously playing sources.',
+                        },
+                    },
+                },
+            },
+        },
         {
             name = 'getDistanceModel',
             description = 'Returns the distance attenuation model.',
@@ -17,11 +47,11 @@ return {
                         {
                             type = 'DistanceModel',
                             name = 'model',
-                            description = 'The current distance model. The default is \'inverseclamped\'.'
-                        }
-                    }
-                }
-            }
+                            description = 'The current distance model. The default is \'inverseclamped\'.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getDopplerScale',
@@ -32,26 +62,64 @@ return {
                         {
                             type = 'number',
                             name = 'scale',
-                            description = 'The current doppler scale factor.'
-                        }
-                    }
-                }
-            }
+                            description = 'The current doppler scale factor.',
+                        },
+                    },
+                },
+            },
         },
         {
-            name = 'getSourceCount',
-            description = 'Returns the number of sources which are currently playing or paused.',
+            name = 'getEffect',
+            description = 'Gets the settings associated with an effect.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'name',
+                            description = 'The name of the effect.',
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'settings',
+                            description = 'The settings associated with the effect.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'getMaxSceneEffects',
+            description = 'Gets the maximum number of active effects supported by the system.',
             variants = {
                 {
                     returns = {
                         {
                             type = 'number',
-                            name = 'numSources',
-                            description = 'The number of sources which are currently playing or paused.'
-                        }
-                    }
-                }
-            }
+                            name = 'maximum',
+                            description = 'The maximum number of active effects.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'getMaxSourceEffects',
+            description = 'Gets the maximum number of active Effects in a single Source object, that the system can support.',
+            variants = {
+                {
+                    description = 'This function return 0 for system that doesn\'t support audio effects.',
+                    returns = {
+                        {
+                            type = 'number',
+                            name = 'maximum',
+                            description = 'The maximum number of active Effects per Source.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getOrientation',
@@ -61,62 +129,73 @@ return {
                     returns = {
                         {
                             type = 'number',
-                            name = 'fx',
-                            description = 'The X component of the forward vector of the listener orientation.'
+                            name = 'fx, fy, fz',
+                            description = 'Forward vector of the listener orientation.',
                         },
                         {
                             type = 'number',
-                            name = 'fy',
-                            description = 'The Y component of the forward vector of the listener orientation.'
+                            name = 'ux, uy, uz',
+                            description = 'Up vector of the listener orientation.',
                         },
-                        {
-                            type = 'number',
-                            name = 'fz',
-                            description = 'The Z component of the forward vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'ux',
-                            description = 'The X component of the up vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'uy',
-                            description = 'The Y component of the up vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'uz',
-                            description = 'The Z component of the up vector of the listener orientation.'
-                        }
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         {
             name = 'getPosition',
-            description = 'Returns the position of the listener.',
+            description = 'Returns the position of the listener. Please note that positional audio only works for mono (i.e. non-stereo) sources.',
             variants = {
                 {
                     returns = {
                         {
                             type = 'number',
                             name = 'x',
-                            description = 'The X position of the listener.'
+                            description = 'The X position of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'y',
-                            description = 'The Y position of the listener.'
+                            description = 'The Y position of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'z',
-                            description = 'The Z position of the listener.'
-                        }
-                    }
-                }
-            }
+                            description = 'The Z position of the listener.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'getRecordingDevices',
+            description = 'Gets a list of RecordingDevices on the system.\n\nThe first device in the list is the user\'s default recording device. The list may be empty if there are no microphones connected to the system.\n\nAudio recording is currently not supported on iOS.',
+            variants = {
+                {
+                    description = 'Audio recording for Android is supported since 11.3. However, it\'s not supported when APK from Play Store is used.',
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'devices',
+                            description = 'The list of connected recording devices.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'getSourceCount',
+            description = 'Gets the current number of simultaneously playing sources.',
+            variants = {
+                {
+                    returns = {
+                        {
+                            type = 'number',
+                            name = 'numSources',
+                            description = 'The current number of simultaneously playing sources.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getVelocity',
@@ -127,21 +206,21 @@ return {
                         {
                             type = 'number',
                             name = 'x',
-                            description = 'The X velocity of the listener.'
+                            description = 'The X velocity of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'y',
-                            description = 'The Y velocity of the listener.'
+                            description = 'The Y velocity of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'z',
-                            description = 'The Z velocity of the listener.'
-                        }
-                    }
-                }
-            }
+                            description = 'The Z velocity of the listener.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'getVolume',
@@ -152,134 +231,213 @@ return {
                         {
                             type = 'number',
                             name = 'volume',
-                            description = 'The current master volume.'
-                        }
-                    }
-                }
-            }
+                            description = 'The current master volume',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'isEffectsSupported',
+            description = 'Gets whether audio effects are supported in the system.',
+            variants = {
+                {
+                    description = 'Older Linux distributions that ship with older OpenAL library may not support audio effects. Furthermore, iOS doesn\'t\n\nsupport audio effects at all.',
+                    returns = {
+                        {
+                            type = 'boolean',
+                            name = 'supported',
+                            description = 'True if effects are supported, false otherwise.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'newQueueableSource',
+            description = 'Creates a new Source usable for real-time generated sound playback with Source:queue.',
+            variants = {
+                {
+                    description = 'The sample rate, bit depth, and channel count of any SoundData used with Source:queue must match the parameters given to this constructor.',
+                    arguments = {
+                        {
+                            type = 'number',
+                            name = 'samplerate',
+                            description = 'Number of samples per second when playing.',
+                        },
+                        {
+                            type = 'number',
+                            name = 'bitdepth',
+                            description = 'Bits per sample (8 or 16).',
+                        },
+                        {
+                            type = 'number',
+                            name = 'channels',
+                            description = '1 for mono or 2 for stereo.',
+                        },
+                        {
+                            type = 'number',
+                            name = 'buffercount',
+                            description = 'The number of buffers that can be queued up at any given time with Source:queue. Cannot be greater than 64. A sensible default (~8) is chosen if no value is specified.',
+                            default = '0',
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'Source',
+                            name = 'source',
+                            description = 'The new Source usable with Source:queue.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'newSource',
-            description = 'Creates a new Source from a file or SoundData. Sources created from SoundData are always static.',
+            description = 'Creates a new Source from a filepath, File, Decoder or SoundData.\n\nSources created from SoundData are always static.',
             variants = {
                 {
                     arguments = {
                         {
                             type = 'string',
                             name = 'filename',
-                            description = 'The filepath to create a Source from.'
+                            description = 'The filepath to the audio file.',
                         },
                         {
                             type = 'SourceType',
                             name = 'type',
-                            default = '"stream"',
-                            description = 'Streaming or static source.'
-                        }
+                            description = 'Streaming or static source.',
+                        },
                     },
                     returns = {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'A new Source that can play the specified audio.'
-                        }
-                    }
+                            description = 'A new Source that can play the specified audio.',
+                        },
+                    },
                 },
                 {
                     arguments = {
                         {
                             type = 'File',
                             name = 'file',
-                            description = 'A File pointing to an audio file.'
+                            description = 'A File pointing to an audio file.',
                         },
                         {
                             type = 'SourceType',
                             name = 'type',
-                            default = '"stream"',
-                            description = 'Streaming or static source.'
-                        }
+                            description = 'Streaming or static source.',
+                        },
                     },
                     returns = {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'A new Source that can play the specified audio.'
-                        }
-                    }
+                            description = 'A new Source that can play the specified audio.',
+                        },
+                    },
                 },
                 {
                     arguments = {
                         {
                             type = 'Decoder',
                             name = 'decoder',
-                            description = 'The Decoder to create a Source from.'
+                            description = 'The Decoder to create a Source from.',
                         },
                         {
                             type = 'SourceType',
                             name = 'type',
-                            default = '"stream"',
-                            description = 'Streaming or static source.'
-                        }
+                            description = 'Streaming or static source.',
+                        },
                     },
                     returns = {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'A new Source that can play the specified audio.'
-                        }
-                    }
-                },
-                {
-                    arguments = {
-                        {
-                            type = 'SoundData',
-                            name = 'soundData',
-                            description = 'The SoundData to create a Source from.'
-                        }
+                            description = 'A new Source that can play the specified audio.',
+                        },
                     },
-                    returns = {
-                        {
-                            type = 'Source',
-                            name = 'source',
-                            description = 'A new Source that can play the specified audio. The SourceType of the returned audio is "static".'
-                        }
-                    }
                 },
                 {
                     arguments = {
                         {
                             type = 'FileData',
-                            name = 'fileData',
-                            description = 'The FileData to create a Source from.'
-                        }
+                            name = 'data',
+                            description = 'The FileData to create a Source from.',
+                        },
+                        {
+                            type = 'SourceType',
+                            name = 'type',
+                            description = 'Streaming or static source.',
+                        },
                     },
                     returns = {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'A new Source that can play the specified audio.'
-                        }
-                    }
-                }
-            }
+                            description = 'A new Source that can play the specified audio.',
+                        },
+                    },
+                },
+                {
+                    arguments = {
+                        {
+                            type = 'SoundData',
+                            name = 'data',
+                            description = 'The SoundData to create a Source from.',
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'Source',
+                            name = 'source',
+                            description = 'A new Source that can play the specified audio. The SourceType of the returned audio is \'static\'.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'pause',
-            description = 'Pauses currently played Sources.',
+            description = 'Pauses specific or all currently played Sources.',
             variants = {
                 {
-                    description = 'This function will pause all currently active Sources.'
+                    description = 'Pauses all currently active Sources and returns them.',
+                    returns = {
+                        {
+                            type = 'table',
+                            name = 'Sources',
+                            description = 'A table containing a list of Sources that were paused by this call.',
+                        },
+                    },
                 },
                 {
-                    description = 'This function will only pause the specified Source.',
+                    description = 'Pauses the given Sources.',
                     arguments = {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'The source on which to pause the playback.'
-                        }
-                    }
-                }
-            }
+                            description = 'The first Source to pause.',
+                        },
+                        {
+                            type = 'Source',
+                            name = '...',
+                            description = 'Additional Sources to pause.',
+                        },
+                    },
+                },
+                {
+                    description = 'Pauses the given Sources.',
+                    arguments = {
+                        {
+                            type = 'table',
+                            name = 'sources',
+                            description = 'A table containing a list of Sources to pause.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'play',
@@ -290,43 +448,41 @@ return {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'The Source to play.'
-                        }
-                    }
-                }
-            }
-        },
-        {
-            name = 'resume',
-            description = 'Resumes all audio',
-            variants = {
-                {},
+                            description = 'The Source to play.',
+                        },
+                    },
+                },
                 {
+                    description = 'Starts playing multiple Sources simultaneously.',
+                    arguments = {
+                        {
+                            type = 'table',
+                            name = 'sources',
+                            description = 'Table containing a list of Sources to play.',
+                        },
+                    },
+                },
+                {
+                    description = 'Starts playing multiple Sources simultaneously.',
                     arguments = {
                         {
                             type = 'Source',
-                            name = 'source',
-                            description = 'The source on which to resume the playback.'
-                        }
-                    }
-                }
-            }
-        },
-        {
-            name = 'rewind',
-            description = 'Rewinds all playing audio.',
-            variants = {
-                {},
-                {
-                    arguments = {
+                            name = 'source1',
+                            description = 'The first Source to play.',
+                        },
                         {
                             type = 'Source',
-                            name = 'source',
-                            description = 'The source to rewind.'
-                        }
-                    }
-                }
-            }
+                            name = 'source2',
+                            description = 'The second Source to play.',
+                        },
+                        {
+                            type = 'Source',
+                            name = '...',
+                            description = 'Additional Sources to play.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setDistanceModel',
@@ -337,11 +493,11 @@ return {
                         {
                             type = 'DistanceModel',
                             name = 'model',
-                            description = 'The new distance model.'
-                        }
-                    }
-                }
-            }
+                            description = 'The new distance model.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setDopplerScale',
@@ -352,11 +508,99 @@ return {
                         {
                             type = 'number',
                             name = 'scale',
-                            description = 'The new doppler scale factor. The scale must be greater than 0.'
+                            description = 'The new doppler scale factor. The scale must be greater than 0.',
                         },
-                    }
-                }
-            }
+                    },
+                },
+            },
+        },
+        {
+            name = 'setEffect',
+            description = 'Defines an effect that can be applied to a Source.\n\nNot all system supports audio effects. Use love.audio.isEffectsSupported to check.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'name',
+                            description = 'The name of the effect.',
+                        },
+                        {
+                            type = 'table',
+                            name = 'settings',
+                            description = 'The settings to use for this effect, with the following fields:',
+                            table = {
+                                {
+                                    type = 'EffectType',
+                                    name = 'type',
+                                    description = 'The type of effect to use.',
+                                },
+                                {
+                                    type = 'number',
+                                    name = 'volume',
+                                    description = 'The volume of the effect.',
+                                },
+                                {
+                                    type = 'number',
+                                    name = '...',
+                                    description = 'Effect-specific settings. See EffectType for available effects and their corresponding settings.',
+                                },
+                            },
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'boolean',
+                            name = 'success',
+                            description = 'Whether the effect was successfully created.',
+                        },
+                    },
+                },
+                {
+                    arguments = {
+                        {
+                            type = 'string',
+                            name = 'name',
+                            description = 'The name of the effect.',
+                        },
+                        {
+                            type = 'boolean',
+                            name = 'enabled',
+                            description = 'If false and the given effect name was previously set, disables the effect.',
+                            default = 'true',
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'boolean',
+                            name = 'success',
+                            description = 'Whether the effect was successfully disabled.',
+                        },
+                    },
+                },
+            },
+        },
+        {
+            name = 'setMixWithSystem',
+            description = 'Sets whether the system should mix the audio with the system\'s audio.',
+            variants = {
+                {
+                    arguments = {
+                        {
+                            type = 'boolean',
+                            name = 'mix',
+                            description = 'True to enable mixing, false to disable it.',
+                        },
+                    },
+                    returns = {
+                        {
+                            type = 'boolean',
+                            name = 'success',
+                            description = 'True if the change succeeded, false otherwise.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setOrientation',
@@ -366,37 +610,17 @@ return {
                     arguments = {
                         {
                             type = 'number',
-                            name = 'fx',
-                            description = 'The X component of the forward vector of the listener orientation.'
+                            name = 'fx, fy, fz',
+                            description = 'Forward vector of the listener orientation.',
                         },
                         {
                             type = 'number',
-                            name = 'fy',
-                            description = 'The Y component of the forward vector of the listener orientation.'
+                            name = 'ux, uy, uz',
+                            description = 'Up vector of the listener orientation.',
                         },
-                        {
-                            type = 'number',
-                            name = 'fz',
-                            description = 'The Z component of the forward vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'ux',
-                            description = 'The X component of the up vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'uy',
-                            description = 'The Y component of the up vector of the listener orientation.'
-                        },
-                        {
-                            type = 'number',
-                            name = 'uz',
-                            description = 'The Z component of the up vector of the listener orientation.'
-                        }
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         {
             name = 'setPosition',
@@ -407,21 +631,21 @@ return {
                         {
                             type = 'number',
                             name = 'x',
-                            description = 'The X position of the listener.'
+                            description = 'The x position of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'y',
-                            description = 'The Y position of the listener.'
+                            description = 'The y position of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'z',
-                            description = 'The Z position of the listener.'
-                        }
-                    }
-                }
-            }
+                            description = 'The z position of the listener.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setVelocity',
@@ -432,21 +656,21 @@ return {
                         {
                             type = 'number',
                             name = 'x',
-                            description = 'The X velocity of the listener.'
+                            description = 'The X velocity of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'y',
-                            description = 'The Y velocity of the listener.'
+                            description = 'The Y velocity of the listener.',
                         },
                         {
                             type = 'number',
                             name = 'z',
-                            description = 'The Z velocity of the listener.'
-                        }
-                    }
-                }
-            }
+                            description = 'The Z velocity of the listener.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'setVolume',
@@ -457,18 +681,18 @@ return {
                         {
                             type = 'number',
                             name = 'volume',
-                            description = '1.0f is max and 0.0f is off.'
-                        }
-                    }
-                }
-            }
+                            description = '1.0 is max and 0.0 is off.',
+                        },
+                    },
+                },
+            },
         },
         {
             name = 'stop',
             description = 'Stops currently played sources.',
             variants = {
                 {
-                    description = 'This function will stop all currently active sources.'
+                    description = 'This function will stop all currently active sources.',
                 },
                 {
                     description = 'This function will only stop the specified source.',
@@ -476,16 +700,49 @@ return {
                         {
                             type = 'Source',
                             name = 'source',
-                            description = 'The source on which to stop the playback.'
-                        }
-                    }
-                }
-            }
-        }
+                            description = 'The source on which to stop the playback.',
+                        },
+                    },
+                },
+                {
+                    description = 'Simultaneously stops all given Sources.',
+                    arguments = {
+                        {
+                            type = 'Source',
+                            name = 'source1',
+                            description = 'The first Source to stop.',
+                        },
+                        {
+                            type = 'Source',
+                            name = 'source2',
+                            description = 'The second Source to stop.',
+                        },
+                        {
+                            type = 'Source',
+                            name = '...',
+                            description = 'Additional Sources to stop.',
+                        },
+                    },
+                },
+                {
+                    description = 'Simultaneously stops all given Sources.',
+                    arguments = {
+                        {
+                            type = 'table',
+                            name = 'sources',
+                            description = 'A table containing a list of Sources to stop.',
+                        },
+                    },
+                },
+            },
+        },
     },
     enums = {
         require(path .. 'enums.DistanceModel'),
+        require(path .. 'enums.EffectType'),
+        require(path .. 'enums.EffectWaveform'),
+        require(path .. 'enums.FilterType'),
         require(path .. 'enums.SourceType'),
-        require(path .. 'enums.TimeUnit')
-    }
-};
+        require(path .. 'enums.TimeUnit'),
+    },
+}

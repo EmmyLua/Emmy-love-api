@@ -3,35 +3,83 @@
 local m = {}
 
 ---Arguments to love.event.push() and the like.
+---
+---Since 0.8.0, event names are no longer abbreviated.
 Event = {
 	---Window focus gained or lost
 	['focus'] = 1,
-	---Joystick axis motion
-	['joystickaxis'] = 2,
-	---Joystick hat pressed
-	['joystickhat'] = 3,
 	---Joystick pressed
-	['joystickpressed'] = 4,
+	['joystickpressed'] = 2,
 	---Joystick released
-	['joystickreleased'] = 5,
+	['joystickreleased'] = 3,
 	---Key pressed
-	['keypressed'] = 6,
+	['keypressed'] = 4,
 	---Key released
-	['keyreleased'] = 7,
-	---Window mouse focus gained or lost
-	['mousefocus'] = 8,
+	['keyreleased'] = 5,
 	---Mouse pressed
-	['mousepressed'] = 9,
+	['mousepressed'] = 6,
 	---Mouse released
-	['mousereleased'] = 10,
-	---Window size changed by the user
-	['resize'] = 11,
-	---A Lua error has occurred in a thread.
-	['threaderror'] = 12,
+	['mousereleased'] = 7,
 	---Quit
-	['quit'] = 13,
+	['quit'] = 8,
+	---Window size changed by the user
+	['resize'] = 9,
 	---Window is minimized or un-minimized by the user
-	['visible'] = 14,
+	['visible'] = 10,
+	---Window mouse focus gained or lost
+	['mousefocus'] = 11,
+	---A Lua error has occurred in a thread
+	['threaderror'] = 12,
+	---Joystick connected
+	['joystickadded'] = 13,
+	---Joystick disconnected
+	['joystickremoved'] = 14,
+	---Joystick axis motion
+	['joystickaxis'] = 15,
+	---Joystick hat pressed
+	['joystickhat'] = 16,
+	---Joystick's virtual gamepad button pressed
+	['gamepadpressed'] = 17,
+	---Joystick's virtual gamepad button released
+	['gamepadreleased'] = 18,
+	---Joystick's virtual gamepad axis moved
+	['gamepadaxis'] = 19,
+	---User entered text
+	['textinput'] = 20,
+	---Mouse position changed
+	['mousemoved'] = 21,
+	---Running out of memory on mobile devices system
+	['lowmemory'] = 22,
+	---Candidate text for an IME changed
+	['textedited'] = 23,
+	---Mouse wheel moved
+	['wheelmoved'] = 24,
+	---Touch screen touched
+	['touchpressed'] = 25,
+	---Touch screen stop touching
+	['touchreleased'] = 26,
+	---Touch press moved inside touch screen
+	['touchmoved'] = 27,
+	---Directory is dragged and dropped onto the window
+	['directorydropped'] = 28,
+	---File is dragged and dropped onto the window.
+	['filedropped'] = 29,
+	---Joystick pressed
+	['jp'] = 30,
+	---Joystick released
+	['jr'] = 31,
+	---Key pressed
+	['kp'] = 32,
+	---Key released
+	['kr'] = 33,
+	---Mouse pressed
+	['mp'] = 34,
+	---Mouse released
+	['mr'] = 35,
+	---Quit
+	['q'] = 36,
+	---Window focus gained or lost
+	['f'] = 37,
 }
 ---Clears the event queue.
 function m.clear() end
@@ -40,26 +88,37 @@ function m.clear() end
 ---@return function
 function m.poll() end
 
----Pump events into the event queue. This is a low-level function, and is usually not called by the user, but by love.run. Note that this does need to be called for any OS to think you're still running, and if you want to handle OS-generated events at all (think callbacks). love.event.pump can only be called from the main thread, but afterwards, the rest of love.event can be used from any other thread.
+---Pump events into the event queue.
+---
+---This is a low-level function, and is usually not called by the user, but by love.run.
+---
+---Note that this does need to be called for any OS to think you're still running,
+---
+---and if you want to handle OS-generated events at all (think callbacks).
 function m.pump() end
 
 ---Adds an event to the event queue.
----@param e Event @The name of the event.
+---
+---From 0.10.0 onwards, you may pass an arbitrary amount of arguments with this function, though the default callbacks don't ever use more than six.
+---@param n Event @The name of the event.
 ---@param a Variant @First event argument.
 ---@param b Variant @Second event argument.
 ---@param c Variant @Third event argument.
 ---@param d Variant @Fourth event argument.
-function m.push(e, a, b, c, d) end
+---@param e Variant @Fifth event argument.
+---@param f Variant @Sixth event argument.
+---@param ... Variant @Further event arguments may follow.
+function m.push(n, a, b, c, d, e, f, ...) end
 
 ---Adds the quit event to the queue.
 ---
 ---The quit event is a signal for the event handler to close LÖVE. It's possible to abort the exit process with the love.quit callback.
----@overload fun(exitstatus:number):void
----@overload fun(restart:string):void
-function m.quit() end
+---@param exitstatus number @The program exit status to use when closing the application.
+---@overload fun('restart':string):void
+function m.quit(exitstatus) end
 
----Like love.event.poll but blocks until there is an event in the queue.
----@return Event, Variant, Variant, Variant, Variant
+---Like love.event.poll(), but blocks until there is an event in the queue.
+---@return Event, Variant, Variant, Variant, Variant, Variant, Variant, Variant
 function m.wait() end
 
 return m

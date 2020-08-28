@@ -14,15 +14,20 @@ function m.getDelta() end
 ---@return number
 function m.getFPS() end
 
----Returns the value of a timer with an unspecified starting time. This function should only be used to calculate differences between points in time, as the starting time of the timer is unknown.
+---Returns the value of a timer with an unspecified starting time.
+---
+---This function should only be used to calculate differences between points in time, as the starting time of the timer is unknown.
 ---@return number
 function m.getTime() end
 
----Sleeps the program for the specified amount of time.
+---Pauses the current thread for the specified amount of time.
 ---@param s number @Seconds to sleep for.
 function m.sleep(s) end
 
----Measures the time between two frames. Calling this changes the return value of love.timer.getDelta.
+---Measures the time between two frames.
+---
+---Calling this changes the return value of love.timer.getDelta.
+---@return number
 function m.step() end
 
 return m

@@ -8,33 +8,9 @@
 ---When a Thread is started, it only loads the love.thread module. Every other module has to be loaded with require.
 local m = {}
 
---region Thread
----@class Thread : Object
----A Thread is a chunk of code that can run in parallel with other threads. Data can be sent between different threads with Channel objects.
-local Thread = {}
----Retrieves the error string from the thread if it produced an error.
----@return string
-function Thread:getError() end
-
----Starts the thread.
----
----Threads can be restarted after they have completed their execution.
----@overload fun(arg1:Variant, arg2:Variant, ...:Variant):void
-function Thread:start() end
-
----Wait for a thread to finish. This call will block until the thread finishes.
-function Thread:wait() end
-
----Returns whether the thread is currently running.
----
----Threads which are not running can be (re)started with Thread:start.
----@return boolean
-function Thread:isRunning() end
-
---endregion Thread
 --region Channel
----@class Channel : Object
----A channel is a way to send and receive data to and from different threads.
+---@class Channel
+---An object which can be used to send and receive data between different threads.
 local Channel = {}
 ---Clears all the messages in the Channel queue.
 function Channel:clear() end
@@ -43,11 +19,17 @@ function Channel:clear() end
 ---
 ---It waits until a message is in the queue then returns the message value.
 ---@return Variant
+---@overload fun(timeout:number):Variant
 function Channel:demand() end
 
 ---Retrieves the number of messages in the thread Channel queue.
 ---@return number
 function Channel:getCount() end
+
+---Gets whether a pushed value has been popped or otherwise removed from the Channel.
+---@param id number @An id value previously returned by Channel:push.
+---@return boolean
+function Channel:hasRead(id) end
 
 ---Retrieves the value of a Channel message, but leaves it in the queue.
 ---
@@ -76,15 +58,44 @@ function Channel:pop() end
 ---
 ---See Variant for the list of supported types.
 ---@param value Variant @The contents of the message.
+---@return number
 function Channel:push(value) end
 
 ---Send a message to the thread Channel and wait for a thread to accept it.
 ---
 ---See Variant for the list of supported types.
 ---@param value Variant @The contents of the message.
+---@return boolean
+---@overload fun(value:Variant, timeout:number):boolean
 function Channel:supply(value) end
 
 --endregion Channel
+--region Thread
+---@class Thread
+---A Thread is a chunk of code that can run in parallel with other threads. Data can be sent between different threads with Channel objects.
+local Thread = {}
+---Retrieves the error string from the thread if it produced an error.
+---@return string
+function Thread:getError() end
+
+---Returns whether the thread is currently running.
+---
+---Threads which are not running can be (re)started with Thread:start.
+---@return boolean
+function Thread:isRunning() end
+
+---Starts the thread.
+---
+---Beginning with version 0.9.0, threads can be restarted after they have completed their execution.
+---@overload fun(arg1:Variant, arg2:Variant, ...:Variant):void
+function Thread:start() end
+
+---Wait for a thread to finish.
+---
+---This call will block until the thread finishes.
+function Thread:wait() end
+
+--endregion Thread
 ---Creates or retrieves a named thread channel.
 ---@param name string @The name of the channel you want to create or retrieve.
 ---@return Channel
@@ -92,12 +103,12 @@ function m.getChannel(name) end
 
 ---Create a new unnamed thread channel.
 ---
----One use for them is to pass new unnamed channels to other threads via Channel:push
+---One use for them is to pass new unnamed channels to other threads via Channel:push on a named channel.
 ---@return Channel
 function m.newChannel() end
 
----Creates a new Thread from a File or Data object.
----@param filename string @The name of the Lua File to use as source.
+---Creates a new Thread from a filename, string or FileData object containing Lua code.
+---@param filename string @The name of the Lua file to use as the source.
 ---@return Thread
 ---@overload fun(fileData:FileData):Thread
 ---@overload fun(codestring:string):Thread
