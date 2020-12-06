@@ -23,18 +23,6 @@ local Canvas = {}
 ---If the mipmap mode is set to 'auto', this function is automatically called inside love.graphics.setCanvas when switching from this Canvas to another Canvas or to the main screen.
 function Canvas:generateMipmaps() end
 
----Gets the width and height of the Canvas.
----@return number, number
-function Canvas:getDimensions() end
-
----Gets the filter mode of the Canvas.
----@return FilterMode, FilterMode
-function Canvas:getFilter() end
-
----Gets the height of the Canvas.
----@return number
-function Canvas:getHeight() end
-
 ---Gets the number of multisample antialiasing (MSAA) samples used when drawing to the Canvas.
 ---
 ---This may be different than the number used as an argument to love.graphics.newCanvas if the system running LÖVE doesn't support that number.
@@ -44,16 +32,6 @@ function Canvas:getMSAA() end
 ---Gets the MipmapMode this Canvas was created with.
 ---@return MipmapMode
 function Canvas:getMipmapMode() end
-
----Gets the width of the Canvas.
----@return number
-function Canvas:getWidth() end
-
----Gets the wrapping properties of a Canvas.
----
----This function returns the currently set horizontal and vertical wrapping modes for the Canvas.
----@return WrapMode, WrapMode
-function Canvas:getWrap() end
 
 ---Generates ImageData from the contents of the Canvas.
 ---@return ImageData
@@ -76,20 +54,12 @@ function Canvas:newImageData() end
 ---@param func function @A function performing drawing operations.
 function Canvas:renderTo(func) end
 
----Sets the filter mode of the Canvas.
----@param min FilterMode @Filter mode to use when minifying the canvas.
----@param mag FilterMode @Filter mode to use when magnifying the canvas.
----@overload fun(min:FilterMode, mag:FilterMode, anisotropy:number):void
-function Canvas:setFilter(min, mag) end
-
----Sets the wrapping properties of a Canvas.
----
----This function sets the way the edges of a Canvas are treated if it is scaled or rotated. If the WrapMode is set to 'clamp', the edge will not be interpolated. If set to 'repeat', the edge will be interpolated with the pixels on the opposing side of the framebuffer.
----@param horiz WrapMode @Horizontal wrapping mode of the Canvas.
----@param vert WrapMode @Vertical wrapping mode of the Canvas.
-function Canvas:setWrap(horiz, vert) end
-
 --endregion Canvas
+--region Drawable
+---@class Drawable
+---Superclass for all things that can be drawn on screen. This is an abstract type that can't be created directly.
+local Drawable = {}
+--endregion Drawable
 --region Font
 ---@class Font
 ---Defines the shape of characters that can be drawn onto the screen.
@@ -178,31 +148,15 @@ function Font:setLineHeight(height) end
 ---@class Image
 ---Drawable image type.
 local Image = {}
----Gets the width and height of the Image.
----@return number, number
-function Image:getDimensions() end
-
----Gets the filter mode for an image.
----@return FilterMode, FilterMode
-function Image:getFilter() end
-
 ---Gets the flags used when the image was created.
 ---@return table
 function Image:getFlags() end
 
----Gets the height of the Image.
----@return number
-function Image:getHeight() end
-
----Gets the width of the Image.
----@return number
-function Image:getWidth() end
-
----Gets the wrapping properties of an Image.
+---Gets whether the Image was created from CompressedData.
 ---
----This function returns the currently set horizontal and vertical wrapping modes for the image.
----@return WrapMode, WrapMode
-function Image:getWrap() end
+---Compressed images take up less space in VRAM, and drawing a compressed image will generally be more efficient than drawing one created from raw pixel data.
+---@return boolean
+function Image:isCompressed() end
 
 ---Replace the contents of an Image.
 ---@param data ImageData @The new ImageData to replace the contents with.
@@ -212,21 +166,6 @@ function Image:getWrap() end
 ---@param y number @The y-offset in pixels from the top-left of the image to replace. The given ImageData's height plus this value must not be greater than the pixel height of the Image's specified mipmap level.
 ---@param reloadmipmaps boolean @Whether to generate new mipmaps after replacing the Image's pixels. True by default if the Image was created with automatically generated mipmaps, false by default otherwise.
 function Image:replacePixels(data, slice, mipmap, x, y, reloadmipmaps) end
-
----Sets the filter mode for an image.
----@param min FilterMode @How to scale an image down.
----@param mag FilterMode @How to scale an image up.
----@overload fun(min:FilterMode, mag:FilterMode, anisotropy:number):void
-function Image:setFilter(min, mag) end
-
----Sets the wrapping properties of an Image.
----
----This function sets the way an Image is repeated when it is drawn with a  Quad that is larger than the image's extent. An image may be clamped or set to repeat in both horizontal and vertical directions. Clamped images appear only once, but repeated ones repeat as many times as there is room in the Quad.
----
----N.B. If you use a Quad that is larger than the image extent and do not use repeated tiling, there may be an unwanted visual effect of the image stretching all the way to fill the Quad. If this is the case, setting Image:setWrap('repeat', 'repeat') for all the images to be repeated, and using Quads of appropriate size will result in the best visual appearance.
----@param horiz WrapMode @Horizontal wrapping mode of the image.
----@param vert WrapMode @Vertical wrapping mode of the image.
-function Image:setWrap(horiz, vert) end
 
 --endregion Image
 --region Mesh
@@ -953,9 +892,27 @@ function Texture:getDPIScale() end
 ---@return number
 function Texture:getDepth() end
 
+---Gets the comparison mode used when sampling from a depth texture in a shader.
+---
+---Depth texture comparison modes are advanced low-level functionality typically used with shadow mapping in 3D.
+---@return CompareMode
+function Texture:getDepthSampleMode() end
+
+---Gets the width and height of the Texture.
+---@return number, number
+function Texture:getDimensions() end
+
+---Gets the filter mode of the Texture.
+---@return FilterMode, FilterMode, number
+function Texture:getFilter() end
+
 ---Gets the pixel format of the Texture.
 ---@return PixelFormat
 function Texture:getFormat() end
+
+---Gets the height of the Texture.
+---@return number
+function Texture:getHeight() end
 
 ---Gets the number of layers / slices in an Array Texture. Returns 1 for 2D, Cubemap, and Volume textures.
 ---@return number
@@ -968,6 +925,12 @@ function Texture:getMipmapCount() end
 ---Gets the mipmap filter mode for a Texture. Prior to 11.0 this method only worked on Images.
 ---@return FilterMode, number
 function Texture:getMipmapFilter() end
+
+---Gets the width and height in pixels of the Texture.
+---
+---Texture:getDimensions gets the dimensions of the texture in units scaled by the texture's DPI scale factor, rather than pixels. Use getDimensions for calculations related to drawing the texture (calculating an origin offset, for example), and getPixelDimensions only when dealing specifically with pixels, for example when using Canvas:newImageData.
+---@return number, number
+function Texture:getPixelDimensions() end
 
 ---Gets the height in pixels of the Texture.
 ---
@@ -985,6 +948,16 @@ function Texture:getPixelWidth() end
 ---@return TextureType
 function Texture:getTextureType() end
 
+---Gets the width of the Texture.
+---@return number
+function Texture:getWidth() end
+
+---Gets the wrapping properties of a Texture.
+---
+---This function returns the currently set horizontal and vertical wrapping modes for the texture.
+---@return WrapMode, WrapMode, WrapMode
+function Texture:getWrap() end
+
 ---Gets whether the Texture can be drawn and sent to a Shader.
 ---
 ---Canvases created with stencil and/or depth PixelFormats are not readable by default, unless readable=true is specified in the settings table passed into love.graphics.newCanvas.
@@ -992,6 +965,20 @@ function Texture:getTextureType() end
 ---Non-readable Canvases can still be rendered to.
 ---@return boolean
 function Texture:isReadable() end
+
+---Sets the comparison mode used when sampling from a depth texture in a shader. Depth texture comparison modes are advanced low-level functionality typically used with shadow mapping in 3D.
+---
+---When using a depth texture with a comparison mode set in a shader, it must be declared as a sampler2DShadow and used in a GLSL 3 Shader. The result of accessing the texture in the shader will return a float between 0 and 1, proportional to the number of samples (up to 4 samples will be used if bilinear filtering is enabled) that passed the test set by the comparison operation.
+---
+---Depth texture comparison can only be used with readable depth-formatted Canvases.
+---@param compare CompareMode @The comparison mode used when sampling from this texture in a shader.
+function Texture:setDepthSampleMode(compare) end
+
+---Sets the filter mode of the Texture.
+---@param min FilterMode @Filter mode to use when minifying the texture (rendering it at a smaller size on-screen than its size in pixels).
+---@param mag FilterMode @Filter mode to use when magnifying the texture (rendering it at a larger size on-screen than its size in pixels).
+---@param anisotropy number @Maximum amount of anisotropic filtering to use.
+function Texture:setFilter(min, mag, anisotropy) end
 
 ---Sets the mipmap filter mode for a Texture. Prior to 11.0 this method only worked on Images.
 ---
@@ -1003,6 +990,16 @@ function Texture:isReadable() end
 ---@param filtermode FilterMode @The filter mode to use in between mipmap levels. 'nearest' will often give better performance.
 ---@param sharpness number @A positive sharpness value makes the texture use a more detailed mipmap level when drawing, at the expense of performance. A negative value does the reverse.
 function Texture:setMipmapFilter(filtermode, sharpness) end
+
+---Sets the wrapping properties of a Texture.
+---
+---This function sets the way a Texture is repeated when it is drawn with a Quad that is larger than the texture's extent, or when a custom Shader is used which uses texture coordinates outside of [0, 1]. A texture may be clamped or set to repeat in both horizontal and vertical directions.
+---
+---Clamped textures appear only once (with the edges of the texture stretching to fill the extent of the Quad), whereas repeated ones repeat as many times as there is room in the Quad.
+---@param horiz WrapMode @Horizontal wrapping mode of the texture.
+---@param vert WrapMode @Vertical wrapping mode of the texture.
+---@param depth WrapMode @Wrapping mode for the z-axis of a Volume texture.
+function Texture:setWrap(horiz, vert, depth) end
 
 --endregion Texture
 --region Video
@@ -1134,57 +1131,30 @@ BlendMode = {
 	---Premultiplied alpha blend mode.
 	['premultiplied'] = 12,
 }
----
-CanvasMipmapMode = {
-	---Do not enable mipmap.
-	['none'] = 1,
-	---Automatically generate mipmap.
-	['auto'] = 2,
-	---Let user manually generate mipmap.
-	['manual'] = 3,
-}
 ---Different types of per-pixel stencil test and depth test comparisons. The pixels of an object will be drawn if the comparison succeeds, for each pixel that the object touches.
----
----;equal:
----
----* stencil tests: the stencil value of the pixel must be equal to the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must be equal to the existing depth value of that pixel.
----
----;notequal:
----
----* stencil tests: the stencil value of the pixel must '''not''' be equal to the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must '''not''' be equal to the existing depth value of that pixel.
----
----;less:
----
----* stencil tests: the stencil value of the pixel must be less than the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must be less than the existing depth value of that pixel.
----
----;lequal:
----
----* stencil tests: the stencil value of the pixel must be less than or equal to the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must be less than or equal to the existing depth value of that pixel.
----
----;gequal:
----
----* stencil tests: the stencil value of the pixel must be greater than or equal to the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must be greater than or equal to the existing depth value of that pixel.
----
----;greater:
----
----* stencil tests: the stencil value of the pixel must be greater than the supplied value.
----
----* depth tests: the depth value of the drawn object at that pixel must be greater than the existing depth value of that pixel.
 CompareMode = {
+	---* stencil tests: the stencil value of the pixel must be equal to the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must be equal to the existing depth value of that pixel.
+	['equal'] = 1,
+	---* stencil tests: the stencil value of the pixel must not be equal to the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must not be equal to the existing depth value of that pixel.
+	['notequal'] = 2,
+	---* stencil tests: the stencil value of the pixel must be less than the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must be less than the existing depth value of that pixel.
+	['less'] = 3,
+	---* stencil tests: the stencil value of the pixel must be less than or equal to the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must be less than or equal to the existing depth value of that pixel.
+	['lequal'] = 4,
+	---* stencil tests: the stencil value of the pixel must be greater than or equal to the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must be greater than or equal to the existing depth value of that pixel.
+	['gequal'] = 5,
+	---* stencil tests: the stencil value of the pixel must be greater than the supplied value.
+---* depth tests: the depth value of the drawn object at that pixel must be greater than the existing depth value of that pixel.
+	['greater'] = 6,
 	---Objects will never be drawn.
-	['never'] = 1,
+	['never'] = 7,
 	---Objects will always be drawn. Effectively disables the depth or stencil test.
-	['always'] = 2,
+	['always'] = 8,
 }
 ---How Mesh geometry is culled when rendering.
 CullMode = {
@@ -1227,28 +1197,6 @@ GraphicsFeature = {
 	['pixelshaderhighp'] = 7,
 	---Whether shaders can use the dFdx, dFdy, and fwidth functions for computing derivatives.
 	['shaderderivatives'] = 8,
-	---Support for Canvas.
-	['canvas'] = 9,
-	---Support for textures with non-power-of-two sizes. See PO2 Syndrome. 
-	['npot'] = 10,
-	---Support for the subtractive blend mode.
-	['subtractive'] = 11,
-	---Support for Shaders.
-	['shader'] = 12,
-	---Support for HDR Canvases. Use love.graphics.getCanvasFormats instead.
-	['hdrcanvas'] = 13,
-	---Support for simultaneous rendering to at least 4 canvases at once, with love.graphics.setCanvas. Use love.graphics.getSystemLimits instead.
-	['multicanvas'] = 14,
-	---Support for Mipmaps.
-	['mipmap'] = 15,
-	---Support for DXT compressed images (see CompressedFormat.) Use love.graphics.getCompressedImageFormats instead.
-	['dxt'] = 16,
-	---Support for BC4 and BC5 compressed images. Use love.graphics.getCompressedImageFormats instead.
-	['bc5'] = 17,
-	---Support for gamma-correct rendering with the srgb window flag in Canvases and Images.
-	['srgb'] = 18,
-	---Support for PixelEffects.
-	['pixeleffect'] = 19,
 }
 ---Types of system-dependent graphics limits checked for using love.graphics.getSystemLimits.
 GraphicsLimit = {
@@ -1268,8 +1216,13 @@ GraphicsLimit = {
 	['cubetexturesize'] = 7,
 	---The maximum amount of anisotropic filtering. Texture:setMipmapFilter internally clamps the given anisotropy value to the system's limit.
 	['anisotropy'] = 8,
-	---The maximum number of antialiasing samples for a Canvas.
-	['canvasfsaa'] = 9,
+}
+---Vertex map datatype for Data variant of Mesh:setVertexMap.
+IndexDataType = {
+	---The vertex map is array of unsigned word (16-bit).
+	['uint16'] = 1,
+	---The vertex map is array of unsigned dword (32-bit).
+	['uint32'] = 2,
 }
 ---Line join style.
 LineJoin = {
@@ -1297,6 +1250,15 @@ MeshDrawMode = {
 	['triangles'] = 3,
 	---The vertices are drawn as unconnected points (see love.graphics.setPointSize.)
 	['points'] = 4,
+}
+---Controls whether a Canvas has mipmaps, and its behaviour when it does.
+MipmapMode = {
+	---The Canvas has no mipmaps.
+	['none'] = 1,
+	---The Canvas has mipmaps. love.graphics.setCanvas can be used to render to a specific mipmap level, or Canvas:generateMipmaps can (re-)compute all mipmap levels based on the base level.
+	['auto'] = 2,
+	---The Canvas has mipmaps, and all mipmap levels will automatically be recomputed when switching away from the Canvas with love.graphics.setCanvas.
+	['manual'] = 3,
 }
 ---How newly created particles are added to the ParticleSystem.
 ParticleInsertMode = {
@@ -1348,6 +1310,22 @@ TextureType = {
 	['cube'] = 3,
 	---3D texture with width, height, and depth. Requires a custom shader to use. Volume textures can have texture filtering applied along the 3rd axis.
 	['volume'] = 4,
+}
+---The frequency at which a vertex shader fetches the vertex attribute's data from the Mesh when it's drawn.
+---
+---Per-instance attributes can be used to render a Mesh many times with different positions, colors, or other attributes via a single love.graphics.drawInstanced call, without using the love_InstanceID vertex shader variable.
+VertexAttributeStep = {
+	---The vertex attribute will have a unique value for each vertex in the Mesh.
+	['pervertex'] = 1,
+	---The vertex attribute will have a unique value for each instance of the Mesh.
+	['perinstance'] = 2,
+}
+---How Mesh geometry vertices are ordered.
+VertexWinding = {
+	---Clockwise.
+	['cw'] = 1,
+	---Counter-clockwise.
+	['ccw'] = 2,
 }
 ---How the image wraps inside a Quad with a larger quad size than image size. This also affects how Meshes with texture coordinates which are outside the range of 1 are drawn, and the color returned by the Texel Shader function when using it to sample from texture coordinates outside of the range of 1.
 WrapMode = {
@@ -1711,8 +1689,6 @@ function m.newArrayImage(slices, settings) end
 ---@overload fun(width:number, height:number):Canvas
 ---@overload fun(width:number, height:number, settings:table):Canvas
 ---@overload fun(width:number, height:number, layers:number, settings:table):Canvas
----@overload fun(width:number, height:number, format:CanvasFormat):Canvas
----@overload fun(width:number, height:number, format:CanvasFormat, msaa:number):Canvas
 function m.newCanvas() end
 
 ---Creates a new cubemap Image.
@@ -1769,9 +1745,9 @@ function m.newCubeImage(filename, settings) end
 ---All variants which accept a filename can also accept a Data object instead.
 ---@param filename string @The filepath to the BMFont or TrueType font file.
 ---@return Font
----@overload fun(filename:string, size:number, hinting:HintingMode):Font
+---@overload fun(filename:string, size:number, hinting:HintingMode, dpiscale:number):Font
 ---@overload fun(filename:string, imagefilename:string):Font
----@overload fun(size:number, hinting:HintingMode):Font
+---@overload fun(size:number, hinting:HintingMode, dpiscale:number):Font
 function m.newFont(filename) end
 
 ---Creates a new Image from a filepath, FileData, an ImageData, or a CompressedImageData, and optionally generates or specifies mipmaps for the image.
@@ -1780,7 +1756,6 @@ function m.newFont(filename) end
 ---@overload fun(imageData:ImageData):Image
 ---@overload fun(compressedImageData:CompressedImageData):Image
 ---@overload fun(filename:string, flags:table):Image
----@overload fun(filename:string, format:TextureFormat):Image
 function m.newImage(filename) end
 
 ---Creates a new specifically formatted image.
@@ -1832,7 +1807,7 @@ function m.newQuad(x, y, width, height, sw, sh) end
 ---Shaders are small programs which are run on the graphics card when drawing. Vertex shaders are run once for each vertex (for example, an image has 4 vertices - one at each corner. A Mesh might have many more.) Pixel shaders are run once for each pixel on the screen which the drawn object touches. Pixel shader code is executed after all the object's vertices have been processed by the vertex shader.
 ---@param code string @The pixel shader or vertex shader code, or a filename pointing to a file with the code.
 ---@return Shader
----@overload fun(transform_projection:mat4, vertex_position:vec4):vec4
+---@overload fun(pixelcode:string, vertexcode:string):Shader
 function m.newShader(code) end
 
 ---Creates a new SpriteBatch object.

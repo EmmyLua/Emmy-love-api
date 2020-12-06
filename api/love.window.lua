@@ -2,6 +2,19 @@
 ---Provides an interface for modifying and retrieving information about the program's window.
 local m = {}
 
+---Types of device display orientation.
+DisplayOrientation = {
+	---Orientation cannot be determined.
+	['unknown'] = 1,
+	---Landscape orientation.
+	['landscape'] = 2,
+	---Landscape orientation (flipped).
+	['landscapeflipped'] = 3,
+	---Portrait orientation.
+	['portrait'] = 4,
+	---Portrait orientation (flipped).
+	['portraitflipped'] = 5,
+}
 ---Types of fullscreen modes.
 FullscreenType = {
 	---Sometimes known as borderless fullscreen windowed mode. A borderless screen-sized window is created which sits on top of all desktop UI elements. The window is automatically resized to match the dimensions of the desktop, and its size cannot be changed.
