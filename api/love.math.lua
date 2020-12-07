@@ -94,17 +94,6 @@ function BezierCurve:setControlPoint(i, x, y) end
 function BezierCurve:translate(dx, dy) end
 
 --endregion BezierCurve
---region CompressedData
----@class CompressedData
----Represents byte data compressed using a specific algorithm.
----
----love.data.decompress can be used to de-compress the data (or love.math.decompress in 0.10.2 or earlier).
-local CompressedData = {}
----Gets the compression format of the CompressedData.
----@return CompressedDataFormat
-function CompressedData:getFormat() end
-
---endregion CompressedData
 --region RandomGenerator
 ---@class RandomGenerator
 ---A random number generation object which has its own random state.
@@ -182,7 +171,7 @@ function Transform:inverseTransformPoint(localX, localY) end
 
 ---Checks whether the Transform is an affine transformation.
 ---@return boolean
-function Transform:isAffine() end
+function Transform:isAffine2DTransform() end
 
 ---Resets the Transform to an identity state. All previously applied transformations are erased.
 ---@return Transform
@@ -244,17 +233,6 @@ function Transform:transformPoint(globalX, globalY) end
 function Transform:translate(dx, dy) end
 
 --endregion Transform
----Compressed data formats.
-CompressedDataFormat = {
-	---The LZ4 compression format. Compresses and decompresses very quickly, but the compression ratio is not the best. LZ4-HC is used when compression level 9 is specified. Some benchmarks are available here.
-	['lz4'] = 1,
-	---The zlib format is DEFLATE-compressed data with a small bit of header data. Compresses relatively slowly and decompresses moderately quickly, and has a decent compression ratio.
-	['zlib'] = 2,
-	---The gzip format is DEFLATE-compressed data with a slightly larger header than zlib. Since it uses DEFLATE it has the same compression characteristics as the zlib format.
-	['gzip'] = 3,
-	---Raw DEFLATE-compressed data (no header).
-	['deflate'] = 4,
-}
 ---The layout of matrix elements (row-major or column-major).
 MatrixLayout = {
 	---The matrix is row-major:

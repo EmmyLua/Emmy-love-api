@@ -5,6 +5,7 @@ return {
     description = 'The primary responsibility for the love.graphics module is the drawing of lines, shapes, text, Images and other Drawable objects onto the screen. Its secondary responsibilities include loading external files (including Images and Fonts) into memory, creating specialized objects (such as ParticleSystems or Canvases) and managing screen geometry.\n\nLÖVE\'s coordinate system is rooted in the upper-left corner of the screen, which is at location (0, 0). The x axis is horizontal: larger values are further to the right. The y axis is vertical: larger values are further towards the bottom.\n\nIn many cases, you draw images or shapes in terms of their upper-left corner.\n\nMany of the functions are used to manipulate the graphics coordinate system, which is essentially the way coordinates are mapped to the display. You can change the position, scale, and even rotation in this way.',
     types = {
         require(path .. 'types.Canvas'),
+        require(path .. 'types.Drawable'),
         require(path .. 'types.Font'),
         require(path .. 'types.Image'),
         require(path .. 'types.Mesh'),
@@ -1855,7 +1856,7 @@ return {
                                     default = 'love.graphics.getDPIScale()',
                                 },
                                 {
-                                    type = 'CanvasMipmapMode',
+                                    type = 'MipmapMode',
                                     name = 'mipmaps',
                                     description = 'Whether the Canvas has mipmaps, and whether to automatically regenerate them if so.',
                                     default = '\'none\'',
@@ -1924,78 +1925,12 @@ return {
                                     default = 'love.graphics.getDPIScale()',
                                 },
                                 {
-                                    type = 'CanvasMipmapMode',
+                                    type = 'MipmapMode',
                                     name = 'mipmaps',
                                     description = 'Whether the Canvas has mipmaps, and whether to automatically regenerate them if so.',
                                     default = '\'none\'',
                                 },
                             },
-                        },
-                    },
-                    returns = {
-                        {
-                            type = 'Canvas',
-                            name = 'canvas',
-                            description = 'A new Canvas with specified width and height.',
-                        },
-                    },
-                },
-                {
-                    description = 'Some Canvas formats have higher system requirements than the default format. Use love.graphics.getCanvasFormats to check for support.',
-                    arguments = {
-                        {
-                            type = 'number',
-                            name = 'width',
-                            description = 'The desired width of the Canvas.',
-                            default = 'window_width',
-                        },
-                        {
-                            type = 'number',
-                            name = 'height',
-                            description = 'The desired height of the Canvas.',
-                            default = 'window_height',
-                        },
-                        {
-                            type = 'CanvasFormat',
-                            name = 'format',
-                            description = 'The desired texture format of the Canvas.',
-                            default = '\'normal\'',
-                        },
-                    },
-                    returns = {
-                        {
-                            type = 'Canvas',
-                            name = 'canvas',
-                            description = 'A new Canvas with specified width and height.',
-                        },
-                    },
-                },
-                {
-                    description = 'Some Canvas formats have higher system requirements than the default format. Use love.graphics.getCanvasFormats to check for support.\n\nThe supported maximum number of MSAA samples varies depending on the system. Use love.graphics.getSystemLimits to check.\n\nIf the number of MSAA samples specified is greater than the maximum supported by the system, the Canvas will still be created but only using the maximum supported amount (this includes 0.)',
-                    arguments = {
-                        {
-                            type = 'number',
-                            name = 'width',
-                            description = 'The desired width of the Canvas.',
-                            default = 'window_width',
-                        },
-                        {
-                            type = 'number',
-                            name = 'height',
-                            description = 'The desired height of the Canvas.',
-                            default = 'window_height',
-                        },
-                        {
-                            type = 'CanvasFormat',
-                            name = 'format',
-                            description = 'The desired texture format of the Canvas.',
-                            default = '\'normal\'',
-                        },
-                        {
-                            type = 'number',
-                            name = 'msaa',
-                            description = 'The desired number of multisample antialiasing (MSAA) samples used when drawing to the Canvas.',
-                            default = '0',
                         },
                     },
                     returns = {
@@ -2128,6 +2063,12 @@ return {
                             description = 'True Type hinting mode.',
                             default = '\'normal\'',
                         },
+                        {
+                            type = 'number',
+                            name = 'dpiscale',
+                            description = 'The DPI scale factor of the font.',
+                            default = 'love.graphics.getDPIScale()',
+                        },
                     },
                     returns = {
                         {
@@ -2173,6 +2114,12 @@ return {
                             name = 'hinting',
                             description = 'True Type hinting mode.',
                             default = '\'normal\'',
+                        },
+                        {
+                            type = 'number',
+                            name = 'dpiscale',
+                            description = 'The DPI scale factor of the font.',
+                            default = 'love.graphics.getDPIScale()',
                         },
                     },
                     returns = {
@@ -2269,27 +2216,6 @@ return {
                             type = 'Image',
                             name = 'image',
                             description = 'A new Image object which can be drawn on screen.',
-                        },
-                    },
-                },
-                {
-                    arguments = {
-                        {
-                            type = 'string',
-                            name = 'filename',
-                            description = 'The filepath to the image file (or a FileData or ImageData or CompressedImageData object.)',
-                        },
-                        {
-                            type = 'TextureFormat',
-                            name = 'format',
-                            description = 'The format to interpret the image\'s data as.',
-                        },
-                    },
-                    returns = {
-                        {
-                            type = 'Image',
-                            name = 'image',
-                            description = 'An Image object which can be drawn on screen.',
                         },
                     },
                 },
@@ -2733,24 +2659,23 @@ return {
                     },
                 },
                 {
-                    description = 'Vertex shader code is run for every vertex drawn to the screen (for example, love.graphics.rectangle will produce 4 vertices) and is used to transform the vertex positions from their original coordinates into screen-space, as well as to send information such as per-vertex color and texture coordinate values to the pixel shader.\n\nPixel shader code is run for every pixel on the screen that a drawn object touches, and is used to produce the color that will be blended onto the screen at that pixel, often by reading from an image. Pixel shaders are sometimes called fragment shaders.\n\nThe varying keyword can be used to set a value in the vertex shader and have it interpolated in between vertices and passed down to the pixel shader.\n\nVertex and Pixel shader code can be combined into one file or string if you wrap the vertex-specific code in #ifdef VERTEX .. #endif and the pixel-specific code in #ifdef PIXEL .. #endif.\n\n== Built-in variables ==\n\nLÖVE provides several built-in variables for both pixel and vertex shaders. The full list can be found here: Shader Variables.',
                     arguments = {
                         {
-                            type = 'mat4',
-                            name = 'transform_projection',
-                            description = 'The transformation matrix affected by love.graphics.translate and friends combined with the orthographic projection matrix.',
+                            type = 'string',
+                            name = 'pixelcode',
+                            description = 'The pixel shader code, or a filename pointing to a file with the code.',
                         },
                         {
-                            type = 'vec4',
-                            name = 'vertex_position',
-                            description = 'The raw un-transformed position of the current vertex.',
+                            type = 'string',
+                            name = 'vertexcode',
+                            description = 'The vertex shader code, or a filename pointing to a file with the code.',
                         },
                     },
                     returns = {
                         {
-                            type = 'vec4',
-                            name = 'output_pos',
-                            description = 'The final transformed position of the current vertex.',
+                            type = 'Shader',
+                            name = 'shader',
+                            description = 'A Shader object for use in drawing operations.',
                         },
                     },
                 },
@@ -4906,21 +4831,24 @@ return {
         require(path .. 'enums.AreaSpreadDistribution'),
         require(path .. 'enums.BlendAlphaMode'),
         require(path .. 'enums.BlendMode'),
-        require(path .. 'enums.CanvasMipmapMode'),
         require(path .. 'enums.CompareMode'),
         require(path .. 'enums.CullMode'),
         require(path .. 'enums.DrawMode'),
         require(path .. 'enums.FilterMode'),
         require(path .. 'enums.GraphicsFeature'),
         require(path .. 'enums.GraphicsLimit'),
+        require(path .. 'enums.IndexDataType'),
         require(path .. 'enums.LineJoin'),
         require(path .. 'enums.LineStyle'),
         require(path .. 'enums.MeshDrawMode'),
+        require(path .. 'enums.MipmapMode'),
         require(path .. 'enums.ParticleInsertMode'),
         require(path .. 'enums.SpriteBatchUsage'),
         require(path .. 'enums.StackType'),
         require(path .. 'enums.StencilAction'),
         require(path .. 'enums.TextureType'),
+        require(path .. 'enums.VertexAttributeStep'),
+        require(path .. 'enums.VertexWinding'),
         require(path .. 'enums.WrapMode'),
     },
 }

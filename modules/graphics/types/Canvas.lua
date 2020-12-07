@@ -3,6 +3,10 @@ local path = (...):match('(.-)[^%./]+$')
 return {
     name = 'Canvas',
     description = 'A Canvas is used for off-screen rendering. Think of it as an invisible screen that you can draw to, but that will not be visible until you draw it to the actual visible screen. It is also known as "render to texture".\n\nBy drawing things that do not change position often (such as background items) to the Canvas, and then drawing the entire Canvas instead of each item,  you can reduce the number of draw operations performed each frame.\n\nIn versions prior to love.graphics.isSupported("canvas") could be used to check for support at runtime.',
+    constructors = {
+        'newCanvas',
+        'getCanvas',
+    },
     supertypes = {
         'Texture',
         'Drawable',
@@ -14,80 +18,6 @@ return {
             description = 'Generates mipmaps for the Canvas, based on the contents of the highest-resolution mipmap level.\n\nThe Canvas must be created with mipmaps set to a MipmapMode other than \'none\' for this function to work. It should only be called while the Canvas is not the active render target.\n\nIf the mipmap mode is set to \'auto\', this function is automatically called inside love.graphics.setCanvas when switching from this Canvas to another Canvas or to the main screen.',
             variants = {
                 {
-                },
-            },
-        },
-        {
-            name = 'getDimensions',
-            description = 'Gets the width and height of the Canvas.',
-            variants = {
-                {
-                    returns = {
-                        {
-                            type = 'number',
-                            name = 'width',
-                            description = 'The width of the Canvas, in pixels.',
-                        },
-                        {
-                            type = 'number',
-                            name = 'height',
-                            description = 'The height of the Canvas, in pixels.',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'getFilter',
-            description = 'Gets the filter mode of the Canvas.',
-            variants = {
-                {
-                    returns = {
-                        {
-                            type = 'FilterMode',
-                            name = 'min',
-                            description = 'Filter mode used when minifying the canvas.',
-                        },
-                        {
-                            type = 'FilterMode',
-                            name = 'mag',
-                            description = 'Filter mode used when magnifying the canvas.',
-                        },
-                    },
-                },
-                {
-                    returns = {
-                        {
-                            type = 'FilterMode',
-                            name = 'min',
-                            description = 'Filter mode used when minifying the canvas.',
-                        },
-                        {
-                            type = 'FilterMode',
-                            name = 'mag',
-                            description = 'Filter mode used when magnifying the canvas.',
-                        },
-                        {
-                            type = 'number',
-                            name = 'anisotropy',
-                            description = 'Maximum amount of anisotropic filtering used.',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'getHeight',
-            description = 'Gets the height of the Canvas.',
-            variants = {
-                {
-                    returns = {
-                        {
-                            type = 'number',
-                            name = 'height',
-                            description = 'The height of the Canvas, in pixels.',
-                        },
-                    },
                 },
             },
         },
@@ -116,41 +46,6 @@ return {
                             type = 'MipmapMode',
                             name = 'mode',
                             description = 'The mipmap mode this Canvas was created with.',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'getWidth',
-            description = 'Gets the width of the Canvas.',
-            variants = {
-                {
-                    returns = {
-                        {
-                            type = 'number',
-                            name = 'width',
-                            description = 'The width of the Canvas, in pixels.',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'getWrap',
-            description = 'Gets the wrapping properties of a Canvas.\n\nThis function returns the currently set horizontal and vertical wrapping modes for the Canvas.',
-            variants = {
-                {
-                    returns = {
-                        {
-                            type = 'WrapMode',
-                            name = 'horiz',
-                            description = 'Horizontal wrapping mode of the Canvas.',
-                        },
-                        {
-                            type = 'WrapMode',
-                            name = 'vert',
-                            description = 'Vertical wrapping mode of the Canvas.',
                         },
                     },
                 },
@@ -223,66 +118,6 @@ return {
                             type = 'function',
                             name = 'func',
                             description = 'A function performing drawing operations.',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'setFilter',
-            description = 'Sets the filter mode of the Canvas.',
-            variants = {
-                {
-                    arguments = {
-                        {
-                            type = 'FilterMode',
-                            name = 'min',
-                            description = 'Filter mode to use when minifying the canvas.',
-                        },
-                        {
-                            type = 'FilterMode',
-                            name = 'mag',
-                            description = 'Filter mode to use when magnifying the canvas.',
-                        },
-                    },
-                },
-                {
-                    arguments = {
-                        {
-                            type = 'FilterMode',
-                            name = 'min',
-                            description = 'Filter mode to use when minifying the canvas.',
-                        },
-                        {
-                            type = 'FilterMode',
-                            name = 'mag',
-                            description = 'Filter mode to use when magnifying the canvas.',
-                        },
-                        {
-                            type = 'number',
-                            name = 'anisotropy',
-                            description = 'Maximum amount of anisotropic filtering to use.',
-                            default = '1',
-                        },
-                    },
-                },
-            },
-        },
-        {
-            name = 'setWrap',
-            description = 'Sets the wrapping properties of a Canvas.\n\nThis function sets the way the edges of a Canvas are treated if it is scaled or rotated. If the WrapMode is set to \'clamp\', the edge will not be interpolated. If set to \'repeat\', the edge will be interpolated with the pixels on the opposing side of the framebuffer.',
-            variants = {
-                {
-                    arguments = {
-                        {
-                            type = 'WrapMode',
-                            name = 'horiz',
-                            description = 'Horizontal wrapping mode of the Canvas.',
-                        },
-                        {
-                            type = 'WrapMode',
-                            name = 'vert',
-                            description = 'Vertical wrapping mode of the Canvas.',
                         },
                     },
                 },

@@ -89,7 +89,6 @@ function m.isCursorSupported() end
 ---@param button number @The index of a button to check. 1 is the primary mouse button, 2 is the secondary mouse button and 3 is the middle button. Further buttons are mouse dependant.
 ---@param ... number @Additional button numbers to check.
 ---@return boolean
----@overload fun(buttonN:MouseConstant):boolean
 function m.isDown(button, ...) end
 
 ---Checks if the mouse is grabbed.

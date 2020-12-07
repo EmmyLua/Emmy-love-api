@@ -3,6 +3,9 @@ local path = (...):match('(.-)[^%./]+$')
 return {
     name = 'File',
     description = 'Represents a file on the filesystem. A function that takes a file path can also take a File.',
+    constructors = {
+        'newFile',
+    },
     supertypes = {
         'Object',
     },
@@ -223,7 +226,7 @@ return {
                     },
                     returns = {
                         {
-                            type = 'value',
+                            type = 'FileData or string',
                             name = 'contents',
                             description = 'FileData or string containing the read bytes.',
                         },

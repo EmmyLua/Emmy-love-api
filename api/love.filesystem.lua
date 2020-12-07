@@ -2,6 +2,13 @@
 ---Provides an interface to the user's filesystem.
 local m = {}
 
+--region DroppedFile
+---@class DroppedFile
+---Represents a file dropped onto the window.
+---
+---Note that the DroppedFile type can only be obtained from love.filedropped callback, and can't be constructed manually by the user.
+local DroppedFile = {}
+--endregion DroppedFile
 --region File
 ---@class File
 ---Represents a file on the filesystem. A function that takes a file path can also take a File.
@@ -50,7 +57,7 @@ function File:open(mode) end
 ---Read a number of bytes from a file.
 ---@param bytes number @The number of bytes to read.
 ---@return string, number
----@overload fun(container:ContainerType, bytes:number):value, number
+---@overload fun(container:ContainerType, bytes:number):FileData or string, number
 function File:read(bytes) end
 
 ---Seek to a position in a file
@@ -275,7 +282,7 @@ function m.newFileData(contents, name) end
 ---@param name string @The name (and path) of the file.
 ---@param size number @How many bytes to read.
 ---@return string, number, nil, string
----@overload fun(container:ContainerType, name:string, size:number):value, number, nil, string
+---@overload fun(container:ContainerType, name:string, size:number):FileData or string, number, nil, string
 function m.read(name, size) end
 
 ---Removes a file or empty directory.
