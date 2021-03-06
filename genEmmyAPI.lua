@@ -49,28 +49,52 @@ local function genFunction(moduleName, fun, static)
                     end
                     if argument.name == '...' then
                         code = code .. gen_phrase('vararg', argument.description, genCorrectType(argument.type))
+                    elseif argument.name:find(',') then
+                        for name in argument.name:gmatch('[^, ]+') do
+                            code = code .. gen_phrase('param', argument.description, name, genCorrectType(argument.type))
+                        end
                     else
                         code = code .. gen_phrase('param', argument.description, argument.name, genCorrectType(argument.type))
                     end
                 end
             else
                 code = code .. gen_phrase('overload', variant.description, 
-                    'fun('..
-                        table.concat(map(
-                            function(argu)
-                                if argu.name == '...' then return '...' end
-                                return argu.name..': '..genCorrectType(argu.type) end,
-                            arguments), ', ')..'):'..
-                        table.concat(map(
-                            function(ret) return genCorrectType(ret.type) end,
-                            variant.returns) or {'nil'}, ', '))
+                    'fun('..table.concat(map(
+                        function(argu)
+                            if argu.name == '...' then
+                                return '...'
+                            elseif argu.name:find(',') then
+                                local ret = ''
+                                local printed = false
+                                for name in argu.name:gmatch('[^ ,]+') do
+                                    if printed then
+                                        ret = ret..', '
+                                    end
+                                    ret = ret..name..': '..genCorrectType(argu.type)
+                                    printed = true
+                                end
+                                return ret
+                            else
+                                return argu.name..': '..genCorrectType(argu.type)
+                            end
+                        end,
+                        arguments), ', ')..
+                    '):'..table.concat(map(
+                        function(ret) return genCorrectType(ret.type) end,
+                        variant.returns) or {'nil'}, ', '))
             end
         end
 
         if vIdx == 1 then
             if variant.returns and #variant.returns > 0 then
                 for _, ret in ipairs(variant.returns) do
-                    code = code .. gen_phrase('return', ret.description, genCorrectType(ret.type), ret.name)
+                    if ret.name:find(',') then
+                        for name in ret.name:gmatch('[^ ,]+') do
+                            code = code .. gen_phrase('return', ret.description, genCorrectType(ret.type), name)
+                        end
+                    else
+                        code = code .. gen_phrase('return', ret.description, genCorrectType(ret.type), ret.name)
+                    end
                 end
             else
                 code = code .. gen_phrase('return', nil, 'nil')
