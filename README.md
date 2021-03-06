@@ -9,7 +9,7 @@ A script to generate [LÖVE](https://love2d.org/) API autocomplete files for [Em
 3. Alternatively, you can just clone this repository *recursively* `--recursive` **and** with `--config core.symlinks=true`(*you must do this on Windows to correctly generate the symbolic links*).
 4. Create an empty directory named `api` in the repository.
 5. Run `genEmmyAPI.lua` in the directory, i.e. run `lua genEmmyAPI.lua` in the terminal. It will generate the API in the `api` folder.
-6. Alternatively, you can download the `api.zip` from the artifacts of the latest GitHub Actions and unzip it as the `api` directory described above.
+6. Alternatively, you can download the `api.zip` from the artifacts of the latest [GitHub Actions](https://github.com/26F-Studio/Emmy-love-api/actions) and unzip it as the `api` directory described above.
 7. If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API as `Lua.workspace.library: {".../api": true}` in the settings.
 8. Alternatively, you can copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
 
