@@ -5,6 +5,15 @@ local function safeDesc(src)
     return string.gsub(src, "\n", "\n---")
 end
 
+local function genCorrectType(type)
+    type = string.gsub(type, ' or ', '|')
+    type = string.gsub(type, 'light userdata', 'userdata')
+    if type:find(' ') then
+        print('maybe wrong type: ' .. type)
+    end
+    return type
+end
+
 local function genReturns(variant)
     local returns = variant.returns
     local s = ""
@@ -13,9 +22,9 @@ local function genReturns(variant)
         num = #returns
         for i, ret in ipairs(returns) do
             if i == 1 then
-                s = ret.type
+                s = genCorrectType(ret.type)
             else
-                s = s .. ', ' .. ret.type
+                s = s .. ', ' .. genCorrectType(ret.type)
             end
         end
     else
@@ -39,16 +48,16 @@ local function genFunction(moduleName, fun, static)
                     else
                         argList = argList .. ', ' .. argument.name
                     end
-                    code = code .. '---@param ' .. argument.name .. ' ' .. argument.type .. ' @' .. argument.description .. '\n'
+                    code = code .. '---@param ' .. argument.name .. ' ' .. genCorrectType(argument.type) .. ' @' .. argument.description .. '\n'
                 end
             else
                 code = code .. '---@overload fun('
                 for argIdx, argument in ipairs(arguments) do
                     if argIdx == 1 then
-                        code = code .. argument.name .. ':' .. argument.type
+                        code = code .. argument.name .. ':' .. genCorrectType(argument.type)
                     else
                         code = code .. ', '
-                        code = code .. argument.name .. ':' .. argument.type
+                        code = code .. argument.name .. ':' .. genCorrectType(argument.type)
                     end
                 end
                 code = code .. '):' .. genReturns(variant)
