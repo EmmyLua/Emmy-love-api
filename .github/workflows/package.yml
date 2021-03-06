@@ -13,8 +13,7 @@ jobs:
       - run: mkdir api -p
       - run: rm api/* -rf
       - run: lua genEmmyAPI.lua
-      - run: zip -r api.zip api
       - uses: actions/upload-artifact@v2
         with:
-          name: api.zip
-          path: /home/runner/work/Emmy-love-api/Emmy-love-api/api.zip
+          name: api
+          path: /home/runner/work/Emmy-love-api/Emmy-love-api/api
