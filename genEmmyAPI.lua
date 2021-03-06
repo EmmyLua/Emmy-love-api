@@ -137,7 +137,10 @@ local function genType(name, type)
 end
 
 local function genEnum(enum)
-    local code = '---#' .. safeDesc(enum.description) .. '\n'
+    local code = ''
+    if enum.description then
+        code = code..'---#' .. safeDesc(enum.description) .. '\n'
+    end
     code = code..'---@alias '..enum.name..'\n'
     for _, const in ipairs(enum.constants) do
         code = code..'---| "\''..const.name..'\'"'

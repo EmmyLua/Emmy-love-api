@@ -1,0 +1,20 @@
+on: [push, pull_request_review, merge]
+jobs:
+  packaging-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: "5.3.3"
+      - run: cd /home/runner/work/Emmy-love-api/Emmy-love-api
+      - run: mkdir api -p
+      - run: rm api/* -rf
+      - run: lua genEmmyAPI.lua
+      - run: zip -r api.zip api
+      - uses: actions/upload-artifact@v2
+        with:
+          name: api.zip
+          path: /home/runner/work/Emmy-love-api/Emmy-love-api/api.zip
