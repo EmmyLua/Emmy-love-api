@@ -4,11 +4,13 @@ A script to generate [LÖVE](https://love2d.org/) API autocomplete files for [Em
 
 ## How to use it
 
-1. Donwload or clone the [LÖVE API](https://github.com/love2d-community/love-api) into a directory on your computer (if you want the API for an older version, check the "releases" of that repository).
-2. Create a directory named `api` in the directory, do not put any files in there or run anything in it.
-3. Download `genEmmyAPI.lua` from this repository into the same directory (either click on the filename and click "Raw" and save the file, or donwload or clone repository to your computer and move the file over).
-4. Run `genEmmyAPI.lua` in the directory, i.e. run `lua genEmmyAPI.lua` in the terminal. This will generate the API autocomplete files in the `api` folder.
-5. Copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
+1. Download or clone the [LÖVE API](https://github.com/26f-studio/love-api) into a directory on your computer .
+2. Download `genEmmyAPI.lua` from this repository into the same directory (you could click on the filename and click "Raw" and save the file, or download or clone repository to your computer and move the file over).
+3. Alternatively, you can just clone this repository *recursively* `--recursive` **and** with `--config core.symlinks=true`(*you must do this on Windows to correctly generate the symbolic links*).
+4. Create an empty directory named `api` in the repository.
+5. Run `genEmmyAPI.lua` in the directory, i.e. run `lua genEmmyAPI.lua` in the terminal. It will generate the API in the `api` folder.
+6. If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API at `Lua.workspace.library` in the settings.
+7. Alternatively, you can copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
 
 Once you start or refresh your IDE (might be automatic) you should have autocomplete and quick documentation for LÖVE!
 
@@ -19,33 +21,31 @@ When you want to change the LÖVE version you use, just delete the `api` folder 
 ## Example workflow (Linux)
 
 ```
-kirby@devbox:~/devel$ git clone https://github.com/love2d-community/love-api.git
-Cloning into 'love-api'...
-remote: Enumerating objects: 34, done.
-remote: Counting objects: 100% (34/34), done.
-remote: Compressing objects: 100% (31/31), done.
-remote: Total 4170 (delta 15), reused 15 (delta 3), pack-reused 4136
-Receiving objects: 100% (4170/4170), 4.29 MiB | 3.90 MiB/s, done.
-Resolving deltas: 100% (2617/2617), done.
-kirby@devbox:~/devel$ git clone https://github.com/kindfulkirby/Emmy-love-api.git
+$ git clone https://github.com/26f-studio/Emmy-love-api.git --recursive --config core.symlinks=true
 Cloning into 'Emmy-love-api'...
-remote: Enumerating objects: 9, done.
-remote: Counting objects: 100% (9/9), done.
-remote: Compressing objects: 100% (9/9), done.
-remote: Total 210 (delta 1), reused 2 (delta 0), pack-reused 201
-Receiving objects: 100% (210/210), 186.86 KiB | 898.00 KiB/s, done.
-Resolving deltas: 100% (91/91), done.
-kirby@devbox:~/devel$ cp Emmy-love-api/genEmmyAPI.lua love-api/
-kirby@devbox:~/devel$ cd love-api/
-kirby@devbox:~/devel/love-api$ mkdir api
-kirby@devbox:~/devel/love-api$ lua genEmmyAPI.lua 
+remote: Enumerating objects: 299, done.
+remote: Counting objects: 100% (299/299), done.
+remote: Compressing objects: 100% (199/199), done.
+remote: Total 541 (delta 164), reused 177 (delta 85), pack-reused 242
+Receiving objects: 100% (541/541), 438.58 KiB | 679.00 KiB/s, done.
+Resolving deltas: 100% (286/286), done.
+Submodule 'love-api' (https://github.com/26f-studio/love-api) registered for path 'love-api'
+Cloning into '/tmp/Emmy-love-api/love-api'...
+remote: Enumerating objects: 62, done.        
+remote: Counting objects: 100% (62/62), done.        
+remote: Compressing objects: 100% (46/46), done.        
+remote: Total 4852 (delta 29), reused 34 (delta 15), pack-reused 4790        
+Receiving objects: 100% (4852/4852), 4.91 MiB | 3.04 MiB/s, done.
+Resolving deltas: 100% (3050/3050), done.
+Submodule path 'love-api': checked out '0639972eea560d5fc69d2cb8b57ff3af31cee986'
+$ cd Emmy-love-api
+$ mkdir api
+$ lua genEmmyAPI.lua
 --finished.
-kirby@devbox:~/devel/love-api$ cp -r api/ ../mygame/src/
-kirby@devbox:~/devel/love-api$
 ```
-
 
 ## Credits
 
 Original script by https://github.com/tangzx  
 One tiny modification of the script, README by https://github.com/kindfulkirby
+Modification by Imple Lee on GitHub.
