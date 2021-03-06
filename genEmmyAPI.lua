@@ -84,7 +84,7 @@ local function genType(name, type)
         end
     end
 
-    return code
+    return code .. '\n\n'
 end
 
 local function genEnum(enum)
@@ -100,7 +100,7 @@ local function genEnum(enum)
         end
         code = code .. '\t[\'' .. name .. '\'] = ' .. i .. ',\n'
     end
-    code = code .. '}\n'
+    code = code .. '}\n\n'
     return code
 end
 
@@ -108,7 +108,7 @@ local function genModule(name, api)
     local f = assert(io.open("api/" .. name .. ".lua", 'w'))
     f:write("---@class " .. name .. '\n')
     if api.description then
-        f:write('---' .. safeDesc(api.description) .. '\n')
+        f:write('---' .. safeDesc(api.description) .. '\n\n')
     end
     f:write("local m = {}\n\n")
 
@@ -117,7 +117,7 @@ local function genModule(name, api)
         for i, type in ipairs(api.types) do
             f:write('--region ' .. type.name .. '\n')
             f:write(genType(type.name, type))
-            f:write('--endregion ' .. type.name .. '\n')
+            f:write('--endregion ' .. type.name .. '\n\n')
         end
     end
 
