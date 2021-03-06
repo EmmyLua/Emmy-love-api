@@ -16,7 +16,7 @@ Once you start or refresh your IDE (might be automatic) you should have autocomp
 
 ## Other LÖVE versions
 
-When you want to change the LÖVE version you use, just delete the `api` folder from your project, and redo the steps above for the appropriate version of the API.
+When you want to change the LÖVE version you use, just delete everything under the `api` folder, and redo the steps above for the appropriate version of the API.
 
 ## Example workflow (Linux)
 
