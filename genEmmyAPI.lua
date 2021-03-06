@@ -153,7 +153,7 @@ local function genModule(name, api)
     local f = assert(io.open("api/" .. name .. ".lua", 'w'))
     f:write("---@class " .. name .. '\n')
     if api.description then
-        f:write('---' .. safeDesc(api.description) .. '\n\n')
+        f:write('---' .. safeDesc(api.description) .. '\n')
     end
     f:write("local m = {}\n\n")
 
