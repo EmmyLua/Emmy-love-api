@@ -85,8 +85,16 @@ end
 
 local function genType(name, type)
     local code = "---@class " .. type.name
-    if type.parenttype then
-        code = code .. ' : ' .. type.parenttype
+    if type.supertypes then
+        code = code .. ' : '
+        local printed = false
+        for _, typename in ipairs(type.supertypes) do
+            if printed then
+                code = code .. ', '
+            end
+            code = code .. typename
+            printed = true
+        end
     end
     code = code .. '\n'
     code = code .. '---' .. safeDesc(type.description) .. '\n'
