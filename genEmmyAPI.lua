@@ -126,19 +126,19 @@ local function genModule(name, api)
     end
     f:write("local m = {}\n\n")
 
+    -- enums
+    if api.enums then
+        for i, enum in ipairs(api.enums) do
+            f:write(genEnum(enum))
+        end
+    end
+
     -- types
     if api.types then
         for i, type in ipairs(api.types) do
             f:write('--region ' .. type.name .. '\n')
             f:write(genType(type.name, type))
             f:write('--endregion ' .. type.name .. '\n\n')
-        end
-    end
-
-    -- enums
-    if api.enums then
-        for i, enum in ipairs(api.enums) do
-            f:write(genEnum(enum))
         end
     end
 
