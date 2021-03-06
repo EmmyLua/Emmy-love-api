@@ -8,6 +8,9 @@ end
 local function genCorrectType(type)
     type = string.gsub(type, ' or ', '|')
     type = string.gsub(type, 'light userdata', 'userdata')
+    if type:find("'") then
+        type = '"'..type..'"'
+    end
     if type:find(' ') then
         print('maybe wrong type: ' .. type)
     end
