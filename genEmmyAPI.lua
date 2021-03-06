@@ -14,28 +14,27 @@ local function genCorrectType(type)
     return type
 end
 
-local function genReturns(variant)
-    local returns = variant.returns
-    local s = ""
-    local num = 0
-    if returns and #returns > 0 then
-        num = #returns
-        for i, ret in ipairs(returns) do
-            if i == 1 then
-                s = genCorrectType(ret.type)
-            else
-                s = s .. ', ' .. genCorrectType(ret.type)
-            end
-        end
-    else
-        s = "void"
-    end
-    return s, num
-end
-
 local function genFunction(moduleName, fun, static)
     local code = "---" .. safeDesc(fun.description) .. "\n"
     local argList = ''
+
+    local function gen_phrase(code, comment, ...)
+        local res = {'---@'..code, ...}
+        if comment ~= nil then
+            table.insert(res, '@'..safeDesc(comment))
+        end
+        return table.concat(res, ' ') .. '\n'
+    end
+
+    local function map(f, xs)
+        if xs == nil then return nil end
+        local res = {}
+        for _, v in ipairs(xs) do
+            table.insert(res, f(v))
+        end
+        return res
+    end
+
 
     for vIdx, variant in ipairs(fun.variants) do
         -- args
@@ -48,27 +47,33 @@ local function genFunction(moduleName, fun, static)
                     else
                         argList = argList .. ', ' .. argument.name
                     end
-                    code = code .. '---@param ' .. argument.name .. ' ' .. genCorrectType(argument.type) .. ' @' .. argument.description .. '\n'
-                end
-            else
-                code = code .. '---@overload fun('
-                for argIdx, argument in ipairs(arguments) do
-                    if argIdx == 1 then
-                        code = code .. argument.name .. ':' .. genCorrectType(argument.type)
+                    if argument.name == '...' then
+                        code = code .. gen_phrase('vararg', argument.description, genCorrectType(argument.type))
                     else
-                        code = code .. ', '
-                        code = code .. argument.name .. ':' .. genCorrectType(argument.type)
+                        code = code .. gen_phrase('param', argument.description, argument.name, genCorrectType(argument.type))
                     end
                 end
-                code = code .. '):' .. genReturns(variant)
-                code = code .. '\n'
+            else
+                code = code .. gen_phrase('overload', variant.description, 
+                    'fun('..
+                        table.concat(map(
+                            function(argu)
+                                if argu.name == '...' then return '...' end
+                                return argu.name..': '..genCorrectType(argu.type) end,
+                            arguments), ', ')..'):'..
+                        table.concat(map(
+                            function(ret) return genCorrectType(ret.type) end,
+                            variant.returns) or {'nil'}, ', '))
             end
         end
 
         if vIdx == 1 then
-            local type, num = genReturns(variant)
-            if num > 0 then
-                code = code .. '---@return ' .. type .. '\n'
+            if variant.returns and #variant.returns > 0 then
+                for _, ret in ipairs(variant.returns) do
+                    code = code .. gen_phrase('return', ret.description, genCorrectType(ret.type), ret.name)
+                end
+            else
+                code = code .. gen_phrase('return', nil, 'nil')
             end
         end
     end
