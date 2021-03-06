@@ -115,7 +115,7 @@ local function genEnum(enum)
     for _, const in ipairs(enum.constants) do
         code = code..'---| "\''..const.name..'\'"'
         if const.description then
-            code = code..' #'..safeDesc(const.description)
+            code = code..' #'..string.gsub(const.description, '\n', '  ')
         end
         code = code..'\n'
     end
