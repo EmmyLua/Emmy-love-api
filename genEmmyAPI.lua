@@ -110,20 +110,16 @@ local function genType(name, type)
 end
 
 local function genEnum(enum)
-    local code = '---' .. safeDesc(enum.description) .. '\n'
-    code = code .. enum.name .. ' = {\n'
-    for i, const in ipairs(enum.constants) do
-        code = code .. '\t---' .. safeDesc(const.description) .. '\n'
-        local name = const.name
-        if name == '\\' then
-            name = '\\\\'
-        elseif name == '\'' then
-            name = '\\\''
+    local code = '---@' .. safeDesc(enum.description) .. '\n'
+    code = code..'---@alias '..enum.name..'\n'
+    for _, const in ipairs(enum.constants) do
+        code = code..'---| "\''..const.name..'\'"'
+        if const.description then
+            code = code..' #'..safeDesc(const.description)
         end
-        code = code .. '\t[\'' .. name .. '\'] = ' .. i .. ',\n'
+        code = code..'\n'
     end
-    code = code .. '}\n\n'
-    return code
+    return code..'\n'
 end
 
 local function genModule(name, api)
