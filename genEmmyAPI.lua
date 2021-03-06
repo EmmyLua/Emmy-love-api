@@ -178,7 +178,7 @@ local function genModule(name, api)
         for i, m in ipairs(api.modules) do
             f:write("---@type " .. name .. '.' .. m.name .. '\n')
             f:write("m." .. m.name .. ' = nil\n\n')
-            genModule(name .. '.' .. m.name, m)
+            genModule(name .. '.' .. m.name, m):close()
         end
     end
 
@@ -195,9 +195,11 @@ local function genModule(name, api)
     end
 
     f:write("return m")
-    f:close()
+    return f
 end
 
-genModule('love', api)
+local apifile = genModule('love', api)
+apifile:write('\n---@alias Variant table|boolean|string|number|Object')
+apifile:close()
 
 print('--finished.')
