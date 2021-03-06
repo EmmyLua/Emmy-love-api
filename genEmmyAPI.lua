@@ -156,6 +156,13 @@ local function genModule(name, api)
         f:write(genFunction('m', fun, true))
     end
 
+    -- callbacks
+    if api.callbacks then
+        for i, fun in ipairs(api.callbacks) do
+            f:write(genFunction('m', fun, true))
+        end
+    end
+
     f:write("return m")
     f:close()
 end
