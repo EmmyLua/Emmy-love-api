@@ -4,14 +4,24 @@ A script to generate [LÖVE](https://love2d.org/) API autocomplete files for [Em
 
 ## How to use it
 
-1. Download or clone the [LÖVE API](https://github.com/26f-studio/love-api) into a directory on your computer .
-2. Download `genEmmyAPI.lua` from this repository into the same directory (you could click on the filename and click "Raw" and save the file, or download or clone repository to your computer and move the file over).
-3. Alternatively, you can just clone this repository *recursively* `--recursive` **and** with `--config core.symlinks=true`(*you must do this on Windows to correctly generate the symbolic links*).
-4. Create an empty directory named `api` in the repository.
-5. Run `genEmmyAPI.lua` in the directory, i.e. run `lua genEmmyAPI.lua` in the terminal. It will generate the API in the `api` folder.
-6. Alternatively, you can download the `api.zip` from the artifacts of the latest [GitHub Actions](https://github.com/26F-Studio/Emmy-love-api/actions) and unzip it as the `api` directory described above.
-7. If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API as `Lua.workspace.library: {".../api": true}` in the settings.
-8. Alternatively, you can copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
+### Prepare the `api` directory
+
+- You can download the `api.zip` from the artifacts of the latest [GitHub Actions](https://github.com/26F-Studio/Emmy-love-api/actions) and unzip the `api` from it.
+- Alternatively, you can build the `api` directory by yourself.
+
+#### How to build the `api` directory by one's own
+
+1. Prepare the whole project.
+  - You can clone this repository *recursively* `--recursive` with symbolic links enabled `--config core.symlinks=true`(*this is a must on `Windows` to generate correct symbolic links*).
+  - Alternatively, you can clone the [LÖVE API](https://github.com/26F-Studio/love-api) and put the `genEmmyAPI.lua`(from this repository) into it.
+2. Create an empty directory named `api` in the same directory where `genEmmyAPI.lua` is.
+3. `lua genEmmyAPI.lua` and the API is generated in the `api` directory.
+
+
+### Use the APIs in your project
+
+- Copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
+- If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API as `Lua.workspace.library: {".../api": true}` in the settings and not copy the `api` folder.
 
 Once you start or refresh your IDE (might be automatic) you should have autocomplete and quick documentation for LÖVE!
 
@@ -22,22 +32,21 @@ When you want to change the LÖVE version you use, just delete everything under 
 ## Example workflow (Linux)
 
 ```
-$ git clone https://github.com/26f-studio/Emmy-love-api.git --recursive --config core.symlinks=true
+$ git clone https://github.com/26F-Studio/Emmy-love-api.git --recursive --config core.symlinks=true --depth=1 --shallow-submodules --single-branch
 Cloning into 'Emmy-love-api'...
-remote: Enumerating objects: 299, done.
-remote: Counting objects: 100% (299/299), done.
-remote: Compressing objects: 100% (199/199), done.
-remote: Total 541 (delta 164), reused 177 (delta 85), pack-reused 242
-Receiving objects: 100% (541/541), 438.58 KiB | 679.00 KiB/s, done.
-Resolving deltas: 100% (286/286), done.
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 11 (delta 0), reused 7 (delta 0), pack-reused 0
+Unpacking objects: 100% (11/11), 3.87 KiB | 793.00 KiB/s, done.
 Submodule 'love-api' (https://github.com/26f-studio/love-api) registered for path 'love-api'
-Cloning into '/tmp/Emmy-love-api/love-api'...
-remote: Enumerating objects: 62, done.        
-remote: Counting objects: 100% (62/62), done.        
-remote: Compressing objects: 100% (46/46), done.        
-remote: Total 4852 (delta 29), reused 34 (delta 15), pack-reused 4790        
-Receiving objects: 100% (4852/4852), 4.91 MiB | 3.04 MiB/s, done.
-Resolving deltas: 100% (3050/3050), done.
+Cloning into 'Emmy-love-api/love-api'...
+remote: Enumerating objects: 196, done.        
+remote: Counting objects: 100% (196/196), done.        
+remote: Compressing objects: 100% (153/153), done.        
+remote: Total 196 (delta 83), reused 82 (delta 30), pack-reused 0        
+Receiving objects: 100% (196/196), 174.33 KiB | 448.00 KiB/s, done.
+Resolving deltas: 100% (83/83), done.
 Submodule path 'love-api': checked out '0639972eea560d5fc69d2cb8b57ff3af31cee986'
 $ cd Emmy-love-api
 $ mkdir api
