@@ -21,7 +21,7 @@ A script to generate [LÖVE](https://love2d.org/) API autocomplete files for [Em
 ### Use the APIs in your project
 
 - Copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
-- If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API as `Lua.workspace.library: {".../api": true}` in the settings and not copy the `api` folder.
+- If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API by adding a term in `Lua.workspace.library` in the settings and not copy the `api` folder.
 
 Once you start or refresh your IDE (might be automatic) you should have autocomplete and quick documentation for LÖVE!
 
