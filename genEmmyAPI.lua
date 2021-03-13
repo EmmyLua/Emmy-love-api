@@ -8,9 +8,7 @@ end
 local function genCorrectType(type)
     type = string.gsub(type, ' or ', '|')
     type = string.gsub(type, 'light userdata', 'userdata')
-    if type:find("'") then
-        type = '"'..type..'"'
-    end
+    type = string.format("%q", type)
     if type:find(' ') then
         print('maybe wrong type: ' .. type)
     end
@@ -143,7 +141,7 @@ local function genEnum(enum)
     end
     code = code..'---@alias '..enum.name..'\n'
     for _, const in ipairs(enum.constants) do
-        code = code..'---| "\''..const.name..'\'"'
+        code = code..'---| '..string.format("%q", "'"..const.name.."'")
         if const.description then
             code = code..' #'..string.gsub(const.description, '\n', '  ')
         end
