@@ -8,9 +8,10 @@ end
 local function genCorrectType(type)
     type = string.gsub(type, ' or ', '|')
     type = string.gsub(type, 'light userdata', 'userdata')
-    type = string.format("%q", type)
-    if type:find(' ') then
+    if type:find('[^a-zA-Z0-9|_]') then
         print('maybe wrong type: ' .. type)
+        type = string.format("%q", type)
+        print('quoted as: '..type)
     end
     return type
 end
