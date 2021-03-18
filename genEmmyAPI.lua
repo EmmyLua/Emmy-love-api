@@ -138,15 +138,14 @@ end
 local function genEnum(enum)
     local code = ''
     if enum.description then
-        code = code..'---#' .. safeDesc(enum.description) .. '\n'
+        code = code..'---' .. safeDesc(enum.description) .. '\n'
     end
     code = code..'---@alias '..enum.name..'\n'
     for _, const in ipairs(enum.constants) do
-        code = code..'---| '..string.format("%q", "'"..const.name.."'")
         if const.description then
-            code = code..' #'..string.gsub(const.description, '\n', '  ')
+            code = code .. '---' .. safeDesc(const.description) .. '\n'
         end
-        code = code..'\n'
+        code = code..'---| '..string.format("%q", "'"..const.name.."'") .. '\n'
     end
     return code..'\n'
 end
