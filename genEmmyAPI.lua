@@ -228,22 +228,59 @@ end
 --endregion prelude
 
 
+--region api-definition
+---@class EnumConstant
+---@field name string
+---@field description string
+
+---@class OneFunction
+---@field returns FunctionField[]|nil
+---@field description string|nil
+---@field arguments FunctionField[]|nil
+
+---@alias Callback Function
+
+---@class Love
+---@field types Type[]
+---@field version string
+---@field functions Function[]
+---@field callbacks Callback[]
+---@field modules Module[]
+
+---@class Type
+---@field supertypes string[]|nil
+---@field name string
+---@field description string
+---@field constructors string[]|nil
+---@field functions Function[]|nil
+
+---@class Enum
+---@field name string
+---@field description string
+---@field constants EnumConstant[]
+
 ---@class Function
 ---@field name string
 ---@field description string
 ---@field variants OneFunction[]
 
----@class OneFunction
----@field returns FunctionField[]|nil
----@field arguments FunctionField[]|nil
----@field description string|nil
-
 ---@class FunctionField
 ---@field type string
----@field name string
----@field default string|nil
----@field description string
 ---@field table FunctionField[]|nil
+---@field default string|nil
+---@field name string
+---@field description string
+
+---@class Module
+---@field types Type[]
+---@field name string
+---@field description string
+---@field functions Function[]
+---@field enums Enum[]
+--endregion api-definition
+
+
+WHERE='api/%s.lua'
 
 ---@param prelude prelude
 ---@param prefix string
@@ -309,22 +346,11 @@ local function gen_function(prelude, prefix)
     end
 end
 
-
----@alias Callback Function
-
 ---@param prelude prelude
 ---@param prefix string
 local function gen_callback(prelude, prefix)
     return gen_function(prelude, prefix)
 end
-
-
----@class Type
----@field name string
----@field description string
----@field constructors string[]|nil # not used
----@field functions Function[]|nil
----@field supertypes string[]|nil
 
 ---@param prelude prelude
 local function gen_type(prelude)
@@ -346,11 +372,6 @@ local function gen_type(prelude)
     end
 end
 
-
----@class EnumConstant
----@field name string
----@field description string
-
 ---@param enum_constant EnumConstant
 ---@return printed
 local function gen_enum_constant(enum_constant)
@@ -358,12 +379,6 @@ local function gen_enum_constant(enum_constant)
     putf(p, '---| %q', "'"..enum_constant.name.."'")
     return p
 end
-
-
----@class Enum
----@field name string
----@field description string
----@field constants EnumConstant[]
 
 ---@param enum Enum
 ---@return printed
@@ -373,17 +388,6 @@ local function gen_enum(enum)
     put(p, map_add(gen_enum_constant, enum.constants))
     return squash(p)
 end
-
-
-WHERE='api/%s.lua'
-
-
----@class Module
----@field name string # not used in documentation
----@field description string
----@field types Type[]
----@field functions Function[]
----@field enums Enum[]
 
 ---@param module Module
 ---@return printed
@@ -404,14 +408,6 @@ local function gen_write_module(module)
     f:close()
     return string.format('love.%s = require "love/%s"', module.name, module.name)
 end
-
-
----@class Love
----@field version string
----@field functions Function[]
----@field modules Module[]
----@field types Type[]
----@field callbacks Callback[]
 
 ---@param love Love
 local function gen_write_love(love)
