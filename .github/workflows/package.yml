@@ -10,7 +10,7 @@ jobs:
         with:
           luaVersion: "5.3.3"
       - run: cd /home/runner/work/Emmy-love-api/Emmy-love-api
-      - run: mkdir api -p
+      - run: mkdir api/love -p
       - run: rm api/* -rf
       - run: lua genEmmyAPI.lua
       - uses: actions/upload-artifact@v2
