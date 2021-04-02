@@ -27,15 +27,28 @@ local function map_add(f, mapped, added)
     if added == nil then
         added = {}
     end
-    local really_added = false
+    local actual_added = {}
+    local added_times = 0
     for _, t in ipairs(mapped) do
-        table.insert(added, f(t))
-        really_added = true
+        table.insert(actual_added, f(t))
+        added_times = added_times + 1
     end
-    if really_added then
+    if added_times == 0 then
+        return nil
+    elseif added_times == 1 then
+        if type(actual_added[1]) == 'string' then
+            table.insert(added, actual_added[1])
+        else
+            for _, t in ipairs(actual_added[1]) do
+                table.insert(added, t)
+            end
+        end
         return added
     else
-        return {}
+        for _, t in ipairs(actual_added) do
+            table.insert(added, t)
+        end
+        return added
     end
 end
 
@@ -131,7 +144,7 @@ local function gen_prelude(prelude, p)
     if added then
         return p
     else
-        return {}
+        return nil
     end
 end
 
@@ -290,14 +303,13 @@ local function gen_function(prelude, prefix)
     ---@param func Function
     ---@return printed
     return function(func)
-        local p = {}
         local prelude_counter = 0
         local actual_prefix = prelude_prefix..func.name..'-'
         local function gen_unique_name()
             prelude_counter = prelude_counter + 1
             return actual_prefix..prelude_counter
         end
-        for _, variant in ipairs(func.variants) do
+        return map_add(function(variant)
             local desc = func.description
             if variant.description then
                 desc = desc .. '\n' .. variant.description
@@ -307,21 +319,19 @@ local function gen_function(prelude, prefix)
             for argument in expand_items(variant.arguments, prelude, gen_unique_name) do
                 table.insert(parameter_list, argument.name)
                 local printed = {}
-                local show_default = argument.default ~= nil
                 if argument.name == '...' then
                     put(printed, '---@vararg')
                 else
                     put(printed, '---@param')
-                    if argument.default == 'nil' then
+                    if argument.default then
                         put(printed, argument.name..'?')
-                        show_default = false
                     else
                         put(printed, argument.name)
                     end
                 end
                 put(printed, argument.type)
                 put(printed, '@')
-                if show_default then
+                if argument.default then
                     put(printed, '(default to '..argument.default..')')
                 end
                 put(printed, table.concat(gen_desc(argument.description, true), '\n'))
@@ -340,9 +350,8 @@ local function gen_function(prelude, prefix)
                 put(variantp, table.concat(printed, ' '))
             end
             put(variantp, 'function '..prefix..func.name..'('..table.concat(parameter_list, ', ')..') end')
-            put(p, squash(variantp))
-        end
-        return p
+            return squash(variantp)
+        end, func.variants)
     end
 end
 
@@ -357,16 +366,16 @@ local function gen_type(prelude)
     ---@param type Type
     ---@return printed
     return function(type)
-        local p = gen_desc(type.description)
-        put(p, '--region '..type.name, 1)
+        local p = {'--region '..type.name}
+        local header = gen_desc(type.description)
         local type_decl = '---@class '..type.name
         if type.supertypes then
             type_decl = type_decl..': '..table.concat(type.supertypes, ', ')
         end
-        put(p, type_decl)
-        put(p, 'local '..type.name..' = {}')
-        p = {p}
-        put(p, map_add(gen_function(prelude, type.name..':'), type.functions, {'-- functions'}))
+        put(header, type_decl)
+        put(header, 'local '..type.name..' = {}')
+        put(p, header)
+        map_add(gen_function(prelude, type.name..':'), type.functions, p)
         put(p, '--endregion '..type.name)
         return p
     end
