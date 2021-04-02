@@ -331,7 +331,9 @@ local function gen_function(prelude, prefix)
             for returned in expand_items(variant.returns, prelude, gen_unique_name, prefix..func.name..':returns') do
                 local printed = {}
                 put(printed, '---@return')
-                put(printed, returned.type)
+                if returned.name ~= '...' then
+                    put(printed, returned.type)
+                end
                 put(printed, returned.name)
                 put(printed, '@')
                 if returned.default then
