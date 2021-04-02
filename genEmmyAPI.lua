@@ -151,27 +151,20 @@ end
 ---@param prelude prelude
 ---@param t FunctionField[]
 ---@param gen_unique_name fun():string
+---@param traceback string
 ---@return string typename
-local function find_or_add(prelude, t, gen_unique_name)
+local function find_or_add(prelude, t, gen_unique_name, traceback)
     if t == nil then
+        print('no field called table found at '..traceback)
         return 'table'
     end
     local actual_fields = {}
     for _, field in pairs(t) do
-        if field.type ~= 'table' then
-            actual_fields[field.name] = {
-                type=field.type,
-                default=field.default,
-                description=field.description
-            }
-        else
-            local typename = find_or_add(field.table)
-            actual_fields[field.name] = {
-                type=typename,
-                default=field.default,
-                description=field.description
-            }
-        end
+        actual_fields[field.name] = {
+            type=field.type == 'table' and find_or_add(prelude, field.table, gen_unique_name, traceback..'.'..field.name) or field.type,
+            default=field.default,
+            description=field.description
+        }
     end
     local actual_length = #actual_fields
     for typename, fields in pairs(prelude) do
@@ -197,8 +190,9 @@ end
 ---@param items FunctionField[]
 ---@param prelude prelude
 ---@param gen_unique_name fun():string
+---@param traceback string
 ---@return fun():FunctionField|nil
-local function expand_items(items, prelude, gen_unique_name)
+local function expand_items(items, prelude, gen_unique_name, traceback)
     local k = 1
     local temp = nil
     return function()
@@ -213,10 +207,7 @@ local function expand_items(items, prelude, gen_unique_name)
         if not item then return end
         local typename = item.type
         if typename == 'table' then
-            typename = find_or_add(prelude, item.table, gen_unique_name)
-            if typename == 'table' then
-                print('type is table but no field called table at '..item.name)
-            end
+            typename = find_or_add(prelude, item.table, gen_unique_name, traceback..'['..(k-1)..']')
         else
             typename = type_corrector(typename)
         end
@@ -316,7 +307,7 @@ local function gen_function(prelude, prefix)
             end
             local variantp = gen_desc(desc)
             local parameter_list = {}
-            for argument in expand_items(variant.arguments, prelude, gen_unique_name) do
+            for argument in expand_items(variant.arguments, prelude, gen_unique_name, prefix..func.name..':parameters') do
                 table.insert(parameter_list, argument.name)
                 local printed = {}
                 if argument.name == '...' then
@@ -337,7 +328,7 @@ local function gen_function(prelude, prefix)
                 put(printed, table.concat(gen_desc(argument.description, true), '\n'))
                 put(variantp, table.concat(printed, ' '))
             end
-            for returned in expand_items(variant.returns, prelude, gen_unique_name) do
+            for returned in expand_items(variant.returns, prelude, gen_unique_name, prefix..func.name..':returns') do
                 local printed = {}
                 put(printed, '---@return')
                 put(printed, returned.type)
