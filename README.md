@@ -26,26 +26,25 @@ Once you start or refresh your IDE (might be automatic) you should have autocomp
 ## Example workflow (Linux)
 
 ```
-$ git clone https://github.com/26F-Studio/Emmy-love-api.git --recursive --config core.symlinks=true --depth=1 --shallow-submodules --single-branch
+$ git clone https://github.com/26F-Studio/Emmy-love-api.git --recursive --depth=1 --shallow-submodules --single-branch
 Cloning into 'Emmy-love-api'...
-remote: Enumerating objects: 11, done.
-remote: Counting objects: 100% (11/11), done.
-remote: Compressing objects: 100% (6/6), done.
-remote: Total 11 (delta 0), reused 7 (delta 0), pack-reused 0
-Unpacking objects: 100% (11/11), 3.87 KiB | 793.00 KiB/s, done.
+remote: Enumerating objects: 12, done.
+remote: Counting objects: 100% (12/12), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 12 (delta 0), reused 5 (delta 0), pack-reused 0
+Unpacking objects: 100% (12/12), 6.49 KiB | 830.00 KiB/s, done.
 Submodule 'love-api' (https://github.com/26f-studio/love-api) registered for path 'love-api'
-Cloning into 'Emmy-love-api/love-api'...
-remote: Enumerating objects: 196, done.        
-remote: Counting objects: 100% (196/196), done.        
+Cloning into '/tmp/Emmy-love-api/love-api'...
+remote: Enumerating objects: 195, done.        
+remote: Counting objects: 100% (195/195), done.        
 remote: Compressing objects: 100% (153/153), done.        
-remote: Total 196 (delta 83), reused 82 (delta 30), pack-reused 0        
-Receiving objects: 100% (196/196), 174.33 KiB | 448.00 KiB/s, done.
+remote: Total 195 (delta 83), reused 81 (delta 30), pack-reused 0        
+Receiving objects: 100% (195/195), 174.27 KiB | 281.00 KiB/s, done.
 Resolving deltas: 100% (83/83), done.
-Submodule path 'love-api': checked out '0639972eea560d5fc69d2cb8b57ff3af31cee986'
+Submodule path 'love-api': checked out '0333363b76aa8e2372c3545f9aea1d31c68f6c39'
 $ cd Emmy-love-api
-$ mkdir api
-$ lua genEmmyAPI.lua
---finished.
+$ mkdir -p api/love
+$ lua genEmmyAPI.lua 2>/dev/null
 ```
 
 ## Credits
