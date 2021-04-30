@@ -1,3 +1,11 @@
+local function log(...)
+    io.stderr:write(...)
+end
+local function logln(...)
+    log(...)
+    log('\n')
+end
+
 --region printed
 ---@alias printed printed[]|string
 
@@ -102,9 +110,10 @@ local function type_corrector(type)
     type = string.gsub(type, ' or ', '|')
     type = string.gsub(type, 'light userdata', 'userdata')
     if type:find('[^a-zA-Z0-9|_-]') then
-        print('maybe wrong type: ' .. type)
+        io.stderr:write()
+        logln('maybe wrong type: ' .. type)
         type = string.format("%q", type)
-        print('quoted as: '..type)
+        logln('quoted as: '..type)
     end
     return type
 end
@@ -134,7 +143,7 @@ local function gen_prelude(prelude, p)
             if name ~= '...' then
                 put(thisp, '---@field '..name..' '..type_corrector(info.type)..table.concat(gen_desc(desc, true), '\n'))
             else
-                print('found ... in table definition '..typename)
+                logln('found ... in table definition '..typename)
                 put(thisp, '------@field '..name..' '..type_corrector(info.type)..table.concat(gen_desc(desc, true), '\n'))
             end
         end
@@ -155,7 +164,7 @@ end
 ---@return string typename
 local function find_or_add(prelude, t, gen_unique_name, traceback)
     if t == nil then
-        print('no field called table found at '..traceback)
+        logln('no field called table found at '..traceback)
         return 'table'
     end
     local actual_fields = {}
