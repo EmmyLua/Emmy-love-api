@@ -137,7 +137,7 @@ local function gen_prelude(prelude, p)
         for name, info in pairs(fields) do
             local desc = ' # '
             if info.default then
-                desc = desc..'(default to '..info.default..') '
+                desc = desc..'(default: `'..info.default..'`) '
             end
             desc = desc..info.description
             if name ~= '...' then
@@ -332,7 +332,7 @@ local function gen_function(prelude, prefix)
                 put(printed, argument.type)
                 put(printed, '@')
                 if argument.default then
-                    put(printed, '(default to '..argument.default..')')
+                    put(printed, '(default: `'..argument.default..'`)')
                 end
                 put(printed, table.concat(gen_desc(argument.description, true), '\n'))
                 put(variantp, table.concat(printed, ' '))
@@ -346,7 +346,7 @@ local function gen_function(prelude, prefix)
                 put(printed, returned.name)
                 put(printed, '@')
                 if returned.default then
-                    put(printed, '(default to '..returned.default..')')
+                    put(printed, '(default: `'..returned.default..'`)')
                 end
                 put(printed, table.concat(gen_desc(returned.description, true), '\n'))
                 put(variantp, table.concat(printed, ' '))
