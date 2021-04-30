@@ -4,30 +4,24 @@ A script to generate [LÖVE](https://love2d.org/) API autocomplete files for [Em
 
 ## How to use it
 
-### Prepare the `api` directory
+### Prepare the `api` folder to put your api in
 
 - You can download the `api.zip` from the artifacts of the latest [GitHub Actions](https://github.com/26F-Studio/Emmy-love-api/actions) and unzip the `api` from it.
-- Alternatively, you can build the `api` directory by yourself.
+- Alternatively, you can build the `api` folder by yourself.
 
-#### How to build the `api` directory by one's own
+#### How to build the `api` folder manually
 
-1. Prepare the whole project.
-  - You can clone this repository *recursively* `--recursive` with symbolic links enabled `--config core.symlinks=true`(*this is a must on `Windows` to generate correct symbolic links*).
-  - Alternatively, you can clone the [LÖVE API](https://github.com/26F-Studio/love-api) and put the `genEmmyAPI.lua`(from this repository) into it.
-2. Create an empty directory named `api` in the same directory where `genEmmyAPI.lua` is.
-3. `lua genEmmyAPI.lua` and the API is generated in the `api` directory.
+1. Clone this repository *recursively* `--recursive`.
+2. Create path `api/love` in the same folder where `genEmmyAPI.lua` is.
+3. `lua genEmmyAPI.lua` and the API is generated in `api`.
 
 
 ### Use the APIs in your project
 
-- Copy the `api` folder into your project's source folder, the same folder where `main.lua` is (you can rename it whatever you want, it doesn't have to be called `api`).
-- If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), you can specify the API by adding a term in `Lua.workspace.library` in the settings and not copy the `api` folder.
+- Copy the content of `api` folder into your project's root directory (the same folder where `main.lua` is).  The content is just `love.lua` and a folder called `love`.
+- If you use [the Lua plugin on VS code](https://github.com/sumneko/lua-language-server), rather than copying, you can [specify the API](https://github.com/sumneko/lua-language-server/wiki/EmmyLua-Libraries).
 
 Once you start or refresh your IDE (might be automatic) you should have autocomplete and quick documentation for LÖVE!
-
-## Other LÖVE versions
-
-When you want to change the LÖVE version you use, just delete everything under the `api` folder, and redo the steps above for the appropriate version of the API.
 
 ## Example workflow (Linux)
 
@@ -58,4 +52,5 @@ $ lua genEmmyAPI.lua
 
 Original script by https://github.com/tangzx  
 One tiny modification of the script, README by https://github.com/kindfulkirby
-Modification by Imple Lee on GitHub.
+
+Hugely modified by Imple Lee on GitHub.
