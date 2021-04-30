@@ -181,5 +181,5 @@ local function printer()
     return table.concat(returned, '\n\n')
 end
 
-assert(check(require 'love_api', 'Love', 'love'))
+assert(check(require 'love-api/love_api', 'Love', 'love'))
 print(printer())

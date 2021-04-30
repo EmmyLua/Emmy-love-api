@@ -431,4 +431,4 @@ local function gen_write_love(love)
 end
 
 
-gen_write_love(require 'love_api')
+gen_write_love(require 'love-api/love_api')
