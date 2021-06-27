@@ -47,10 +47,3 @@ $ cd Emmy-love-api
 $ mkdir -p api/love
 $ lua genEmmyAPI.lua 2>/dev/null
 ```
-
-## Credits
-
-Original script by https://github.com/tangzx  
-One tiny modification of the script, README by https://github.com/kindfulkirby
-
-Hugely modified by Imple Lee on GitHub.
