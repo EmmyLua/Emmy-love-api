@@ -29,7 +29,7 @@ end
 ---@generic T
 ---@param f fun(t:T):printed
 ---@param mapped T[]
----@param added printed[]|nil
+---@param added? printed[]
 ---@return printed
 local function map_add(f, mapped, added)
     if added == nil then
@@ -120,7 +120,7 @@ end
 
 --region prelude
 ---@class field
----@field default string|nil
+---@field default? string
 ---@field description string
 ---@field type string
 
