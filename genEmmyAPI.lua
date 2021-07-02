@@ -138,9 +138,10 @@ local function gen_prelude(prelude, p)
             local desc = ' # '
             if info.default then
                 desc = desc..'(default: `'..info.default..'`) '
+                name = name..'?'
             end
             desc = desc..info.description
-            if name ~= '...' then
+            if name ~= '...' and name ~= '...?' then
                 put(thisp, '---@field '..name..' '..type_corrector(info.type)..table.concat(gen_desc(desc, true), '\n'))
             else
                 logln('found ... in table definition '..typename)
@@ -341,7 +342,11 @@ local function gen_function(prelude, prefix)
                 local printed = {}
                 put(printed, '---@return')
                 if returned.name ~= '...' then
-                    put(printed, returned.type)
+                    if returned.default then
+                        put(printed, returned.type..'?')
+                    else
+                        put(printed, returned.type)
+                    end
                 end
                 put(printed, returned.name)
                 put(printed, '@')
