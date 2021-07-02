@@ -108,7 +108,7 @@ end
 ---@param type string
 local function type_corrector(type)
     type = string.gsub(type, ' or ', '|')
-    type = string.gsub(type, 'light userdata', 'userdata')
+    type = string.gsub(type, 'light userdata', 'lightuserdata')
     if type:find('[^a-zA-Z0-9|_-]') then
         io.stderr:write()
         logln('maybe wrong type: ' .. type)
