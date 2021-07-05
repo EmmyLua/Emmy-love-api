@@ -141,18 +141,21 @@ local function gen_prelude(prelude, p)
         for _, name in ipairs(fields.names) do
             local info = fields.fields[name]
             local desc = ' # '
-            local normalized_name = name
+            local question = ''
             if info.default then
                 desc = desc..'(default: `'..info.default..'`) '
-                normalized_name = name..'?'
+                question = '?'
             end
             desc = desc..info.description
-            if name ~= '...' then
-                put(thisp, '---@field '..normalized_name..' '..type_corrector(info.type, typename..'.'..name)..table.concat(gen_desc(desc, true), '\n'))
-            else
+            local extra = ''
+            if name == '...' then
                 logln('found ... in table definition '..typename)
-                put(thisp, '------@field '..normalized_name..' '..type_corrector(info.type, typename.."."..name)..table.concat(gen_desc(desc, true), '\n'))
+                extra = '---'
+            elseif name:find('^[0-9]+$') then
+                extra = '---'
+                name = '['..name..']'
             end
+            put(thisp, extra..'---@field '..name..question..' '..type_corrector(info.type, typename..'.'..name)..table.concat(gen_desc(desc, true), '\n'))
         end
         put(p, thisp)
         added = true
