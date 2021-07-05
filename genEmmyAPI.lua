@@ -184,11 +184,11 @@ local function find_or_add(prelude, t, gen_unique_name, traceback)
         }
         table.insert(actual_names, field.name)
     end
-    local actual_length = #actual_fields
+    local actual_length = #actual_names
     for typename, fields in pairs(prelude) do
         if (function()
             if #fields.names ~= actual_length then return end
-            for _, fieldname in pairs(fields.names) do
+            for _, fieldname in ipairs(fields.names) do
                 local fieldinfo = fields.fields[fieldname]
                 local actualinfo = actual_fields[fieldname]
                 if not actualinfo then return end
