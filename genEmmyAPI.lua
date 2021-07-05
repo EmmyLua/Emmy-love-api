@@ -106,12 +106,12 @@ end
 --endregion printed
 
 ---@param type string
-local function type_corrector(type)
+---@param where string
+local function type_corrector(type, where)
     type = string.gsub(type, ' or ', '|')
     type = string.gsub(type, 'light userdata', 'lightuserdata')
     if type:find('[^a-zA-Z0-9|_-]') then
-        io.stderr:write()
-        logln('maybe wrong type: ' .. type)
+        logln('maybe wrong type: ' .. type .. ' at ' .. where)
         type = string.format("%q", type)
         logln('quoted as: '..type)
     end
@@ -141,16 +141,17 @@ local function gen_prelude(prelude, p)
         for _, name in ipairs(fields.names) do
             local info = fields.fields[name]
             local desc = ' # '
+            local normalized_name = name
             if info.default then
                 desc = desc..'(default: `'..info.default..'`) '
-                name = name..'?'
+                normalized_name = name..'?'
             end
             desc = desc..info.description
-            if name ~= '...' and name ~= '...?' then
-                put(thisp, '---@field '..name..' '..type_corrector(info.type)..table.concat(gen_desc(desc, true), '\n'))
+            if name ~= '...' then
+                put(thisp, '---@field '..normalized_name..' '..type_corrector(info.type, typename..'.'..name)..table.concat(gen_desc(desc, true), '\n'))
             else
                 logln('found ... in table definition '..typename)
-                put(thisp, '------@field '..name..' '..type_corrector(info.type)..table.concat(gen_desc(desc, true), '\n'))
+                put(thisp, '------@field '..normalized_name..' '..type_corrector(info.type, typename.."."..name)..table.concat(gen_desc(desc, true), '\n'))
             end
         end
         put(p, thisp)
@@ -230,7 +231,7 @@ local function expand_items(items, prelude, gen_unique_name, traceback)
         if typename == 'table' then
             typename = find_or_add(prelude, item.table, gen_unique_name, traceback..'['..(k-1)..']')
         else
-            typename = type_corrector(typename)
+            typename = type_corrector(typename, traceback..'['..(k-1)..']')
         end
         local function get_returned(name)
             return {
