@@ -124,7 +124,11 @@ end
 ---@field description string
 ---@field type string
 
----@alias prelude table<string, table<string, field>>
+---@class datatype
+---@field fields table<string, field>
+---@field names string[]
+
+---@alias prelude table<string, datatype>
 
 ---@param prelude prelude
 ---@param p printed[]
@@ -134,7 +138,8 @@ local function gen_prelude(prelude, p)
     for typename, fields in pairs(prelude) do
         local thisp = {}
         put(thisp, '---@class '..typename)
-        for name, info in pairs(fields) do
+        for _, name in ipairs(fields.names) do
+            local info = fields.fields[name]
             local desc = ' # '
             if info.default then
                 desc = desc..'(default: `'..info.default..'`) '
@@ -169,18 +174,21 @@ local function find_or_add(prelude, t, gen_unique_name, traceback)
         return 'table'
     end
     local actual_fields = {}
+    local actual_names = {}
     for _, field in pairs(t) do
         actual_fields[field.name] = {
             type=field.type == 'table' and find_or_add(prelude, field.table, gen_unique_name, traceback..'.'..field.name) or field.type,
             default=field.default,
             description=field.description
         }
+        table.insert(actual_names, field.name)
     end
     local actual_length = #actual_fields
     for typename, fields in pairs(prelude) do
         if (function()
-            if #fields ~= actual_length then return end
-            for fieldname, fieldinfo in pairs(fields) do
+            if #fields.names ~= actual_length then return end
+            for _, fieldname in pairs(fields.names) do
+                local fieldinfo = fields.fields[fieldname]
                 local actualinfo = actual_fields[fieldname]
                 if not actualinfo then return end
                 if fieldinfo.default ~= actualinfo.default then return end
@@ -193,7 +201,10 @@ local function find_or_add(prelude, t, gen_unique_name, traceback)
         end
     end
     local name = gen_unique_name()
-    prelude[name] = actual_fields
+    prelude[name] = {
+        names = actual_names,
+        fields = actual_fields
+    }
     return name
 end
 
