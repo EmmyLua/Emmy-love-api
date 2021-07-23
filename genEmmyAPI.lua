@@ -152,7 +152,6 @@ local function gen_prelude(prelude, p)
                 logln('found ... in table definition '..typename)
                 extra = '---'
             elseif name:find('^[0-9]+$') then
-                extra = '---'
                 name = '['..name..']'
             end
             put(thisp, extra..'---@field '..name..question..' '..type_corrector(info.type, typename..'.'..name)..table.concat(gen_desc(desc, true), '\n'))
