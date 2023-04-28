@@ -42,7 +42,7 @@ local function map_add(f, mapped, added)
         added_times = added_times + 1
     end
     if added_times == 0 then
-        return nil
+        return {}
     elseif added_times == 1 then
         if type(actual_added[1]) == 'string' then
             table.insert(added, actual_added[1])
@@ -76,8 +76,13 @@ local function squash(p)
     return ret
 end
 
+---@param printed table
 ---@param printing printed
+---@param pos integer?
 local function put(printed, printing, pos)
+    if #printing == 0 then
+        return
+    end
     if pos == nil then
         table.insert(printed, printing)
     else
@@ -90,7 +95,7 @@ end
 
 ---@param description string
 ---@param without_first_dashes? boolean
----@return printed
+---@return printed[]
 local function gen_desc(description, without_first_dashes)
     local ret = {}
     for _ in description:gmatch("[^\n]*") do
@@ -162,7 +167,7 @@ local function gen_prelude(prelude, p)
     if added then
         return p
     else
-        return nil
+        return {}
     end
 end
 
@@ -433,7 +438,7 @@ local function gen_write_module(module)
     put(p, gen_prelude(prelude, {'-- preludes'}))
     put(p, 'return '..module.name)
     local f = assert(io.open(string.format(WHERE, 'love/'..module.name), 'w'))
-    p, _ = printing(p)
+    local p, _ = printing(p)
     f:write(p)
     f:close()
     return string.format('love.%s = require "love/%s"', module.name, module.name)
@@ -453,7 +458,7 @@ local function gen_write_love(love)
     put(p, 'return love')
     put(p, '---@alias Variant table|boolean|string|number|Object')
     local f = assert(io.open(string.format(WHERE, 'love'), 'w'))
-    p, _ = printing(p)
+    local p, _ = printing(p)
     f:write(p)
     f:close()
 end

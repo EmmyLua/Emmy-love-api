@@ -38,23 +38,23 @@ local function check(obj, Type, prefix)
             return fail_match('string', type(obj))
         end
     else
-        local info = assert(info.metainfo[Type])
-        if type(info) == 'string' then
-            return check(obj, info, prefix)
+        local typeinfo = assert(info.metainfo[Type])
+        if type(typeinfo) == 'string' then
+            return check(obj, typeinfo, prefix)
         end
         if type(obj) ~= "table" then
             return fail_match(info.stringify(Type), type(obj))
         end
         local need_to_be_checked = {}
-        for k, v in pairs(info) do
+        for k, v in pairs(typeinfo) do
             need_to_be_checked[k] = v
         end
         for k, v in pairs(obj) do
-            if not info[k] then
+            if not typeinfo[k] then
                 print('<'..prefix..'>: extra field '..k ..' and value '..type(v))
                 ok = false
             else
-                ok = ok and check(v, info[k], prefix..'.'..k)
+                ok = ok and check(v, typeinfo[k], prefix..'.'..k)
                 need_to_be_checked[k] = nil
             end
         end
