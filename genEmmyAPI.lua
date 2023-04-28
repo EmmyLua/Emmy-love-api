@@ -419,6 +419,7 @@ end
 ---@return printed
 local function gen_write_module(module)
     local p = {}
+    put(p, '---@meta')
     local header = gen_desc(module.description)
     table.insert(header, 'local '..module.name..' = {}')
     put(p, header)
@@ -438,6 +439,7 @@ end
 ---@param love Love
 local function gen_write_love(love)
     local p = {}
+    put(p, '---@meta')
     put(p, 'local love = {}')
     putf(p, 'love.version = %q', love.version)
     local prelude = {}
