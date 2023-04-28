@@ -120,6 +120,7 @@ local function type_corrector(type, where)
         type = string.format("%q", type)
         logln('quoted as: '..type)
     end
+    type = string.gsub(type, 'cdata', 'ffi.cdata*')
     return type
 end
 
