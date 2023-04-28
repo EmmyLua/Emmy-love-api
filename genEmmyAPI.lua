@@ -216,11 +216,12 @@ local function find_or_add(prelude, t, gen_unique_name, traceback)
     return name
 end
 
----@param items FunctionField[]
+---@generic T: CallbackField|FunctionField
+---@param items T[]
 ---@param prelude prelude
 ---@param gen_unique_name fun():string
 ---@param traceback string
----@return fun():FunctionField|nil
+---@return fun():T|nil
 local function expand_items(items, prelude, gen_unique_name, traceback)
     local k = 1
     local temp = nil
@@ -336,8 +337,44 @@ end
 
 ---@param prelude prelude
 ---@param prefix string
-local function gen_callback(prelude, prefix)
-    return gen_function(prelude, prefix)
+local function gen_callback(prelude, prefix, f)
+    local prelude_prefix = prefix:gsub('[.:]', '-')
+    ---@param func Callback
+    ---@return printed
+    return function(func)
+        local prelude_counter = 0
+        local actual_prefix = prelude_prefix..func.name..'-'
+        local function gen_unique_name()
+            prelude_counter = prelude_counter + 1
+            return actual_prefix..prelude_counter
+        end
+        local variant = func.variants[1]
+        local desc = func.description
+        if variant.description then
+            desc = desc .. '\n' .. variant.description
+        end
+        local variantp = gen_desc(desc)
+        local parameter_list = {}
+        for argument in expand_items(variant.arguments, prelude, gen_unique_name, prefix..func.name..':parameters') do
+            local printed = {}
+            put(printed, argument.name)
+            put(printed, argument.type)
+            put(parameter_list, table.concat(printed, ': '))
+        end
+        local returns = {}
+        for returned in expand_items(variant.returns, prelude, gen_unique_name, prefix..func.name..':returns') do
+            if returned.name ~= '...' then
+                put(returns, returned.type)
+            else
+                put(returns, '...')
+            end
+        end
+        local type = {}
+        put(type, 'fun('..table.concat(parameter_list, ', ')..')')
+        put(type, table.concat(returns, ', '))
+        put(variantp, '---@alias '..prefix..func.name..' '..table.concat(type, ': '))
+        return squash(variantp)
+    end
 end
 
 ---@param prelude prelude

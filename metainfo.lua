@@ -5,6 +5,7 @@
 ---@class my_many
 ---@field name "'many'"
 ---@field wrapped my_type
+---@field num integer?
 
 ---@alias my_type my_nullable|my_many|string
 
@@ -18,11 +19,13 @@ local function optional(type)
 end
 
 ---@param type my_type
+---@param num integer?
 ---@return my_many
-local function array(type)
+local function array(type, num)
     return {
         name='many',
-        wrapped=type
+        wrapped=type,
+        num=num
     }
 end
 
@@ -74,7 +77,22 @@ local metainfo = {
         functions=optional(array("Function")),
         supertypes=optional(array("string")),
     },
-    Callback="Function",
+    Callback={
+        name="string",
+        description="string",
+        variants=array("OneCallback", 1),
+    },
+    OneCallback={
+        returns=optional(array("CallbackField")),
+        arguments=optional(array("CallbackField")),
+        description=optional("string"),
+    },
+    CallbackField={
+        type="string",
+        name="string",
+        description="string",
+        table=optional(array("FunctionField")),
+    },
     Function={
         name="string",
         description="string",

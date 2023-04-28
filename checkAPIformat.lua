@@ -22,6 +22,12 @@ local function check(obj, Type, prefix)
             if type(obj) ~= "table" then
                 return fail_match(info.stringify(Type), type(obj))
             end
+            if Type.num then
+                if #obj ~= Type.num then
+                    print('<'..prefix..'>: expected '..Type.num..' elements, but got '..#obj)
+                    ok = false
+                end
+            end
             for key, value in pairs(obj) do
                 if type(key) ~= "number" then
                     print('<'..prefix..'>: nonnumeric key', key)
