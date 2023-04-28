@@ -262,54 +262,7 @@ end
 
 
 --region api-definition
----@class EnumConstant
----@field name string
----@field description string
-
----@class OneFunction
----@field returns FunctionField[]|nil
----@field description string|nil
----@field arguments FunctionField[]|nil
-
----@alias Callback Function
-
----@class Love
----@field types Type[]
----@field version string
----@field functions Function[]
----@field callbacks Callback[]
----@field modules Module[]
-
----@class Type
----@field supertypes string[]|nil
----@field name string
----@field description string
----@field constructors string[]|nil
----@field functions Function[]|nil
-
----@class Enum
----@field name string
----@field description string
----@field constants EnumConstant[]
-
----@class Function
----@field name string
----@field description string
----@field variants OneFunction[]
-
----@class FunctionField
----@field type string
----@field table FunctionField[]|nil
----@field default string|nil
----@field name string
----@field description string
-
----@class Module
----@field types Type[]
----@field name string
----@field description string
----@field functions Function[]
----@field enums Enum[]
+pcall(require, 'api-definition')
 --endregion api-definition
 
 
