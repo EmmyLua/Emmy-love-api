@@ -1,0 +1,3 @@
+[submodule "love-api"]
+	path = love-api
+	url = https://github.com/26f-studio/love-api
