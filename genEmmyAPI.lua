@@ -440,7 +440,7 @@ end
 local function gen_write_love(love)
     local p = {}
     put(p, '---@meta')
-    put(p, 'local love = {}')
+    put(p, 'love = {}')
     putf(p, 'love.version = %q', love.version)
     local prelude = {}
     put(p, map_add(gen_function(prelude, 'love.'), love.functions, {'-- functions'}))
@@ -448,7 +448,6 @@ local function gen_write_love(love)
     put(p, map_add(gen_type(prelude), love.types, {'-- types'}))
     put(p, map_add(gen_callback(prelude, 'love.'), love.callbacks, {'-- callbacks'}))
     put(p, gen_prelude(prelude, {'-- preludes'}))
-    put(p, 'return love')
     put(p, '---@alias Variant table|boolean|string|number|Object')
     local f = assert(io.open(string.format(WHERE, 'love'), 'w'))
     local p, _ = printing(p)
